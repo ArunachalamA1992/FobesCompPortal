@@ -205,7 +205,97 @@ const Applies = ({categories_data, navigation}) => {
 const Shortlisted = ({}) => {
   return (
     <View>
-      <Text>Text</Text>
+      <FlatList
+        data={job_data}
+        showsVerticalScrollIndicator={false}
+        renderItem={({item, index}) => {
+          return (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('applicantdetails', {item});
+              }}
+              style={styles.card}>
+              <View style={styles.header}>
+                <Image source={item?.image} style={styles.image} />
+                <View style={styles.details}>
+                  <Text style={styles.name} numberOfLines={1}>
+                    {item?.name} | {item?.job_role}
+                  </Text>
+                  <View style={styles.row}>
+                    <Iconviewcomponent
+                      Icontag={'MaterialIcons'}
+                      iconname={'location-history'}
+                      icon_size={18}
+                      icon_color={Color.cloudyGrey}
+                    />
+                    <Text style={styles.location} numberOfLines={1}>
+                      {item?.location}
+                    </Text>
+                  </View>
+                  <View style={styles.row}>
+                    <View style={styles.row}>
+                      <Iconviewcomponent
+                        Icontag={'FontAwesome'}
+                        iconname={'briefcase'}
+                        icon_size={16}
+                        icon_color={Color.cloudyGrey}
+                      />
+                      <Text style={styles.experience} numberOfLines={1}>
+                        {item?.experience}
+                      </Text>
+                    </View>
+                    <View style={styles.row}>
+                      <Iconviewcomponent
+                        Icontag={'Entypo'}
+                        iconname={'wallet'}
+                        icon_size={16}
+                        icon_color={Color.cloudyGrey}
+                      />
+                      <Text style={styles.ctc} numberOfLines={1}>
+                        {item?.expectedCTC}
+                      </Text>
+                    </View>
+                  </View>
+                  <Text style={styles.location} numberOfLines={1}>
+                    Applied on {moment(item?.created_at).format('DD MMM YY')}
+                  </Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+          );
+        }}
+        ListEmptyComponent={() => {
+          return (
+            <View
+              style={{
+                height: height / 2,
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginVertical: 10,
+                width: '100%',
+              }}>
+              <MCIcon
+                name="briefcase-variant-off"
+                color={Color.primary}
+                size={20}
+              />
+              <Text
+                style={{
+                  fontSize: 12,
+                  padding: 5,
+                  paddingHorizontal: 20,
+                  marginStart: 5,
+                  borderRadius: 5,
+                  marginVertical: 10,
+                  color: Color.primary,
+                  fontFamily: Gilmer.Bold,
+                }}>
+                Job Not Found
+              </Text>
+            </View>
+          );
+        }}
+      />
     </View>
   );
 };
@@ -213,7 +303,97 @@ const Shortlisted = ({}) => {
 const Rejected = ({}) => {
   return (
     <View>
-      <Text>Text</Text>
+      <FlatList
+        data={job_data}
+        showsVerticalScrollIndicator={false}
+        renderItem={({item, index}) => {
+          return (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('applicantdetails', {item});
+              }}
+              style={styles.card}>
+              <View style={styles.header}>
+                <Image source={item?.image} style={styles.image} />
+                <View style={styles.details}>
+                  <Text style={styles.name} numberOfLines={1}>
+                    {item?.name} | {item?.job_role}
+                  </Text>
+                  <View style={styles.row}>
+                    <Iconviewcomponent
+                      Icontag={'MaterialIcons'}
+                      iconname={'location-history'}
+                      icon_size={18}
+                      icon_color={Color.cloudyGrey}
+                    />
+                    <Text style={styles.location} numberOfLines={1}>
+                      {item?.location}
+                    </Text>
+                  </View>
+                  <View style={styles.row}>
+                    <View style={styles.row}>
+                      <Iconviewcomponent
+                        Icontag={'FontAwesome'}
+                        iconname={'briefcase'}
+                        icon_size={16}
+                        icon_color={Color.cloudyGrey}
+                      />
+                      <Text style={styles.experience} numberOfLines={1}>
+                        {item?.experience}
+                      </Text>
+                    </View>
+                    <View style={styles.row}>
+                      <Iconviewcomponent
+                        Icontag={'Entypo'}
+                        iconname={'wallet'}
+                        icon_size={16}
+                        icon_color={Color.cloudyGrey}
+                      />
+                      <Text style={styles.ctc} numberOfLines={1}>
+                        {item?.expectedCTC}
+                      </Text>
+                    </View>
+                  </View>
+                  <Text style={styles.location} numberOfLines={1}>
+                    Applied on {moment(item?.created_at).format('DD MMM YY')}
+                  </Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+          );
+        }}
+        ListEmptyComponent={() => {
+          return (
+            <View
+              style={{
+                height: height / 2,
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginVertical: 10,
+                width: '100%',
+              }}>
+              <MCIcon
+                name="briefcase-variant-off"
+                color={Color.primary}
+                size={20}
+              />
+              <Text
+                style={{
+                  fontSize: 12,
+                  padding: 5,
+                  paddingHorizontal: 20,
+                  marginStart: 5,
+                  borderRadius: 5,
+                  marginVertical: 10,
+                  color: Color.primary,
+                  fontFamily: Gilmer.Bold,
+                }}>
+                Job Not Found
+              </Text>
+            </View>
+          );
+        }}
+      />
     </View>
   );
 };
