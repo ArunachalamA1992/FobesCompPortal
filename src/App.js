@@ -4,7 +4,6 @@ import {LogBox, StatusBar, View} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
-// import CustomDrawerContent from './Components/Nav/CustomDrawerContent';
 import {Provider, useDispatch} from 'react-redux';
 
 import {Provider as PaperProvider} from 'react-native-paper';
@@ -17,6 +16,7 @@ import Store from './Redux/Store';
 import OnboardOne from './Screens/OnboardScreens/OnboardOne';
 import Color from './Global/Color';
 import { navigationRef } from '../RootNavigation';
+import CustomDrawerContent from './Componens/Nav/CustomDrawerContent';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -91,7 +91,7 @@ const MyDrawer = () => {
         <Drawer.Navigator
           initialRouteName="Home"
           screenOptions={{swipeEnabled: false}}
-          // drawerContent={props => <CustomDrawerContent {...props} />}
+          drawerContent={props => <CustomDrawerContent {...props} />}
           >
           <Drawer.Screen
             name="Home"

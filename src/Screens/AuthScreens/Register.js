@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -8,13 +8,13 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Color from '../../Global/Color';
-import {Gilmer} from '../../Global/FontFamily';
+import { Gilmer } from '../../Global/FontFamily';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useTheme} from 'react-native-paper';
-import {Iconviewcomponent} from '../../Componens/Icontag';
+import { useTheme } from 'react-native-paper';
+import { Iconviewcomponent } from '../../Componens/Icontag';
 
-const Register = ({navigation}) => {
-  var {replace} = navigation;
+const Register = ({ navigation }) => {
+  var { replace } = navigation;
   const [username, setUsername] = useState('');
   const [checked, setChecked] = useState(false);
   const [email, setEmail] = useState('');
@@ -22,7 +22,7 @@ const Register = ({navigation}) => {
   const [emailValidError, setEmailValidError] = useState('');
   const [password, setPassword] = useState('');
   const [minPass, setMinPass] = useState('');
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const [password_visible, setPasswordvisibility] = useState(false);
 
   return (
@@ -36,7 +36,7 @@ const Register = ({navigation}) => {
         <Text
           style={{
             textAlign: 'center',
-            fontSize: 20,
+            fontSize: 22,
             paddingHorizontal: 10,
             color: Color.black,
             fontFamily: Gilmer.Heavy,
@@ -47,7 +47,7 @@ const Register = ({navigation}) => {
         <Text
           style={{
             textAlign: 'center',
-            fontSize: 16,
+            fontSize: 14,
             paddingHorizontal: 10,
             color: Color.cloudyGrey,
             fontFamily: Gilmer.Medium,
@@ -56,15 +56,16 @@ const Register = ({navigation}) => {
           by creating a free account
         </Text>
       </View>
+
       <View style={styles.textContainer}>
         <Iconviewcomponent
           Icontag={'Ionicons'}
           iconname={'person'}
           icon_size={22}
-          iconstyle={{color: Color.transparantBlack}}
+          iconstyle={{ color: Color.transparantBlack }}
         />
         <TextInput
-          style={[styles.numberTextBox, {paddingHorizontal: 10}]}
+          style={[styles.numberTextBox, { paddingHorizontal: 10 }]}
           placeholder="HR Name"
           placeholderTextColor={Color.transparantBlack}
           value={username}
@@ -74,15 +75,16 @@ const Register = ({navigation}) => {
           keyboardType="name-phone-pad"
         />
       </View>
+
       <View style={styles.textContainer}>
         <Iconviewcomponent
           Icontag={'Ionicons'}
           iconname={'mail'}
           icon_size={22}
-          iconstyle={{color: Color.transparantBlack}}
+          iconstyle={{ color: Color.transparantBlack }}
         />
         <TextInput
-          style={[styles.numberTextBox, {paddingHorizontal: 10}]}
+          style={[styles.numberTextBox, { paddingHorizontal: 10 }]}
           placeholder="Official Email Address"
           placeholderTextColor={Color.transparantBlack}
           onChangeText={text => {
@@ -92,15 +94,16 @@ const Register = ({navigation}) => {
           keyboardType="email-address"
         />
       </View>
+
       <View style={styles.textContainer}>
         <Iconviewcomponent
           Icontag={'Ionicons'}
           iconname={'call'}
           icon_size={22}
-          iconstyle={{color: Color.transparantBlack}}
+          iconstyle={{ color: Color.transparantBlack }}
         />
         <TextInput
-          style={[styles.numberTextBox, {paddingHorizontal: 10}]}
+          style={[styles.numberTextBox, { paddingHorizontal: 10 }]}
           placeholder="Mobile Number"
           placeholderTextColor={Color.transparantBlack}
           value={phone}
@@ -109,15 +112,16 @@ const Register = ({navigation}) => {
           maxLength={10}
         />
       </View>
+
       <View style={styles.textContainer}>
         <Iconviewcomponent
           Icontag={'MaterialCommunityIcons'}
           iconname={'lock'}
           icon_size={22}
-          iconstyle={{color: Color.transparantBlack}}
+          iconstyle={{ color: Color.transparantBlack }}
         />
         <TextInput
-          style={[styles.numberTextBox, {paddingHorizontal: 10}]}
+          style={[styles.numberTextBox, { paddingHorizontal: 10 }]}
           placeholder="Password"
           placeholderTextColor={Color.transparantBlack}
           secureTextEntry={!password_visible}
@@ -136,7 +140,6 @@ const Register = ({navigation}) => {
           }}
           keyboardType="name-phone-pad"
         />
-
         <TouchableOpacity
           onPress={() => setPasswordvisibility(!password_visible)}
           style={styles.numberCountryCode}>
@@ -144,19 +147,20 @@ const Register = ({navigation}) => {
             Icontag={'MaterialCommunityIcons'}
             iconname={!password_visible ? 'eye-off' : 'eye'}
             icon_size={22}
-            iconstyle={{color: Color.transparantBlack}}
+            iconstyle={{ color: Color.transparantBlack }}
           />
         </TouchableOpacity>
       </View>
+
       <View style={styles.textContainer}>
         <Iconviewcomponent
           Icontag={'MaterialCommunityIcons'}
           iconname={'lock'}
           icon_size={22}
-          iconstyle={{color: Color.transparantBlack}}
+          iconstyle={{ color: Color.transparantBlack }}
         />
         <TextInput
-          style={[styles.numberTextBox, {paddingHorizontal: 10}]}
+          style={[styles.numberTextBox, { paddingHorizontal: 10 }]}
           placeholder="Confirm Password"
           placeholderTextColor={Color.transparantBlack}
           secureTextEntry={!password_visible}
@@ -175,7 +179,6 @@ const Register = ({navigation}) => {
           }}
           keyboardType="name-phone-pad"
         />
-
         <TouchableOpacity
           onPress={() => setPasswordvisibility(!password_visible)}
           style={styles.numberCountryCode}>
@@ -183,10 +186,11 @@ const Register = ({navigation}) => {
             Icontag={'MaterialCommunityIcons'}
             iconname={!password_visible ? 'eye-off' : 'eye'}
             icon_size={22}
-            iconstyle={{color: Color.transparantBlack}}
+            iconstyle={{ color: Color.transparantBlack }}
           />
         </TouchableOpacity>
       </View>
+
       <View
         style={{
           // flex: 1,
@@ -203,7 +207,7 @@ const Register = ({navigation}) => {
           <MCIcon
             name={!checked ? 'checkbox-blank-outline' : 'checkbox-marked'}
             size={24}
-            color={Color.black}
+            color={Color.cloudyGrey}
           />
         </TouchableOpacity>
         <View
@@ -215,12 +219,12 @@ const Register = ({navigation}) => {
           <Text
             style={{
               fontSize: 14,
-              color: Color.black,
-              textAlign: 'center',
+              color: Color.cloudyGrey,
+              textAlign: 'center', fontFamily: Gilmer.Medium
             }}>
             I've read and agree with{' '}
           </Text>
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity onPress={() => { }}>
             <Text
               style={{
                 fontSize: 14,
@@ -233,20 +237,48 @@ const Register = ({navigation}) => {
           </TouchableOpacity>
         </View>
       </View>
+
       <TouchableOpacity
-        onPress={() => {}}
+        onPress={() => { }}
         disabled={!checked}
         style={{
-          height: 50,
+          height: 45,
           backgroundColor: Color.primary,
           justifyContent: 'center',
           alignItems: 'center',
-          borderRadius: 10,
+          borderRadius: 5, marginVertical: 20
         }}>
-        <Text style={{fontSize: 16, color: Color.white, textAlign: 'center'}}>
+        <Text style={{ fontSize: 14, color: Color.white, textAlign: 'center' }}>
           Create Account
         </Text>
       </TouchableOpacity>
+
+      <View
+        style={{
+          width: '100%',
+          flexDirection: 'row', justifyContent: 'center',
+          alignItems: 'center', marginVertical: 20
+        }}>
+        <Text
+          style={{
+            fontSize: 14,
+            color: Color.cloudyGrey,
+            textAlign: 'center', fontFamily: Gilmer.Medium
+          }}>
+          Already have an account?
+        </Text>
+        <TouchableOpacity onPress={() => { navigation.navigate("Login")}}>
+          <Text
+            style={{
+              fontSize: 16,
+              color: Color.primary,
+              fontFamily: Gilmer.Bold,
+              textDecorationLine: 'underline', paddingHorizontal: 5
+            }}>
+            Login
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -260,14 +292,14 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     marginVertical: 10,
-    borderColor: Color.cloudyGrey,
+    borderColor: '#EEEEEE',
     backgroundColor: '#EAEAEF50',
-    borderWidth: 1,
+    borderWidth: 0.5,
     height: 50,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 10,
-    borderRadius: 5,
+    paddingHorizontal: 10, marginVertical: 15,
+    borderRadius: 5, elevation: 0.2
   },
   numberCountryCode: {
     color: Color.black,

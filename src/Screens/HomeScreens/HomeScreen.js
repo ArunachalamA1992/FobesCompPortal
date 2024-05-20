@@ -10,7 +10,7 @@ const HomeScreen = () => {
         <View style={styles.container}>
             <Text>HomeScreen</Text>
             <TouchableOpacity 
-            onPress={() => navigation.navigate("JobDetails")}
+            onPress={() => navigation.navigate("BuySubscriptions")}
              style={{ backgroundColor: 'red', padding: 10, paddingHorizontal: 30 }}>
                 <Text>Home</Text>
             </TouchableOpacity>
