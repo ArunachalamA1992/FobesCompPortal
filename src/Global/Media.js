@@ -3,6 +3,7 @@ export const Media = {
   status: require('../assets/images/app_status.png'),
   vector: require('../assets/images/vector.png'),
   logo: require('../assets/logos/fobes.png'),
+  home_logo: require('../assets/logos/fobes_logo.png'),
   aboutUs:
     'https://albion-backend.s3.ap-south-1.amazonaws.com/Fobes/aboutUs.jpg',
   contactUs:
@@ -11,4 +12,5 @@ export const Media = {
     'https://albion-backend.s3.ap-south-1.amazonaws.com/Fobes/privacy.jpg',
   faq: 'https://albion-backend.s3.ap-south-1.amazonaws.com/Fobes/faq.jpg',
   terms: 'https://albion-backend.s3.ap-south-1.amazonaws.com/Fobes/terms.jpg',
+  empty_cover: require('../assets/images/emptyCover.png'),
 };

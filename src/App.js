@@ -1,108 +1,44 @@
-import React, {useEffect} from 'react';
-import {LogBox, StatusBar, View} from 'react-native';
+import React from 'react';
+import {LogBox, StatusBar, Text, View} from 'react-native';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
-// import CustomDrawerContent from './Components/Nav/CustomDrawerContent';
-import {Provider, useDispatch} from 'react-redux';
+import {Provider} from 'react-redux';
 
 import {Provider as PaperProvider} from 'react-native-paper';
 import TabNavigator, {Auth} from './route';
 import SplashScreen from './SplashScreen';
-import {Linking} from 'react-native';
-import {setUserData} from './Redux';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Store from './Redux/Store';
 import OnboardOne from './Screens/OnboardScreens/OnboardOne';
 import Color from './Global/Color';
-import { navigationRef } from '../RootNavigation';
+import {navigationRef} from '../RootNavigation';
+import BasicDetails from './Screens/Details/BasicDetails';
+import Icon from 'react-native-vector-icons/Ionicons';
+import {Gilmer} from './Global/FontFamily';
+import SocialMedia from './Screens/Details/SocialMedia';
+import ContactDetails from './Screens/Details/ContactDetails';
+import ProfileCompletion from './Screens/Details/ProfileCompletion';
+import Profile from './Screens/Details/Profile';
+import Notification from './Screens/HomeScreens/Notification';
+import ApplicantDetails from './Screens/HomeScreens/ApplicantDetails';
+import JobApplicants from './Screens/JobPosted/JobApplicants';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
 const MyDrawer = () => {
-  const dispatch = useDispatch();
-
-  const linking = {
-    prefixes: ['https://fobes.in/job', 'fobes://'],
-    config: {
-      initialRouteName: 'Home',
-      screens: {
-        Home: {
-          path: 'home',
-        },
-        DetailedScreen: {
-          path: '/:slug',
-        },
-      },
-    },
-  };
-
-  useEffect(() => {
-    const getUserData = async () => {
-      try {
-        const value = await AsyncStorage.getItem('user_data');
-        if (value !== null) {
-          dispatch(setUserData(JSON.parse(value)));
-        }
-      } catch (error) {
-        console.log('error', error);
-      }
-    };
-
-    getUserData();
-  }, [dispatch]);
-
-  useEffect(() => {
-    const handleDeepLink = ({url}) => {
-      try {
-        const route = url.replace(/.*?:\/\//g, '');
-        const id = route.match(/\/([^\/]+)\/?$/)[1];
-        // navigation.navigate('DetailedScreen', { slug });
-      } catch (error) {
-        console.error('Error handling deep link:', error);
-      }
-    };
-
-    const subscription = Linking.addEventListener('url', handleDeepLink);
-
-    const handleInitialUrl = async () => {
-      try {
-        const initialUrl = await Linking.getInitialURL();
-        if (initialUrl) {
-          handleDeepLink({url: initialUrl});
-        }
-      } catch (error) {
-        console.error('Error handling initial URL:', error);
-      }
-    };
-
-    handleInitialUrl();
-
-    return () => {
-      subscription.remove();
-    };
-  }, []);
-
   return (
     <PaperProvider>
-      <NavigationContainer linking={linking} ref={navigationRef}>
+      <NavigationContainer ref={navigationRef}>
         <Drawer.Navigator
           initialRouteName="Home"
-          screenOptions={{swipeEnabled: false}}
-          // drawerContent={props => <CustomDrawerContent {...props} />}
-          >
+          screenOptions={{swipeEnabled: false}}>
           <Drawer.Screen
             name="Home"
             component={MainApp}
             options={{headerShown: false}}
           />
-          {/* <Stack.Screen
-            name="DetailedScreen"
-            component={DetailedScreen}
-            options={{headerShown: false}}
-          /> */}
         </Drawer.Navigator>
       </NavigationContainer>
     </PaperProvider>
@@ -120,7 +56,7 @@ const App = () => {
 const MainApp = () => {
   return (
     <>
-      <StatusBar backgroundColor={Color.white} barStyle={'dark-content'} />
+      <StatusBar backgroundColor={Color.primary} />
       <Stack.Navigator initialRouteName="Splash">
         <Stack.Screen
           name="Splash"
@@ -132,16 +68,6 @@ const MainApp = () => {
           component={OnboardOne}
           options={{headerShown: false}}
         />
-        {/* <Stack.Screen
-          name="OnboardTwo"
-          component={OnboardTwo}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="OnboardThree"
-          component={OnboardThree}
-          options={{headerShown: false}}
-        /> */}
         <Stack.Screen
           name="Auth"
           component={Auth}
@@ -152,53 +78,11 @@ const MainApp = () => {
           component={TabNavigator}
           options={{headerShown: false}}
         />
-
-        {/* <Stack.Screen
-          name="SearchDataList"
-          component={SearchDataList}
-          options={({navigation, route}) => ({
-            headerTitle: 'Jobs',
-            headerTitleAlign: 'center',
-            headerTitleStyle: {color: Color.black},
-            headerStyle: {backgroundColor: Color.white},
-            headerLeft: () => (
-              <View style={{marginHorizontal: 10}}>
-                <Icon
-                  name="arrow-back"
-                  size={30}
-                  color={Color.black}
-                  onPress={() => navigation.goBack()}
-                />
-              </View>
-            ),
-          })}
-        />
-        <Stack.Screen
-          name="AppliedJobs"
-          component={AppliedJobs}
-          options={({navigation, route}) => ({
-            headerTitle: 'Applied Jobs',
-            headerTitleAlign: 'center',
-            headerTitleStyle: {color: Color.black},
-            headerStyle: {backgroundColor: Color.white},
-            headerLeft: () => (
-              <View style={{marginHorizontal: 10}}>
-                <Icon
-                  name="arrow-back"
-                  size={30}
-                  color={Color.black}
-                  onPress={() => navigation.goBack()}
-                />
-              </View>
-            ),
-          })}
-        />
         <Stack.Screen
           name="Notification"
           component={Notification}
           options={({navigation, route}) => ({
-            headerTitle: 'Notification',
-            headerTitleAlign: 'center',
+            headerTitle: 'Notifications',
             headerTitleStyle: {color: Color.black},
             headerStyle: {backgroundColor: Color.white},
             headerLeft: () => (
@@ -214,52 +98,11 @@ const MainApp = () => {
           })}
         />
         <Stack.Screen
-          name="JobStatus"
-          component={JobStatus}
-          options={({navigation, route}) => ({
-            headerTitle: 'Applied Jobs Status',
-            headerTitleAlign: 'center',
-            headerTitleStyle: {color: Color.black},
-            headerStyle: {backgroundColor: Color.white},
-            headerLeft: () => (
-              <View style={{marginHorizontal: 10}}>
-                <Icon
-                  name="arrow-back"
-                  size={30}
-                  color={Color.black}
-                  onPress={() => navigation.goBack()}
-                />
-              </View>
-            ),
-          })}
-        />
-        <Stack.Screen
-          name="Skill"
-          component={SkillScreen}
-          options={({navigation, route}) => ({
-            headerTitle: 'Key Skills',
-            headerTitleStyle: {color: Color.black},
-            headerTitleAlign: 'center',
-            headerStyle: {backgroundColor: Color.white},
-            headerLeft: () => (
-              <View style={{marginHorizontal: 10}}>
-                <Icon
-                  name="arrow-back"
-                  size={30}
-                  color={Color.black}
-                  onPress={() => navigation.goBack()}
-                />
-              </View>
-            ),
-          })}
-        />
-        <Stack.Screen
-          name="basicdetails"
+          name="basicDetails"
           component={BasicDetails}
           options={({navigation, route}) => ({
             headerTitle: 'Basic Details',
             headerTitleStyle: {color: Color.black},
-            headerTitleAlign: 'center',
             headerStyle: {backgroundColor: Color.white},
             headerLeft: () => (
               <View style={{marginHorizontal: 10}}>
@@ -271,89 +114,147 @@ const MainApp = () => {
                 />
               </View>
             ),
+            headerRight: () => (
+              <View style={{marginHorizontal: 10}}>
+                <Text
+                  style={{
+                    color: Color.primary,
+                    fontSize: 14,
+                    fontFamily: Gilmer.Medium,
+                  }}>
+                  0% Completed
+                </Text>
+              </View>
+            ),
           })}
         />
         <Stack.Screen
-          name="Applycompletion"
-          component={Applycompletion}
+          name="profileDetails"
+          component={Profile}
+          options={({navigation, route}) => ({
+            headerTitle: 'Profile',
+            headerTitleStyle: {color: Color.black},
+            headerStyle: {backgroundColor: Color.white},
+            headerLeft: () => (
+              <View style={{marginHorizontal: 10}}>
+                <Icon
+                  name="arrow-back"
+                  size={30}
+                  color={Color.black}
+                  onPress={() => navigation.goBack()}
+                />
+              </View>
+            ),
+            headerRight: () => (
+              <View style={{marginHorizontal: 10}}>
+                <Text
+                  style={{
+                    color: Color.primary,
+                    fontSize: 14,
+                    fontFamily: Gilmer.Medium,
+                  }}>
+                  15% Completed
+                </Text>
+              </View>
+            ),
+          })}
+        />
+        <Stack.Screen
+          name="SocialMedia"
+          component={SocialMedia}
+          options={({navigation, route}) => ({
+            headerTitle: 'Social Media',
+            headerTitleStyle: {color: Color.black},
+            headerStyle: {backgroundColor: Color.white},
+            headerLeft: () => (
+              <View style={{marginHorizontal: 10}}>
+                <Icon
+                  name="arrow-back"
+                  size={30}
+                  color={Color.black}
+                  onPress={() => navigation.goBack()}
+                />
+              </View>
+            ),
+            headerRight: () => (
+              <View style={{marginHorizontal: 10}}>
+                <Text
+                  style={{
+                    color: Color.primary,
+                    fontSize: 14,
+                    fontFamily: Gilmer.Medium,
+                  }}>
+                  45% Completed
+                </Text>
+              </View>
+            ),
+          })}
+        />
+        <Stack.Screen
+          name="ContactDetails"
+          component={ContactDetails}
+          options={({navigation, route}) => ({
+            headerTitle: 'Social Media',
+            headerTitleStyle: {color: Color.black},
+            headerStyle: {backgroundColor: Color.white},
+            headerLeft: () => (
+              <View style={{marginHorizontal: 10}}>
+                <Icon
+                  name="arrow-back"
+                  size={30}
+                  color={Color.black}
+                  onPress={() => navigation.goBack()}
+                />
+              </View>
+            ),
+            headerRight: () => (
+              <View style={{marginHorizontal: 10}}>
+                <Text
+                  style={{
+                    color: Color.primary,
+                    fontSize: 14,
+                    fontFamily: Gilmer.Medium,
+                  }}>
+                  77% Completed
+                </Text>
+              </View>
+            ),
+          })}
+        />
+        <Stack.Screen
+          name="applicantdetails"
+          component={ApplicantDetails}
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="FilterList"
-          component={FilterListScreen}
+          name="JobApplicants"
+          component={JobApplicants}
           options={({navigation, route}) => ({
-            headerTitle: '',
-            headerTitleStyle: {color: Color.black},
-            headerStyle: {backgroundColor: Color.white},
+            headerTitle: route?.params?.item?.job_role,
+            headerTitleStyle: {color: Color.white},
+            headerStyle: {backgroundColor: Color.primary},
             headerLeft: () => (
               <View style={{marginHorizontal: 10}}>
                 <Icon
                   name="arrow-back"
                   size={30}
-                  color={Color.black}
+                  color={Color.white}
                   onPress={() => navigation.goBack()}
                 />
+              </View>
+            ),
+            headerRight: () => (
+              <View style={{marginHorizontal: 10}}>
+                <Icon name="list" size={30} color={Color.white} />
               </View>
             ),
           })}
         />
         <Stack.Screen
-          name="ForgotPassword"
-          component={ForgotPassword}
-          options={({navigation, route}) => ({
-            headerTitle: '',
-            headerTitleStyle: {color: Color.black},
-            headerStyle: {backgroundColor: Color.white},
-            headerLeft: () => (
-              <View style={{marginHorizontal: 10}}>
-                <Icon
-                  name="arrow-back"
-                  size={30}
-                  color={Color.black}
-                  onPress={() => navigation.goBack()}
-                />
-              </View>
-            ),
-          })}
+          name="ProfileCompletion"
+          component={ProfileCompletion}
+          options={{headerShown: false}}
         />
-        <Stack.Screen
-          name="PassOtpVerify"
-          component={PassOtpVerify}
-          options={({navigation, route}) => ({
-            headerTitle: '',
-            headerTitleStyle: {color: Color.black},
-            headerStyle: {backgroundColor: Color.white},
-            headerLeft: () => (
-              <View style={{marginHorizontal: 10}}>
-                <Icon
-                  name="arrow-back"
-                  size={30}
-                  color={Color.black}
-                  onPress={() => navigation.goBack()}
-                />
-              </View>
-            ),
-          })}
-        />
-        <Stack.Screen
-          name="ResetPass"
-          component={ResetPass}
-          options={({navigation, route}) => ({
-            headerTitle: '',
-            headerTitleStyle: {color: Color.black},
-            headerStyle: {backgroundColor: Color.white},
-            headerLeft: () => (
-              <View style={{marginHorizontal: 10}}>
-                <Icon
-                  name="arrow-back"
-                  size={30}
-                  color={Color.black}
-                  onPress={() => navigation.goBack()}
-                />
-              </View>
-            ),
-          })}
-        /> */}
       </Stack.Navigator>
     </>
   );

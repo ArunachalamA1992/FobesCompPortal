@@ -88,7 +88,6 @@ export const api = {
           },
         )
         .then(res => {
-          console.log('res.data', res);
           if (res.status == 200) {
             resolve(res.data);
           }

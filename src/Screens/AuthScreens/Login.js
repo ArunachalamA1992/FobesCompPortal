@@ -232,7 +232,9 @@ const Login = () => {
           </TouchableOpacity>
         </View>
         <TouchableOpacity
-          onPress={() => signIn()}
+          onPress={() => {
+            navigation.navigate('basicDetails');
+          }}
           style={{
             height: 50,
             justifyContent: 'center',

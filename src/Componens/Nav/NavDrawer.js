@@ -1,49 +1,26 @@
 import React from 'react';
-import {Text, TouchableOpacity, View} from 'react-native';
-import F5Icon from 'react-native-vector-icons/FontAwesome5';
+import {Image, TouchableOpacity, View} from 'react-native';
 import Color from '../../Global/Color';
-import {Gilmer} from '../../Global/FontFamily';
+import Icon from 'react-native-vector-icons/Ionicons';
+import {Media} from '../../Global/Media';
 
 export const NavigationDrawerStructure = ({navigation, home}) => {
   var {toggleDrawer} = navigation;
   return (
-    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+    <View style={{flexDirection: 'row', alignItems: 'center', padding: 10}}>
       <TouchableOpacity
         onPress={() => toggleDrawer()}
-        style={{borderColor: Color.smokeyGrey}}>
-        <F5Icon
-          name={'align-left'}
-          color={home == true ? Color.black : Color.black}
-          size={25}
-          style={{marginStart: 15}}
+        style={{borderColor: Color.smokeyGrey, marginRight: 10}}>
+        <Icon
+          name={'menu'}
+          color={home == true ? Color.white : Color.white}
+          size={30}
         />
       </TouchableOpacity>
-      {/* <View
-        style={{
-          width: '100%',
-          alignItems: 'flex-start',
-          paddingHorizontal: 15,
-        }}>
-        <Text
-          style={{
-            fontSize: 11,
-            color: Color.black,
-            fontFamily: Gilmer.Medium,
-          }}>
-          Welcome Back!
-        </Text>
-        <Text
-          style={{
-            width: '100%',
-            textAlign: 'justify',
-            fontSize: 14,
-            color: Color.black,
-            fontFamily: Gilmer.SemiBold,
-          }}
-          numberOfLines={1}>
-          Aruanchalam Annamalai
-        </Text>
-      </View> */}
+      <Image
+        source={Media.home_logo}
+        style={{width: 80, height: 80, resizeMode: 'contain'}}
+      />
     </View>
   );
 };
