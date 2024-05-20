@@ -7,7 +7,6 @@ import {Badge} from 'react-native-paper';
 import Login from './Screens/AuthScreens/Login';
 import Register from './Screens/AuthScreens/Register';
 import SavedJobScreen from './Screens/HomeScreens/SavedJobScreen';
-import AppliedJobs from './Screens/HomeScreens/AppliedJobs';
 import {NavigationDrawerStructure} from './Componens/Nav/NavDrawer';
 import {Iconviewcomponent} from './Componens/Icontag';
 import Color from './Global/Color';
@@ -18,6 +17,8 @@ import SearchDataList from './Screens/HomeScreens/Search/SearchDataList';
 import JobList from './Screens/JobPosted/JobList';
 import JobApplicants from './Screens/JobPosted/JobApplicants';
 import RecentJobList from './Screens/HomeScreens/RecentJobList';
+import BuySubscriptions from './Screens/BuySubscriptions';
+import PromoteJob from './Screens/SideMenu/PromoteJob';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -39,7 +40,7 @@ export const HomeStack = () => {
             <TouchableOpacity
               style={{right: 10}}
               onPress={() => {
-                navigation.navigate('Notification');
+                navigation.navigate('PromoteJob');
               }}>
               <Badge
                 badgeStyle={{
@@ -78,6 +79,205 @@ export const HomeStack = () => {
           ),
         })}
       />
+      <Stack.Screen
+        name="BuySubscriptions"
+        component={BuySubscriptions}
+        options={({navigation, route}) => ({
+          headerTitle: 'Buy Subscriptions',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {color: Color.white},
+          headerStyle: {backgroundColor: Color.primary},
+          headerLeft: () => (
+            <View style={{marginHorizontal: 10}}>
+              <Icon
+                name="arrow-back"
+                size={30}
+                color={Color.white}
+                onPress={() => navigation.goBack()}
+              />
+            </View>
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="PromoteJob"
+        component={PromoteJob}
+        options={({navigation, route}) => ({
+          headerTitle: 'Promote Your Job',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {color: Color.white},
+          headerStyle: {backgroundColor: Color.primary},
+          headerLeft: () => (
+            <View style={{marginHorizontal: 10}}>
+              <Icon
+                name="arrow-back"
+                size={30}
+                color={Color.white}
+                onPress={() => navigation.goBack()}
+              />
+            </View>
+          ),
+        })}
+      />
+      {/*  <Stack.Screen
+        name="TermsCondition"
+        component={TermsCondition}
+        options={({navigation, route}) => ({
+          headerTitle: 'Terms & Conditions',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {color: Color.white},
+          headerStyle: {backgroundColor: Color.primary},
+          headerLeft: () => (
+            <View style={{marginHorizontal: 10}}>
+              <Icon
+                name="arrow-back"
+                size={30}
+                color={Color.white}
+                onPress={() => navigation.goBack()}
+              />
+            </View>
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="PrivacyPolicy"
+        component={PrivacyPolicy}
+        options={({navigation, route}) => ({
+          headerTitle: 'Privacy Policy',
+          headerTitleStyle: {color: Color.white},
+          headerStyle: {backgroundColor: Color.primary},
+          headerLeft: () => (
+            <View style={{marginHorizontal: 10}}>
+              <Icon
+                name="arrow-back"
+                size={30}
+                color={Color.white}
+                onPress={() => navigation.goBack()}
+              />
+            </View>
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="JobListScreen"
+        component={JobListScreen}
+        options={({navigation, route}) => ({
+          headerTitle: 'Job List',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {color: Color.black},
+          headerStyle: {backgroundColor: Color.white},
+          headerLeft: () => (
+            <View style={{marginHorizontal: 10}}>
+              <Icon
+                name="arrow-back"
+                size={30}
+                color={Color.black}
+                onPress={() => navigation.goBack()}
+              />
+            </View>
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="recommendedjob"
+        component={RecommendedListScreen}
+        options={({navigation, route}) => ({
+          headerTitle: 'Recommended Jobs',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {color: Color.black},
+          headerStyle: {backgroundColor: Color.white},
+          headerLeft: () => (
+            <View style={{marginHorizontal: 10}}>
+              <Icon
+                name="arrow-back"
+                size={30}
+                color={Color.black}
+                onPress={() => navigation.goBack()}
+              />
+            </View>
+          ),
+        })}
+      />
+
+      <Stack.Screen
+        name="ApplyJob"
+        component={ApplyJob}
+        options={({navigation, route}) => ({
+          headerTitle: 'Apply Job',
+          headerTitleStyle: {color: Color.white},
+          headerStyle: {backgroundColor: Color.primary},
+          headerLeft: () => (
+            <View style={{marginHorizontal: 10}}>
+              <Icon
+                name="arrow-back"
+                size={30}
+                color={Color.white}
+                onPress={() => navigation.goBack()}
+              />
+            </View>
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="CompanyList"
+        component={CompanyList}
+        options={({navigation, route}) => ({
+          headerTitle: 'Company List',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {color: Color.black},
+          headerStyle: {backgroundColor: Color.white},
+          headerLeft: () => (
+            <View style={{marginHorizontal: 10}}>
+              <Icon
+                name="arrow-back"
+                size={30}
+                color={Color.black}
+                onPress={() => navigation.goBack()}
+              />
+            </View>
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="CompanyDetails"
+        component={CompanyDetails}
+        options={({navigation, route}) => ({
+          headerTitle: 'Company Details',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {color: Color.black},
+          headerStyle: {backgroundColor: Color.white},
+          headerLeft: () => (
+            <View style={{marginHorizontal: 10}}>
+              <Icon
+                name="arrow-back"
+                size={30}
+                color={Color.black}
+                onPress={() => navigation.goBack()}
+              />
+            </View>
+          ),
+        })}
+      />
+
+      <Stack.Screen
+        name="Filter"
+        component={FilterScreen}
+        options={({navigation, route}) => ({
+          headerTitle: '',
+          headerTitleStyle: {color: Color.black},
+          headerStyle: {backgroundColor: Color.white},
+          headerLeft: () => (
+            <View style={{marginHorizontal: 10}}>
+              <Icon
+                name="arrow-back"
+                size={30}
+                color={Color.black}
+                onPress={() => navigation.goBack()}
+              />
+            </View>
+          ),
+        })}
+      /> */}
     </Stack.Navigator>
   );
 };

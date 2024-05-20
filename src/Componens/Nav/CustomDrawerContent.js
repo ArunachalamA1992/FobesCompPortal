@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   Text,
   View,
@@ -9,22 +9,21 @@ import {
   FlatList,
   LayoutAnimation,
 } from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import Color from '../../Global/Color';
-import {Media} from '../../Global/Media';
-import {Gilmer} from '../../Global/FontFamily';
-import {Iconviewcomponent} from '../Icontag';
-import {Divider} from 'react-native-paper';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Divider } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {useSelector, useDispatch} from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {setCompleteProfile, setOnBoardVisible, setUserData} from '../../Redux';
+import Color from '../../Global/Color';
+import { Media } from '../../Global/Media';
+import { Gilmer } from '../../Global/FontFamily';
+import { Iconviewcomponent } from '../Icontag';
 import common_fn from '../../Config/common_fn';
 
 const CustomDrawerContent = props => {
   const [itemSelected, setItemSelected] = useState('');
   const userData = useSelector(state => state.UserReducer.userData);
-  var {first_name, last_name, name, email, role} = userData;
+  var { first_name, last_name, name, email, role } = userData;
   const dispatch = useDispatch();
 
   const [visible, setVisible] = useState(false);
@@ -88,7 +87,7 @@ const CustomDrawerContent = props => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: Color.white}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Color.white }}>
       <TouchableOpacity
         onPress={() => {
           props.navigation.navigate('ProfileTab');
@@ -111,126 +110,35 @@ const CustomDrawerContent = props => {
             marginTop: 20,
           }}
         />
-        <View style={{flex: 1, marginHorizontal: 5}}>
+        <View style={{ flex: 1, marginHorizontal: 5, marginVertical: 10 }}>
           <Text
             style={{
-              fontSize: 20,
+              fontSize: 16,
               color: Color.white,
               fontFamily: Gilmer.Bold,
               textTransform: 'capitalize',
             }}
             numberOfLines={1}>
-            {name}
+            Arunachalam Annamalai
           </Text>
           <Text
             style={{
-              fontSize: 14,
+              fontSize: 13,
               color: Color.white,
               fontFamily: Gilmer.SemiBold,
               marginVertical: 5,
             }}>
-            {email}
+            arunachalam@avanexa.com
           </Text>
         </View>
-        {/* <Icon
-          name="chevron-forward"
-          size={18}
-          color={Color.white}
-          style={{ marginRight: 10 }}
-        /> */}
       </TouchableOpacity>
-      {/* <FlatList
-        data={customDrawer}
-        showsVerticalScrollIndicator={false}
-        renderItem={({item, index}) => {
-          return (
-            <View
-              style={{
-                backgroundColor:
-                  itemSelected === item?.name ? Color.primary : Color.white,
-                marginVertical: 5,
-              }}>
-              <TouchableOpacity
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  marginHorizontal: 5,
-                  paddingVertical: 15,
-                  padding: 10,
-                }}
-                onPress={() => {
-                  setItemSelected(item?.name);
-                }}>
-                <Iconviewcomponent
-                  Icontag={item?.icontag}
-                  iconname={item?.icon}
-                  icon_size={22}
-                  icon_color={
-                    itemSelected === item?.name ? Color.white : Color.primary
-                  }
-                />
-                <Text
-                  style={{
-                    fontSize: 18,
-                    marginLeft: 10,
-                    color:
-                      itemSelected === item?.name ? Color.white : Color.black,
-                    fontFamily:
-                      itemSelected === item?.name ? Gilmer.Bold : Gilmer.Medium,
-                  }}>
-                  {item?.name}
-                </Text>
-              </TouchableOpacity>
-              {item?.id > 1 && item.id == 2 && (
-                <Divider style={{height: 1, marginVertical: 10}} />
-              )}
-            </View>
-          );
-        }}
-      />
-      <View
-        style={{
-          backgroundColor:
-            itemSelected === 'Logout' ? Color.primary : Color.white,
-          marginVertical: 5,
-        }}>
-        <TouchableOpacity
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginHorizontal: 5,
-            paddingVertical: 15,
-            padding: 10,
-          }}
-          onPress={() => {
-            setItemSelected('Logout');
-            props.navigation.navigate('Auth');
-          }}>
-          <Iconviewcomponent
-            Icontag={'MaterialCommunityIcons'}
-            iconname={'logout'}
-            icon_size={22}
-            icon_color={itemSelected === 'Logout' ? Color.white : Color.primary}
-          />
-          <Text
-            style={{
-              fontSize: 18,
-              marginLeft: 10,
-              color: itemSelected === 'Logout' ? Color.white : Color.black,
-              fontFamily:
-                itemSelected === 'Settings' ? Gilmer.Bold : Gilmer.Medium,
-            }}>
-            Log Out
-          </Text>
-        </TouchableOpacity>
-      </View> */}
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{marginVertical: 10, marginBottom: 50}}>
+        <View style={{ marginVertical: 10, marginBottom: 10 }}>
           <View
             style={{
               backgroundColor:
                 itemSelected === 'jobs' ? Color.primary : Color.white,
-              marginVertical: 5,
+              marginVertical: 0,
             }}>
             <TouchableOpacity
               style={{
@@ -269,7 +177,7 @@ const CustomDrawerContent = props => {
             style={{
               backgroundColor:
                 itemSelected === 'favorite' ? Color.primary : Color.white,
-              marginVertical: 5,
+              marginVertical: 0,
             }}>
             <TouchableOpacity
               style={{
@@ -304,7 +212,8 @@ const CustomDrawerContent = props => {
               </Text>
             </TouchableOpacity>
           </View>
-          <Divider style={{height: 1, marginVertical: 10}} />
+
+          <Divider style={{ height: 1, marginVertical: 10 }} />
           <View
             style={{
               backgroundColor:
@@ -360,10 +269,10 @@ const CustomDrawerContent = props => {
           <View
             style={{
               backgroundColor: Color.white,
-              marginVertical: 5,
+              marginVertical: 0,
             }}>
             {visible && (
-              <View style={{paddingHorizontal: 10}}>
+              <View style={{ paddingHorizontal: 10 }}>
                 <View
                   style={{
                     backgroundColor:
@@ -579,44 +488,6 @@ const CustomDrawerContent = props => {
               </Text>
             </TouchableOpacity>
           </View>
-          {/* <View
-            style={{
-              backgroundColor:
-                itemSelected === 'settings' ? Color.primary : Color.white,
-              marginVertical: 5,
-            }}>
-            <TouchableOpacity
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginHorizontal: 5,
-                paddingVertical: 15,
-                padding: 10,
-              }}
-              onPress={() => {
-                setItemSelected('settings');
-              }}>
-              <Iconviewcomponent
-                Icontag={'Ionicons'}
-                iconname={'settings'}
-                icon_size={24}
-                icon_color={
-                  itemSelected === 'settings' ? Color.white : Color.primary
-                }
-              />
-              <Text
-                style={{
-                  fontSize: 16,
-                  marginLeft: 10,
-                  color:
-                    itemSelected === 'settings' ? Color.white : Color.black,
-                  fontFamily:
-                    itemSelected === 'settings' ? Gilmer.Bold : Gilmer.Medium,
-                }}>
-                Settings
-              </Text>
-            </TouchableOpacity>
-          </View> */}
 
           <View
             style={{
@@ -640,11 +511,11 @@ const CustomDrawerContent = props => {
                 );
               }}>
               <Iconviewcomponent
-                Icontag={'Ionicons'}
+                Icontag={'Feather'}
                 iconname={
                   itemSelected === 'share'
-                    ? 'share-social-sharp'
-                    : 'share-social'
+                    ? 'share-2'
+                    : 'share-2'
                 }
                 icon_size={22}
                 icon_color={
@@ -663,6 +534,49 @@ const CustomDrawerContent = props => {
               </Text>
             </TouchableOpacity>
           </View>
+
+          <View
+            style={{
+              backgroundColor:
+                itemSelected === 'Settings' ? Color.primary : Color.white,
+              marginVertical: 0,
+            }}>
+            <TouchableOpacity
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginHorizontal: 5,
+                paddingVertical: 15,
+                padding: 10,
+              }}
+              onPress={() => {
+                setItemSelected('Settings');
+              }}>
+              <Iconviewcomponent
+                Icontag={'Feather'}
+                iconname={
+                  itemSelected === 'Settings'
+                    ? 'settings'
+                    : 'settings'
+                }
+                icon_size={22}
+                icon_color={
+                  itemSelected === 'Settings' ? Color.white : Color.primary
+                }
+              />
+              <Text
+                style={{
+                  fontSize: 16,
+                  marginLeft: 10,
+                  color: itemSelected === 'Settings' ? Color.white : Color.black,
+                  fontFamily:
+                    itemSelected === 'Settings' ? Gilmer.Bold : Gilmer.Medium,
+                }}>
+                Settings
+              </Text>
+            </TouchableOpacity>
+          </View>
+
           <View
             style={{
               backgroundColor:
@@ -681,8 +595,7 @@ const CustomDrawerContent = props => {
                 setItemSelected('Logout');
                 props.navigation.navigate('Auth');
                 AsyncStorage.clear();
-                dispatch(setUserData({}));
-                dispatch(setOnBoardVisible(false));
+                // dispatch(setUserData({}));
               }}>
               <Iconviewcomponent
                 Icontag={'MaterialCommunityIcons'}

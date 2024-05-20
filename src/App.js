@@ -23,6 +23,7 @@ import Profile from './Screens/Details/Profile';
 import Notification from './Screens/HomeScreens/Notification';
 import ApplicantDetails from './Screens/HomeScreens/ApplicantDetails';
 import JobApplicants from './Screens/JobPosted/JobApplicants';
+import CustomDrawerContent from './Componens/Nav/CustomDrawerContent';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -33,7 +34,8 @@ const MyDrawer = () => {
       <NavigationContainer ref={navigationRef}>
         <Drawer.Navigator
           initialRouteName="Home"
-          screenOptions={{swipeEnabled: false}}>
+          screenOptions={{swipeEnabled: false}}
+          drawerContent={props => <CustomDrawerContent {...props} />}>
           <Drawer.Screen
             name="Home"
             component={MainApp}

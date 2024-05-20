@@ -39,6 +39,7 @@ const Login = () => {
           email: email,
           password: password,
         };
+        navigation.navigate("TabNavigator")
       } else {
         common_fn.showToast('Invalid Email or Password');
       }
@@ -217,9 +218,10 @@ const Login = () => {
               justifyContent: 'center',
               alignItems: 'center',
             }}
-            onPress={() => {
-              navigation.navigate('ForgotPassword');
-            }}>
+            // onPress={() => {
+            //   navigation.navigate('ForgotPassword');
+            // }}
+            >
             <Text
               style={{
                 fontFamily: Gilmer.Medium,
