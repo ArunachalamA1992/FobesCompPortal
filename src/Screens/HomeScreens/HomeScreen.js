@@ -291,7 +291,7 @@ const HomeScreen = ({navigation}) => {
             mode="contained"
             onPress={async () => {
               try {
-                navigation.navigate('');
+                navigation.navigate('BuySubscriptions');
               } catch (err) {}
             }}
             style={{

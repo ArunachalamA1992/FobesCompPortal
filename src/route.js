@@ -40,7 +40,7 @@ export const HomeStack = () => {
             <TouchableOpacity
               style={{right: 10}}
               onPress={() => {
-                navigation.navigate('PromoteJob');
+                navigation.navigate('Notification');
               }}>
               <Badge
                 badgeStyle={{
@@ -84,15 +84,14 @@ export const HomeStack = () => {
         component={BuySubscriptions}
         options={({navigation, route}) => ({
           headerTitle: 'Buy Subscriptions',
-          headerTitleAlign: 'center',
-          headerTitleStyle: {color: Color.white},
-          headerStyle: {backgroundColor: Color.primary},
+          headerTitleStyle: {color: Color.black},
+          headerStyle: {backgroundColor: Color.white},
           headerLeft: () => (
             <View style={{marginHorizontal: 10}}>
               <Icon
                 name="arrow-back"
                 size={30}
-                color={Color.white}
+                color={Color.black}
                 onPress={() => navigation.goBack()}
               />
             </View>
@@ -119,165 +118,6 @@ export const HomeStack = () => {
           ),
         })}
       />
-      {/*  <Stack.Screen
-        name="TermsCondition"
-        component={TermsCondition}
-        options={({navigation, route}) => ({
-          headerTitle: 'Terms & Conditions',
-          headerTitleAlign: 'center',
-          headerTitleStyle: {color: Color.white},
-          headerStyle: {backgroundColor: Color.primary},
-          headerLeft: () => (
-            <View style={{marginHorizontal: 10}}>
-              <Icon
-                name="arrow-back"
-                size={30}
-                color={Color.white}
-                onPress={() => navigation.goBack()}
-              />
-            </View>
-          ),
-        })}
-      />
-      <Stack.Screen
-        name="PrivacyPolicy"
-        component={PrivacyPolicy}
-        options={({navigation, route}) => ({
-          headerTitle: 'Privacy Policy',
-          headerTitleStyle: {color: Color.white},
-          headerStyle: {backgroundColor: Color.primary},
-          headerLeft: () => (
-            <View style={{marginHorizontal: 10}}>
-              <Icon
-                name="arrow-back"
-                size={30}
-                color={Color.white}
-                onPress={() => navigation.goBack()}
-              />
-            </View>
-          ),
-        })}
-      />
-      <Stack.Screen
-        name="JobListScreen"
-        component={JobListScreen}
-        options={({navigation, route}) => ({
-          headerTitle: 'Job List',
-          headerTitleAlign: 'center',
-          headerTitleStyle: {color: Color.black},
-          headerStyle: {backgroundColor: Color.white},
-          headerLeft: () => (
-            <View style={{marginHorizontal: 10}}>
-              <Icon
-                name="arrow-back"
-                size={30}
-                color={Color.black}
-                onPress={() => navigation.goBack()}
-              />
-            </View>
-          ),
-        })}
-      />
-      <Stack.Screen
-        name="recommendedjob"
-        component={RecommendedListScreen}
-        options={({navigation, route}) => ({
-          headerTitle: 'Recommended Jobs',
-          headerTitleAlign: 'center',
-          headerTitleStyle: {color: Color.black},
-          headerStyle: {backgroundColor: Color.white},
-          headerLeft: () => (
-            <View style={{marginHorizontal: 10}}>
-              <Icon
-                name="arrow-back"
-                size={30}
-                color={Color.black}
-                onPress={() => navigation.goBack()}
-              />
-            </View>
-          ),
-        })}
-      />
-
-      <Stack.Screen
-        name="ApplyJob"
-        component={ApplyJob}
-        options={({navigation, route}) => ({
-          headerTitle: 'Apply Job',
-          headerTitleStyle: {color: Color.white},
-          headerStyle: {backgroundColor: Color.primary},
-          headerLeft: () => (
-            <View style={{marginHorizontal: 10}}>
-              <Icon
-                name="arrow-back"
-                size={30}
-                color={Color.white}
-                onPress={() => navigation.goBack()}
-              />
-            </View>
-          ),
-        })}
-      />
-      <Stack.Screen
-        name="CompanyList"
-        component={CompanyList}
-        options={({navigation, route}) => ({
-          headerTitle: 'Company List',
-          headerTitleAlign: 'center',
-          headerTitleStyle: {color: Color.black},
-          headerStyle: {backgroundColor: Color.white},
-          headerLeft: () => (
-            <View style={{marginHorizontal: 10}}>
-              <Icon
-                name="arrow-back"
-                size={30}
-                color={Color.black}
-                onPress={() => navigation.goBack()}
-              />
-            </View>
-          ),
-        })}
-      />
-      <Stack.Screen
-        name="CompanyDetails"
-        component={CompanyDetails}
-        options={({navigation, route}) => ({
-          headerTitle: 'Company Details',
-          headerTitleAlign: 'center',
-          headerTitleStyle: {color: Color.black},
-          headerStyle: {backgroundColor: Color.white},
-          headerLeft: () => (
-            <View style={{marginHorizontal: 10}}>
-              <Icon
-                name="arrow-back"
-                size={30}
-                color={Color.black}
-                onPress={() => navigation.goBack()}
-              />
-            </View>
-          ),
-        })}
-      />
-
-      <Stack.Screen
-        name="Filter"
-        component={FilterScreen}
-        options={({navigation, route}) => ({
-          headerTitle: '',
-          headerTitleStyle: {color: Color.black},
-          headerStyle: {backgroundColor: Color.white},
-          headerLeft: () => (
-            <View style={{marginHorizontal: 10}}>
-              <Icon
-                name="arrow-back"
-                size={30}
-                color={Color.black}
-                onPress={() => navigation.goBack()}
-              />
-            </View>
-          ),
-        })}
-      /> */}
     </Stack.Navigator>
   );
 };
@@ -541,7 +381,7 @@ const TabNavigator = () => {
                     Icontag={'Ionicons'}
                     iconname={'bookmark'}
                     icon_size={25}
-                    icon_color={color.primary}
+                    icon_color={Color.primary}
                   />
                 </View>
                 {/* <Text

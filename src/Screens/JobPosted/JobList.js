@@ -14,6 +14,7 @@ import {categories_data, job_posting} from '../../Config/Content';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import moment from 'moment';
 import common_fn from '../../Config/common_fn';
+import {Button} from 'react-native-paper';
 
 const {height} = Dimensions.get('screen');
 const JobList = ({navigation}) => {
@@ -188,6 +189,20 @@ const JobList = ({navigation}) => {
           );
         }}
       />
+      <Button
+        mode="contained"
+        onPress={async () => {
+          try {
+            navigation.navigate('BuySubscriptions');
+          } catch (err) {}
+        }}
+        style={{
+          backgroundColor: Color.primary,
+          marginHorizontal: 10,
+        }}
+        textColor={Color.white}>
+        Post Job +
+      </Button>
     </View>
   );
 };
