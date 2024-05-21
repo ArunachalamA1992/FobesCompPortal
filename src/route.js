@@ -19,6 +19,7 @@ import JobApplicants from './Screens/JobPosted/JobApplicants';
 import RecentJobList from './Screens/HomeScreens/RecentJobList';
 import BuySubscriptions from './Screens/BuySubscriptions';
 import PromoteJob from './Screens/SideMenu/PromoteJob';
+import {Gilmer} from './Global/FontFamily';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -31,7 +32,11 @@ export const HomeStack = () => {
         component={HomeScreen}
         options={({navigation}) => ({
           headerTitle: '',
-          headerTitleStyle: {color: Color.white},
+          headerTitleStyle: {
+            color: Color.white,
+            fontFamily: Gilmer.Bold,
+            fontSize: 18,
+          },
           headerStyle: {backgroundColor: Color.primary, elevation: 0},
           headerLeft: () => (
             <NavigationDrawerStructure navigation={navigation} home={true} />
@@ -65,7 +70,11 @@ export const HomeStack = () => {
         options={({navigation, route}) => ({
           headerTitle: 'Job Details',
           headerTitleAlign: 'center',
-          headerTitleStyle: {color: Color.white},
+          headerTitleStyle: {
+            color: Color.white,
+            fontFamily: Gilmer.Bold,
+            fontSize: 18,
+          },
           headerStyle: {backgroundColor: Color.primary},
           headerLeft: () => (
             <View style={{marginHorizontal: 10}}>
@@ -84,7 +93,11 @@ export const HomeStack = () => {
         component={BuySubscriptions}
         options={({navigation, route}) => ({
           headerTitle: 'Buy Subscriptions',
-          headerTitleStyle: {color: Color.black},
+          headerTitleStyle: {
+            color: Color.black,
+            fontFamily: Gilmer.Bold,
+            fontSize: 18,
+          },
           headerStyle: {backgroundColor: Color.white},
           headerLeft: () => (
             <View style={{marginHorizontal: 10}}>
@@ -101,7 +114,7 @@ export const HomeStack = () => {
       <Stack.Screen
         name="PromoteJob"
         component={PromoteJob}
-        options={{headerShown:false}}
+        options={{headerShown: false}}
       />
     </Stack.Navigator>
   );
@@ -116,7 +129,11 @@ export const SearchStack = () => {
         options={({navigation, route}) => ({
           headerTitle: '',
           headerTitleAlign: 'center',
-          headerTitleStyle: {color: Color.black},
+          headerTitleStyle: {
+            color: Color.black,
+            fontFamily: Gilmer.Bold,
+            fontSize: 18,
+          },
           headerStyle: {backgroundColor: Color.white},
           headerLeft: () => (
             <View style={{marginHorizontal: 10}}>
@@ -136,7 +153,11 @@ export const SearchStack = () => {
         options={({navigation, route}) => ({
           headerTitle: '',
           headerTitleAlign: 'center',
-          headerTitleStyle: {color: Color.black},
+          headerTitleStyle: {
+            color: Color.black,
+            fontFamily: Gilmer.Bold,
+            fontSize: 18,
+          },
           headerStyle: {backgroundColor: Color.white},
           headerLeft: () => (
             <View style={{marginHorizontal: 10}}>
@@ -163,7 +184,11 @@ export const SavedJobStack = () => {
         options={({navigation, route}) => ({
           headerTitle: 'Saved Candidates',
           headerTitleAlign: 'center',
-          headerTitleStyle: {color: Color.black},
+          headerTitleStyle: {
+            color: Color.black,
+            fontFamily: Gilmer.Bold,
+            fontSize: 18,
+          },
           headerStyle: {backgroundColor: Color.white},
           headerLeft: () => (
             <View style={{marginHorizontal: 10}}>
@@ -190,7 +215,11 @@ export const JobPostStack = () => {
         options={({navigation}) => ({
           headerTitle: 'Jobs',
           headerTitleAlign: 'center',
-          headerTitleStyle: {color: Color.black},
+          headerTitleStyle: {
+            color: Color.black,
+            fontFamily: Gilmer.Bold,
+            fontSize: 18,
+          },
           headerStyle: {backgroundColor: Color.white},
           headerLeft: () => (
             <View style={{marginHorizontal: 10}}>
@@ -209,7 +238,11 @@ export const JobPostStack = () => {
         component={JobApplicants}
         options={({navigation, route}) => ({
           headerTitle: route?.params?.item?.job_role,
-          headerTitleStyle: {color: Color.white},
+          headerTitleStyle: {
+            color: Color.white,
+            fontFamily: Gilmer.Bold,
+            fontSize: 18,
+          },
           headerStyle: {backgroundColor: Color.primary},
           headerLeft: () => (
             <View style={{marginHorizontal: 10}}>
@@ -234,7 +267,11 @@ export const JobPostStack = () => {
         options={({navigation}) => ({
           headerTitle: '',
           headerTitleAlign: 'center',
-          headerTitleStyle: {color: Color.black},
+          headerTitleStyle: {
+            color: Color.black,
+            fontFamily: Gilmer.Bold,
+            fontSize: 18,
+          },
           headerStyle: {backgroundColor: Color.white},
           headerLeft: () => (
             <View style={{marginHorizontal: 10}}>

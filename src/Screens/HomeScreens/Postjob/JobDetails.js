@@ -12,13 +12,14 @@ import StepIndicator from 'react-native-step-indicator';
 import {Dropdown} from 'react-native-element-dropdown';
 import Color from '../../../Global/Color';
 import {useNavigation} from '@react-navigation/native';
+import {Gilmer} from '../../../Global/FontFamily';
 
 const JobDetails = () => {
   const navigation = useNavigation();
   const [Category, setCategory] = useState(null);
   const [role, setRole] = useState(null);
-  const [tagInput, setTagInput] = useState("");
-  const [skillInput, setSkillInput] = useState("");
+  const [tagInput, setTagInput] = useState('');
+  const [skillInput, setSkillInput] = useState('');
   const [tags, setTags] = useState([]);
   const [skills, setSkills] = useState([]);
   const labels = ['JobDetails', 'Salary & Benefits', 'Advance Information'];
@@ -26,14 +27,14 @@ const JobDetails = () => {
   const customStyles = {
     stepIndicatorSize: 25,
     currentStepIndicatorSize: 30,
-    separatorStrokeWidth: 3,
+    separatorStrokeWidth: 4,
     currentStepStrokeWidth: 3,
     stepStrokeCurrentColor: '#309CD2',
     stepStrokeWidth: 3,
     stepStrokeFinishedColor: '#309CD2',
-    stepStrokeUnFinishedColor: '#aaaaaa',
+    stepStrokeUnFinishedColor: '#EAEAEF',
     separatorFinishedColor: '#309CD2',
-    separatorUnFinishedColor: '#aaaaaa',
+    separatorUnFinishedColor: '#EAEAEF',
     stepIndicatorFinishedColor: '#309CD2',
     stepIndicatorUnFinishedColor: '#ffffff',
     stepIndicatorCurrentColor: '#ffffff',
@@ -41,10 +42,10 @@ const JobDetails = () => {
     currentStepIndicatorLabelFontSize: 15,
     stepIndicatorLabelCurrentColor: '#309CD2',
     stepIndicatorLabelFinishedColor: '#ffffff',
-    stepIndicatorLabelUnFinishedColor: '#aaaaaa',
-    labelColor: '#999999',
+    stepIndicatorLabelUnFinishedColor: '#EAEAEF',
+    labelColor: '#EAEAEF',
     labelSize: 13,
-    currentStepLabelColor: '#309CD2',
+    currentStepLabelColor: Color.black,
   };
 
   const categories = [
@@ -79,134 +80,154 @@ const JobDetails = () => {
   );
 
   const createTags = () => {
-    if(tags.length < 6 || setTagInput != ""){
-      setTags([...tags,tagInput])
-      setTagInput("")
+    if (tags.length < 6 || setTagInput != '') {
+      setTags([...tags, tagInput]);
+      setTagInput('');
     } else {
-      null
+      null;
     }
-  }
+  };
 
   const createSkillTags = () => {
-    if(skills.length < 6 || setSkillInput != ""){
-      setSkills([...skills,skillInput])
-      setSkillInput("")
+    if (skills.length < 6 || setSkillInput != '') {
+      setSkills([...skills, skillInput]);
+      setSkillInput('');
     } else {
-      null
+      null;
     }
-  }
-
-  
+  };
 
   return (
-    <ScrollView
-      contentContainerStyle={styles.container}
-      showsVerticalScrollIndicator={false}>
+    <View style={{flex: 1, padding: 10, backgroundColor: Color.white}}>
       <StepIndicator
         customStyles={customStyles}
         currentPosition={0}
         stepCount={3}
         labels={labels}
       />
-      <View style={styles.inputContainer}>
-        <Text style={styles.h1}>Job Title<Text style={styles.star}>*</Text></Text>
-        <TextInput
-          style={styles.input}
-          placeholderTextColor={Color.smokeyGrey}
-          placeholder="Enter Job Title"
-        />
-      </View>
-      <View style={styles.dropDownContainer}>
-        <Text style={styles.h1}>Job Category *</Text>
-        <Dropdown
-          style={styles.dropdown}
-          containerStyle={styles.dropContainer}
-          itemTextStyle={styles.dropTextStyle}
-          placeholderStyle={styles.placeholderStyle}
-          selectedTextStyle={styles.selectedTextStyle}
-          iconStyle={styles.iconStyle}
-          iconColor={Color.smokeyGrey}
-          data={categories}
-          maxHeight={200}
-          labelField="label"
-          valueField="label"
-          placeholder="Design/Creative"
-          value={Category}
-          onChange={item => {
-            setCategory(item.label);
-          }}
-        />
-        <Text style={styles.h1}>Job Role <Text style={styles.star}>*</Text></Text>
-        <Dropdown
-          style={styles.dropdown}
-          containerStyle={styles.dropContainer}
-          itemTextStyle={styles.dropTextStyle}
-          placeholderStyle={styles.placeholderStyle}
-          selectedTextStyle={styles.selectedTextStyle}
-          iconStyle={styles.iconStyle}
-          iconColor={Color.smokeyGrey}
-          data={roles}
-          maxHeight={200}
-          labelField="label"
-          valueField="label"
-          placeholder="Select item"
-          value={role}
-          onChange={item => {
-            setRole(item.label);
-          }}
-        />
-      </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.h1}>Tags<Text style={styles.star}>*</Text></Text>
-        <TextInput
-          style={styles.input}
-          placeholderTextColor={Color.smokeyGrey}
-          placeholder="Enter Job Title"
-          value={tagInput}
-          onChangeText={text => setTagInput(text)}
-          onEndEditing={() => createTags()}
-        />
-        <Text style={styles.p}>Search or write tag and hit enter</Text>
-        <View style={styles.tagsContainer}>
-          {tags.map((tag, index) => (
-            <TagList item={tag} index={index} key={index} />
-          ))}
+      <ScrollView
+        contentContainerStyle={styles.container}
+        showsVerticalScrollIndicator={false}>
+        <View style={styles.inputContainer}>
+          <Text style={styles.h1}>
+            Job Title<Text style={styles.star}>*</Text>
+          </Text>
+          <TextInput
+            style={styles.input}
+            placeholderTextColor={Color.smokeyGrey}
+            placeholder="Enter Job Title"
+          />
         </View>
-      </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.h1}>Required Skills <Text style={styles.star}>*</Text></Text>
-        <TextInput
-          style={styles.input}
-          placeholderTextColor={Color.smokeyGrey}
-          placeholder="Enter Job Title"
-          value={skillInput}
-          onChangeText={text => setSkillInput(text)}
-          onEndEditing={() => createSkillTags()}
-        />
-        <Text style={styles.p}>Add 4 to 6 Skills to get best Candidates</Text>
-        <View style={styles.tagsContainer}>
-          {skills.map((tag, index) => (
-            <TagList item={tag} index={index} key={index} />
-          ))}
+        <View style={styles.dropDownContainer}>
+          <Text style={styles.h1}>Job Category *</Text>
+          <Dropdown
+            style={styles.dropdown}
+            containerStyle={styles.dropContainer}
+            itemTextStyle={styles.dropTextStyle}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            iconStyle={styles.iconStyle}
+            iconColor={Color.smokeyGrey}
+            data={categories}
+            maxHeight={200}
+            labelField="label"
+            valueField="label"
+            placeholder="Design/Creative"
+            value={Category}
+            onChange={item => {
+              setCategory(item.label);
+            }}
+          />
+          <Text style={styles.h1}>
+            Job Role <Text style={styles.star}>*</Text>
+          </Text>
+          <Dropdown
+            style={styles.dropdown}
+            containerStyle={styles.dropContainer}
+            itemTextStyle={styles.dropTextStyle}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            iconStyle={styles.iconStyle}
+            iconColor={Color.smokeyGrey}
+            data={roles}
+            maxHeight={200}
+            labelField="label"
+            valueField="label"
+            placeholder="Select item"
+            value={role}
+            onChange={item => {
+              setRole(item.label);
+            }}
+          />
         </View>
-      </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.h1}>Required Skills <Text style={styles.star}>*</Text></Text>
-        <TextInput
-          style={styles.input}
-          multiline={true}
-          numberOfLines={4}
-          placeholderTextColor={Color.smokeyGrey}
-          textAlignVertical='top'
-          placeholder="Enter Job Title"
-        />
-      </View>
-      <TouchableOpacity
-        style={styles.nextView}
-        onPress={() => navigation.navigate('SalaryandBenefits')}>
-        <Text style={styles.next}>Next</Text>
-      </TouchableOpacity>
-    </ScrollView>
+        <View style={styles.inputContainer}>
+          <Text style={styles.h1}>
+            Tags<Text style={styles.star}>*</Text>
+          </Text>
+          <TextInput
+            style={styles.input}
+            placeholderTextColor={Color.smokeyGrey}
+            placeholder="Enter Job Title"
+            value={tagInput}
+            onChangeText={text => setTagInput(text)}
+            onEndEditing={() => createTags()}
+          />
+          {tags?.length > 0 && (
+            <>
+              <Text style={styles.p}>Search or write tag and hit enter</Text>
+              <View style={styles.tagsContainer}>
+                {tags.map((tag, index) => (
+                  <TagList item={tag} index={index} key={index} />
+                ))}
+              </View>
+            </>
+          )}
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.h1}>
+            Required Skills <Text style={styles.star}>*</Text>
+          </Text>
+          <TextInput
+            style={styles.input}
+            placeholderTextColor={Color.smokeyGrey}
+            placeholder="Enter Job Title"
+            value={skillInput}
+            onChangeText={text => setSkillInput(text)}
+            onEndEditing={() => createSkillTags()}
+          />
+          {skills?.length > 0 && (
+            <>
+              <Text style={styles.p}>
+                Add 4 to 6 Skills to get best Candidates
+              </Text>
+              <View style={styles.tagsContainer}>
+                {skills.map((tag, index) => (
+                  <TagList item={tag} index={index} key={index} />
+                ))}
+              </View>
+            </>
+          )}
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.h1}>
+            Job Description <Text style={styles.star}>*</Text>
+          </Text>
+          <TextInput
+            style={styles.input}
+            multiline={true}
+            numberOfLines={4}
+            placeholderTextColor={Color.smokeyGrey}
+            textAlignVertical="top"
+            placeholder="Enter Job Title"
+          />
+        </View>
+        <TouchableOpacity
+          style={styles.nextView}
+          onPress={() => navigation.navigate('SalaryandBenefits')}>
+          <Text style={styles.next}>Next</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </View>
   );
 };
 
@@ -220,62 +241,70 @@ const styles = StyleSheet.create({
     gap: 15,
   },
   inputContainer: {
-    paddingHorizontal: 20,
     gap: 15,
   },
   h1: {
     color: Color.black,
     fontSize: 16,
+    fontFamily: Gilmer.Medium,
   },
   h2: {
     color: Color.black,
     fontSize: 20,
+    fontFamily: Gilmer.Medium,
   },
   p: {
     color: Color.black,
     fontSize: 14,
+    fontFamily: Gilmer.Medium,
   },
   p2: {
     color: Color.white,
+    fontFamily: Gilmer.Medium,
   },
   star: {
     color: Color.red,
+    fontFamily: Gilmer.Medium,
   },
   input: {
-    backgroundColor: Color.softGrey,
+    backgroundColor: Color.Fantasy,
     fontSize: 16,
+    borderWidth: 1,
     paddingHorizontal: 10,
-    borderWidth: 0.5,
-    borderColor: Color.smokeyGrey,
+    borderColor: Color.lightgrey,
     borderRadius: 5,
   },
   ////
   dropDownContainer: {
-    paddingHorizontal: 15,
     gap: 15,
   },
   dropdown: {
-    margin: height * 0.008,
-    height: height * 0.06,
-    width: width * 0.88,
-    backgroundColor: Color.softGrey,
-    borderColor: 'gray',
-    borderWidth: 0.5,
+    // margin: height * 0.008,
+    // height: height * 0.06,
+    // width: width * 0.88,
+    height: 45,
+    backgroundColor: Color.Fantasy,
+    borderColor: Color.lightgrey,
+    borderWidth: 1,
     borderRadius: 5,
   },
   dropContainer: {
     color: Color.black,
+    fontFamily: Gilmer.Medium,
   },
   placeholderStyle: {
     color: Color.smokeyGrey,
     fontSize: 16,
+    fontFamily: Gilmer.Medium,
     marginLeft: width * 0.04,
   },
   dropTextStyle: {
     color: Color.black,
+    fontFamily: Gilmer.Medium,
   },
   selectedTextStyle: {
     color: Color.black,
+    fontFamily: Gilmer.Medium,
     fontSize: 16,
     marginLeft: width * 0.04,
   },
@@ -299,22 +328,22 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   tagsContainer: {
-    flexWrap: "wrap",
-    width: width* 0.9,
-    Height: height* 0.5,
-    resizeMode: "stretch",
+    flexWrap: 'wrap',
+    width: width * 0.9,
+    Height: height * 0.5,
+    resizeMode: 'stretch',
     flexDirection: 'row',
   },
   next: {
     color: Color.white,
-    fontSize: 20,
+    fontSize: 18,
+    fontFamily: Gilmer.Medium,
     textAlign: 'center',
     backgroundColor: Color.primary,
     paddingVertical: 10,
-    marginHorizontal: 18,
     marginTop: 30,
-    marginBottom: 40,
-    borderRadius: 8,
+    // marginBottom: 40,
+    borderRadius: 5,
   },
 });
 

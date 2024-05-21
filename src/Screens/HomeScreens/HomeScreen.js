@@ -291,8 +291,7 @@ const HomeScreen = ({navigation}) => {
             mode="contained"
             onPress={async () => {
               try {
-                // navigation.navigate('BuySubscriptions');
-                navigation.navigate('PromoteJob');
+                navigation.navigate('JobDetails');
               } catch (err) {}
             }}
             style={{
