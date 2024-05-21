@@ -21,6 +21,9 @@ import { Iconviewcomponent } from './Componens/Icontag';
 import Color from './Global/Color';
 import HomeScreen from './Screens/HomeScreens/HomeScreen';
 import JobDetails from './Screens/HomeScreens/Postjob/JobDetails';
+import SalaryandBenefits from './Screens/HomeScreens/Postjob/SalaryandBenefits';
+import AdvanceInformation from './Screens/HomeScreens/Postjob/AdvanceInformation';
+import Congratulations from './Screens/HomeScreens/Postjob/Congratulations';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -82,6 +85,51 @@ export const HomeStack = () => {
             </View>
           ),
         })}
+      />
+      <Stack.Screen
+        name="SalaryandBenefits"
+        component={SalaryandBenefits}
+        options={({navigation, route}) => ({
+          headerTitle: 'Salary & Benefits',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {color: Color.white},
+          headerStyle: {backgroundColor: Color.primary},
+          headerLeft: () => (
+            <View style={{marginHorizontal: 10}}>
+              <Icon
+                name="arrow-back"
+                size={30}
+                color={Color.white}
+                onPress={() => navigation.goBack()}
+              />
+            </View>
+          ),
+        })}
+      />
+       <Stack.Screen
+        name="AdvanceInformation"
+        component={AdvanceInformation}
+        options={({navigation, route}) => ({
+          headerTitle: 'Advance Information',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {color: Color.white},
+          headerStyle: {backgroundColor: Color.primary},
+          headerLeft: () => (
+            <View style={{marginHorizontal: 10}}>
+              <Icon
+                name="arrow-back"
+                size={30}
+                color={Color.white}
+                onPress={() => navigation.goBack()}
+              />
+            </View>
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="Congratulations"
+        component={Congratulations}
+        options={{headerShown: false}}
       />
    {/*   <Stack.Screen
         name="ContactUs"

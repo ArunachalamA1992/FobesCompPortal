@@ -32,4 +32,5 @@ export default {
   lightYellow: '#FFC72C',
   darkBlue: '#19398C',
   purple: '#A020F0',
+  lightSky: "#DBF3FF",
 };
