@@ -24,6 +24,11 @@ import Notification from './Screens/HomeScreens/Notification';
 import ApplicantDetails from './Screens/HomeScreens/ApplicantDetails';
 import JobApplicants from './Screens/JobPosted/JobApplicants';
 import CustomDrawerContent from './Componens/Nav/CustomDrawerContent';
+import Congratulations from './Screens/HomeScreens/Postjob/Congratulations';
+import AdvanceInformation from './Screens/HomeScreens/Postjob/AdvanceInformation';
+import SalaryandBenefits from './Screens/HomeScreens/Postjob/SalaryandBenefits';
+import RecentJobList from './Screens/HomeScreens/RecentJobList';
+import HomeScreen from './Screens/HomeScreens/HomeScreen';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -252,6 +257,105 @@ const MainApp = () => {
             ),
           })}
         />
+        
+      <Stack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={({navigation}) => ({
+          headerTitle: '',
+          headerTitleStyle: {color: Color.white},
+          headerStyle: {backgroundColor: Color.primary, elevation: 0},
+          headerLeft: () => (
+            <NavigationDrawerStructure navigation={navigation} home={true} />
+          ),
+          headerRight: () => (
+            <TouchableOpacity
+              style={{right: 10}}
+              onPress={() => {
+                navigation.navigate('Notification');
+              }}>
+              <Badge
+                badgeStyle={{
+                  backgroundColor: Color.red,
+                }}
+                style={{position: 'absolute', zIndex: 1, top: -5, right: -5}}>
+                {0}
+              </Badge>
+              <Iconviewcomponent
+                Icontag={'Ionicons'}
+                iconname={'notifications'}
+                icon_size={26}
+                icon_color={Color.white}
+              />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="RecentJob"
+        component={RecentJobList}
+        options={({navigation, route}) => ({
+          headerTitle: 'Job Details',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {color: Color.white},
+          headerStyle: {backgroundColor: Color.primary},
+          headerLeft: () => (
+            <View style={{marginHorizontal: 10}}>
+              <Icon
+                name="arrow-back"
+                size={30}
+                color={Color.white}
+                onPress={() => navigation.goBack()}
+              />
+            </View>
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="SalaryandBenefits"
+        component={SalaryandBenefits}
+        options={({navigation, route}) => ({
+          headerTitle: 'Salary & Benefits',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {color: Color.white},
+          headerStyle: {backgroundColor: Color.primary},
+          headerLeft: () => (
+            <View style={{marginHorizontal: 10}}>
+              <Icon
+                name="arrow-back"
+                size={30}
+                color={Color.white}
+                onPress={() => navigation.goBack()}
+              />
+            </View>
+          ),
+        })}
+      />
+       <Stack.Screen
+        name="AdvanceInformation"
+        component={AdvanceInformation}
+        options={({navigation, route}) => ({
+          headerTitle: 'Advance Information',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {color: Color.white},
+          headerStyle: {backgroundColor: Color.primary},
+          headerLeft: () => (
+            <View style={{marginHorizontal: 10}}>
+              <Icon
+                name="arrow-back"
+                size={30}
+                color={Color.white}
+                onPress={() => navigation.goBack()}
+              />
+            </View>
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="Congratulations"
+        component={Congratulations}
+        options={{headerShown: false}}
+      />
         <Stack.Screen
           name="ProfileCompletion"
           component={ProfileCompletion}
