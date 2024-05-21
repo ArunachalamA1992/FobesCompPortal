@@ -58,7 +58,7 @@ const ProfileCompletion = ({navigation}) => {
         mode="contained"
         onPress={async () => {
           try {
-            navigation.navigate('ProfileCompletion');
+            navigation.navigate('JobDetails');
           } catch (err) {}
         }}
         style={{

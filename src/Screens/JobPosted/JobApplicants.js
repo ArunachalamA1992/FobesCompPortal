@@ -134,8 +134,9 @@ const Applies = ({categories_data, navigation}) => {
                   style={{
                     backgroundColor: Color.white,
                     marginHorizontal: 10,
-                    borderWidth: 1.5,
+                    borderWidth: 1,
                     borderColor: Color.primary,
+                    borderRadius: 50,
                   }}
                   textColor={Color.primary}>
                   Shortlist

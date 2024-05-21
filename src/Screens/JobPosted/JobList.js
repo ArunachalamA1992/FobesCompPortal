@@ -193,7 +193,7 @@ const JobList = ({navigation}) => {
         mode="contained"
         onPress={async () => {
           try {
-            navigation.navigate('BuySubscriptions');
+            navigation.navigate('JobDetails');
           } catch (err) {}
         }}
         style={{
