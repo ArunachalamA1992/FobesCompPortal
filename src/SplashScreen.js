@@ -48,7 +48,7 @@ const SplashScreen = ({navigation}) => {
 
       const user_data = await AsyncStorage.getItem('user_data');
       if (!user_data) {
-        navigation.replace('Auth');
+        navigation.replace('OnboardOne');
         return;
       }
 
