@@ -101,22 +101,7 @@ export const HomeStack = () => {
       <Stack.Screen
         name="PromoteJob"
         component={PromoteJob}
-        options={({navigation, route}) => ({
-          headerTitle: 'Promote Your Job',
-          headerTitleAlign: 'center',
-          headerTitleStyle: {color: Color.white},
-          headerStyle: {backgroundColor: Color.primary},
-          headerLeft: () => (
-            <View style={{marginHorizontal: 10}}>
-              <Icon
-                name="arrow-back"
-                size={30}
-                color={Color.white}
-                onPress={() => navigation.goBack()}
-              />
-            </View>
-          ),
-        })}
+        options={{headerShown:false}}
       />
     </Stack.Navigator>
   );

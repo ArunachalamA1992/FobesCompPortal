@@ -6180,7 +6180,11 @@ react-native-document-picker@^9.2.0:
 
 react-native-element-dropdown@^2.12.0:
   version "2.12.0"
+<<<<<<< HEAD
+  resolved "https://registry.yarnpkg.com/react-native-element-dropdown/-/react-native-element-dropdown-2.12.0.tgz#6d1f47384fe3924a435d482449d430b53bc4cd4c"
+=======
   resolved "https://registry.npmjs.org/react-native-element-dropdown/-/react-native-element-dropdown-2.12.0.tgz"
+>>>>>>> 9e8395bded86a49fcd2225eef979a12cab6b2279
   integrity sha512-Zi9a4vGPztXVdvogg5c2a7xLZDB30YqsXH5EqbeHw6WAnoj5dkj4o/HjfZtxu2DHuT/ipBXDBo5gLG0gDMm5Nw==
   dependencies:
     lodash "^4.17.21"
@@ -6324,7 +6328,7 @@ react-native-skeleton-placeholder@^5.2.4:
 
 react-native-step-indicator@^1.0.3:
   version "1.0.3"
-  resolved "https://registry.npmjs.org/react-native-step-indicator/-/react-native-step-indicator-1.0.3.tgz"
+  resolved "https://registry.yarnpkg.com/react-native-step-indicator/-/react-native-step-indicator-1.0.3.tgz#d136ec88639485a338c8ce281035aefd9d169f8f"
   integrity sha512-WwTb6lpJl0T7MV59sus1utoEQuqbuWHq6V0R0iDWmlPRFjM0qirhTNTS5on1+V9Qmc9dsUCT380/mRgDF+U6zw==
 
 react-native-tab-view@^3.5.2:
