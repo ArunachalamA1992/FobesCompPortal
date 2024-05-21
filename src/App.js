@@ -59,7 +59,7 @@ const MainApp = () => {
   return (
     <>
       <StatusBar backgroundColor={Color.primary} />
-      <Stack.Navigator initialRouteName="Splash">
+      <Stack.Navigator initialRouteName="TabNavigator">
         <Stack.Screen
           name="Splash"
           component={SplashScreen}

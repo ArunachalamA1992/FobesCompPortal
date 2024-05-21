@@ -291,7 +291,8 @@ const HomeScreen = ({navigation}) => {
             mode="contained"
             onPress={async () => {
               try {
-                navigation.navigate('BuySubscriptions');
+                // navigation.navigate('BuySubscriptions');
+                navigation.navigate('PromoteJob');
               } catch (err) {}
             }}
             style={{
@@ -356,9 +357,9 @@ const HomeScreen = ({navigation}) => {
                 style={{padding: 5}}>
                 <Text
                   style={{
-                    fontSize: 16,
+                    fontSize: 14,
                     color: Color.lightBlack,
-                    fontFamily: Gilmer.Bold,
+                    fontFamily: Gilmer.Medium,
                     paddingHorizontal: 10,
                   }}>
                   View All
