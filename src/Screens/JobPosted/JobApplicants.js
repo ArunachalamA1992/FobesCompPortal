@@ -26,6 +26,7 @@ import fetchData from '../../Config/fetchData';
 import {Media} from '../../Global/Media';
 import common_fn from '../../Config/common_fn';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import {base_image_url} from '../../Config/base_url';
 
 const {height} = Dimensions.get('screen');
 const Applies = ({
@@ -294,7 +295,10 @@ const Applies = ({
                     )}
                     <View style={styles.header}>
                       {item?.photo != null ? (
-                        <Image source={item?.photo} style={styles.image} />
+                        <Image
+                          source={{uri: base_image_url + item?.photo}}
+                          style={styles.image}
+                        />
                       ) : (
                         <Image source={Media.user} style={styles.image} />
                       )}
@@ -570,7 +574,10 @@ const Shortlisted = ({navigation, job_posting, token, loading}) => {
                     padding: 15,
                   }}>
                   {item?.photo != null ? (
-                    <Image source={item?.photo} style={styles.image} />
+                    <Image
+                      source={{uri: base_image_url + item?.photo}}
+                      style={styles.image}
+                    />
                   ) : (
                     <Image source={Media.user} style={styles.image} />
                   )}
@@ -756,7 +763,10 @@ const Rejected = ({navigation, job_posting, token, loading}) => {
                     padding: 15,
                   }}>
                   {item?.photo != null ? (
-                    <Image source={item?.photo} style={styles.image} />
+                    <Image
+                      source={{uri: base_image_url + item?.photo}}
+                      style={styles.image}
+                    />
                   ) : (
                     <Image source={Media.user} style={styles.image} />
                   )}

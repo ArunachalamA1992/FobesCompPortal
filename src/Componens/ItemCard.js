@@ -14,6 +14,7 @@ import fetchData from '../Config/fetchData';
 import common_fn from '../Config/common_fn';
 import {useSelector} from 'react-redux';
 import {Media} from '../Global/Media';
+import {base_image_url} from '../Config/base_url';
 
 const ItemCard = props => {
   const {item, navigation, getData} = props;
@@ -71,7 +72,10 @@ const ItemCard = props => {
       style={styles.card}>
       <View style={styles.header}>
         {item?.photo != null ? (
-          <Image source={item?.photo} style={styles.image} />
+          <Image
+            source={{uri: base_image_url + item?.photo}}
+            style={styles.image}
+          />
         ) : (
           <Image source={Media.user} style={styles.image} />
         )}

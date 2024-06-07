@@ -24,10 +24,12 @@ import {setUserData} from '../../Redux';
 import {useDispatch, useSelector} from 'react-redux';
 import fetchData from '../../Config/fetchData';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import {base_image_url} from '../../Config/base_url';
+import {SafeAreaView} from 'react-native';
 
 const All = ({acticityData, navigation, activityLoading, token}) => {
   return (
-    <View style={{flex: 1}}>
+    <SafeAreaView style={{flex: 1}}>
       {activityLoading ? (
         <View style={{padding: 10}}>
           <SkeletonPlaceholder>
@@ -114,7 +116,7 @@ const All = ({acticityData, navigation, activityLoading, token}) => {
                 }}>
                 {item?.image != null ? (
                   <Image
-                    source={item?.image}
+                    source={{uri: base_image_url + item?.image}}
                     style={{width: 70, height: 70, resizeMode: 'contain'}}
                   />
                 ) : (
@@ -212,12 +214,12 @@ const All = ({acticityData, navigation, activityLoading, token}) => {
           showsVerticalScrollIndicator={false}
         />
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 const Called = ({acticityData, navigation, activityLoading, token}) => {
   return (
-    <View style={{flex: 1}}>
+    <SafeAreaView style={{flex: 1}}>
       {activityLoading ? (
         <View style={{padding: 10}}>
           <SkeletonPlaceholder>
@@ -304,7 +306,7 @@ const Called = ({acticityData, navigation, activityLoading, token}) => {
                 }}>
                 {item?.image != null ? (
                   <Image
-                    source={item?.image}
+                    source={{uri: base_image_url + item?.image}}
                     style={{width: 70, height: 70, resizeMode: 'contain'}}
                   />
                 ) : (
@@ -398,12 +400,12 @@ const Called = ({acticityData, navigation, activityLoading, token}) => {
           showsVerticalScrollIndicator={false}
         />
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 const Viewed = ({acticityData, navigation, activityLoading, token}) => {
   return (
-    <View style={{flex: 1}}>
+    <SafeAreaView style={{flex: 1}}>
       {activityLoading ? (
         <View style={{padding: 10}}>
           <SkeletonPlaceholder>
@@ -490,7 +492,7 @@ const Viewed = ({acticityData, navigation, activityLoading, token}) => {
                 }}>
                 {item?.image != null ? (
                   <Image
-                    source={item?.image}
+                    source={{uri: base_image_url + item?.image}}
                     style={{width: 70, height: 70, resizeMode: 'contain'}}
                   />
                 ) : (
@@ -567,7 +569,12 @@ const Viewed = ({acticityData, navigation, activityLoading, token}) => {
                   marginVertical: 10,
                   width: '100%',
                 }}>
-                <Icon name="mail" size={25} color={Color.primary} />
+                <MCIcon
+                  name="account-search"
+                  size={20}
+                  color={Color.primary}
+                  style={{padding: 10}}
+                />
                 <Text
                   style={{
                     fontSize: 14,
@@ -576,7 +583,7 @@ const Viewed = ({acticityData, navigation, activityLoading, token}) => {
                     marginVertical: 5,
                     fontFamily: Gilmer.Bold,
                   }}>
-                  No Mailed
+                  No Viewed
                 </Text>
               </View>
             );
@@ -584,12 +591,12 @@ const Viewed = ({acticityData, navigation, activityLoading, token}) => {
           showsVerticalScrollIndicator={false}
         />
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 const Mailed = ({acticityData, navigation, activityLoading, token}) => {
   return (
-    <View style={{flex: 1}}>
+    <SafeAreaView style={{flex: 1}}>
       {activityLoading ? (
         <View style={{padding: 10}}>
           <SkeletonPlaceholder>
@@ -676,7 +683,7 @@ const Mailed = ({acticityData, navigation, activityLoading, token}) => {
                 }}>
                 {item?.image != null ? (
                   <Image
-                    source={item?.image}
+                    source={{uri: base_image_url + item?.image}}
                     style={{width: 70, height: 70, resizeMode: 'contain'}}
                   />
                 ) : (
@@ -770,7 +777,7 @@ const Mailed = ({acticityData, navigation, activityLoading, token}) => {
           showsVerticalScrollIndicator={false}
         />
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -1157,7 +1164,7 @@ const HomeScreen = ({navigation}) => {
           </SkeletonPlaceholder>
         </View>
       ) : (
-        <View>
+        <View style={{flex: 1}}>
           <View
             style={{
               backgroundColor: Color.primary,
@@ -1487,7 +1494,9 @@ const HomeScreen = ({navigation}) => {
                 renderScene={renderScene}
                 swipeEnabled={false}
                 onIndexChange={setIndex}
-                // style={{height: YourActivitiesData?.length * 100 + 50 + 10 + 50}}
+                // style={{
+                //   height: acticityData?.length * 100 + 50 + 10 + 50,
+                // }}
                 style={{flex: 1}}
                 initialLayout={{width: layout.width}}
                 renderTabBar={props => {
@@ -1499,17 +1508,14 @@ const HomeScreen = ({navigation}) => {
                         height: 50,
                         marginVertical: 10,
                       }}
-                      scrollEnabled={true}
                       labelStyle={{
                         color: Color.primary,
                         fontSize: 14,
-                        fontFamily: Gilmer.Medium,
+                        fontFamily: Gilmer.Bold,
                         borderBottomColor: Color.primary,
                         justifyContent: 'space-evenly',
-                        flexDirection: 'row',
                         alignItems: 'center',
                         textAlign: 'center',
-                        textTransform: 'capitalize',
                       }}
                       indicatorStyle={{
                         backgroundColor: Color.primary,

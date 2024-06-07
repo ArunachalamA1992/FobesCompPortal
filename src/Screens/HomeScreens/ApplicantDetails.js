@@ -25,6 +25,7 @@ import fetchData from '../../Config/fetchData';
 import {useSelector} from 'react-redux';
 import {Dropdown} from 'react-native-element-dropdown';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import {base_image_url} from '../../Config/base_url';
 
 const {height} = Dimensions.get('window');
 const AboutProfile = ({navigation, itemData}) => {
@@ -952,7 +953,10 @@ const ApplicantDetails = ({navigation, route}) => {
             </View>
             <View style={styles.header}>
               {itemData?.photo != null ? (
-                <Image source={itemData?.photo} style={styles.image} />
+                <Image
+                  source={{uri: base_image_url + itemData?.photo}}
+                  style={styles.image}
+                />
               ) : (
                 <Image source={Media.user} style={styles.image} />
               )}
