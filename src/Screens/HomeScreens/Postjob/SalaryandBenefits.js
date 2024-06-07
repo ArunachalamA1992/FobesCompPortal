@@ -1,5 +1,7 @@
 import {
   Dimensions,
+  Modal,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -7,69 +9,157 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import StepIndicator from 'react-native-step-indicator';
 import Color from '../../../Global/Color';
 import {Dropdown} from 'react-native-element-dropdown';
 import {useNavigation} from '@react-navigation/native';
 import {Gilmer} from '../../../Global/FontFamily';
+import fetchData from '../../../Config/fetchData';
+import {useSelector} from 'react-redux';
+import {Button} from 'react-native-elements';
+import common_fn from '../../../Config/common_fn';
 
-const SalaryandBenefits = () => {
+const labels = ['JobDetails', 'Salary & Benefits', 'Advance Information'];
+
+const customStyles = {
+  stepIndicatorSize: 25,
+  currentStepIndicatorSize: 30,
+  separatorStrokeWidth: 4,
+  currentStepStrokeWidth: 3,
+  stepStrokeCurrentColor: '#309CD2',
+  stepStrokeWidth: 3,
+  stepStrokeFinishedColor: '#309CD2',
+  stepStrokeUnFinishedColor: '#EAEAEF',
+  separatorFinishedColor: '#309CD2',
+  separatorUnFinishedColor: '#EAEAEF',
+  stepIndicatorFinishedColor: '#309CD2',
+  stepIndicatorUnFinishedColor: '#ffffff',
+  stepIndicatorCurrentColor: '#ffffff',
+  stepIndicatorLabelFontSize: 10,
+  currentStepIndicatorLabelFontSize: 15,
+  stepIndicatorLabelCurrentColor: '#309CD2',
+  stepIndicatorLabelFinishedColor: '#ffffff',
+  stepIndicatorLabelUnFinishedColor: '#EAEAEF',
+  labelColor: '#EAEAEF',
+  labelSize: 13,
+  currentStepLabelColor: Color.black,
+};
+const SalaryandBenefits = ({route}) => {
+  const [jobTitle] = useState(route.params.jobTitle);
+  const [selectedCategory] = useState(route.params.Category);
+  const [selectedRole] = useState(route.params.role);
+  const [selectedSkills] = useState(route.params.selectedSkills);
+  const [selectedTags] = useState(route.params.selectedTags);
+  const [description] = useState(route.params.description);
   const navigation = useNavigation();
-  const [salaryRange, setSalaryRange] = useState('');
-  const [salaryType, setSalaryType] = useState('');
-  const [selectedTags, setSelectedTags] = useState([]);
-  const tags = [
-    'Provident Fund',
-    'Paid Sick time',
-    'Leave enhancement',
-    'Work from home',
-    'Health Insurance',
-    'Cell Phone reimbursement',
-  ];
+  const [salaryRange, setSalaryRange] = useState({});
+  const [min, setMin] = useState(0);
+  const [max, setMax] = useState(0);
+  const [BenifitsVisible, setBenifitsVisible] = useState(false);
+  const [salaryType, setSalaryType] = useState({});
+  const [benifitsData, setBenifitsData] = useState([]);
+  const [queryBenefits, setQueryBenefits] = useState('');
+  const [selectedBenifits, setSelectedBenifits] = useState([]);
+  const [benifitsSelectedItem, setBenifitsSelectedItem] = useState([]);
+  const [salaryTypeData, setSalaryTypeData] = useState([]);
+  const userData = useSelector(state => state.UserReducer.userData);
+  var {token} = userData;
 
-  const labels = ['JobDetails', 'Salary & Benefits', 'Advance Information'];
+  const [SalaryRangeData] = useState([
+    {
+      id: 1,
+      name: 'Salary Range',
+      value: 'range',
+    },
+    {
+      id: 2,
+      name: 'Custom Salary',
+      value: 'custom',
+    },
+  ]);
 
-  const customStyles = {
-    stepIndicatorSize: 25,
-    currentStepIndicatorSize: 30,
-    separatorStrokeWidth: 4,
-    currentStepStrokeWidth: 3,
-    stepStrokeCurrentColor: '#309CD2',
-    stepStrokeWidth: 3,
-    stepStrokeFinishedColor: '#309CD2',
-    stepStrokeUnFinishedColor: '#EAEAEF',
-    separatorFinishedColor: '#309CD2',
-    separatorUnFinishedColor: '#EAEAEF',
-    stepIndicatorFinishedColor: '#309CD2',
-    stepIndicatorUnFinishedColor: '#ffffff',
-    stepIndicatorCurrentColor: '#ffffff',
-    stepIndicatorLabelFontSize: 10,
-    currentStepIndicatorLabelFontSize: 15,
-    stepIndicatorLabelCurrentColor: '#309CD2',
-    stepIndicatorLabelFinishedColor: '#ffffff',
-    stepIndicatorLabelUnFinishedColor: '#EAEAEF',
-    labelColor: '#EAEAEF',
-    labelSize: 13,
-    currentStepLabelColor: Color.black,
-  };
-
-  const salaryTypes = [
-    {label: 'Item 1', value: '1'},
-    {label: 'Item 2', value: '2'},
-    {label: 'Item 3', value: '3'},
-    {label: 'Item 4', value: '4'},
-  ];
-
-  const handleBenefits = tag => {
-    if (selectedTags.includes(tag)) {
-      const updatedTags = selectedTags.filter(item => item !== tag);
-      setSelectedTags(updatedTags);
+  const handleBenifitsPress = itemId => {
+    if (benifitsSelectedItem.includes(itemId)) {
+      setBenifitsSelectedItem(
+        benifitsSelectedItem?.filter(single => single !== itemId),
+      );
+      setSelectedBenifits(
+        selectedBenifits?.filter(single => single.benefit_id !== itemId),
+      );
     } else {
-      setSelectedTags([...selectedTags, tag]);
+      setBenifitsSelectedItem([...benifitsSelectedItem, itemId]);
+      const selectedItem = benifitsData.find(
+        single => single.benefit_id === itemId,
+      );
+      setSelectedBenifits([...selectedBenifits, selectedItem]);
     }
   };
 
+  useEffect(() => {
+    getData();
+  }, [getData]);
+
+  const getData = async () => {
+    try {
+      const benifits_data = await fetchData.benefits({}, token);
+      setBenifitsData(benifits_data?.data);
+      const salarytype_data = await fetchData.salarytype('', token);
+      setSalaryTypeData(salarytype_data?.data);
+    } catch (error) {
+      console.error('Error fetching items:', error);
+    }
+  };
+
+  const addBenifitsItem = async newItem => {
+    try {
+      if (!newItem) {
+        common_fn.showToast('Please Enter Any Benifits');
+      } else {
+        var data = {
+          name: newItem,
+          locale: 'en',
+        };
+        const create_data = await fetchData.create_benifits(data, token);
+        if (create_data?.status == true) {
+          common_fn.showToast(create_data?.message);
+        } else {
+          common_fn.showToast(create_data?.message);
+        }
+      }
+    } catch (error) {
+      console.error('Error adding item:', error);
+    }
+  };
+
+  const salary_details_data = async () => {
+    try {
+      if (
+        (salaryRange?.value != 'range' ||
+          (salaryRange?.value == 'range' && min != 0 && max != 0)) &&
+        salaryType?.name != '' &&
+        selectedBenifits?.length > 0
+      ) {
+        navigation.navigate('AdvanceInformation', {
+          jobTitle,
+          selectedCategory,
+          selectedRole,
+          selectedSkills,
+          selectedTags,
+          description,
+          salaryRange,
+          min,
+          max,
+          salaryType,
+          selectedBenifits,
+        });
+      } else {
+        common_fn.showToast('Please Select All the Required fields');
+      }
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
   return (
     <View style={{flex: 1, padding: 10, backgroundColor: Color.white}}>
       <StepIndicator
@@ -83,55 +173,60 @@ const SalaryandBenefits = () => {
         showsVerticalScrollIndicator={false}>
         <View style={styles.inputContainer}>
           <Text style={styles.h2}>Salary</Text>
-          <View style={styles.salaryView}>
-            <TouchableOpacity onPress={() => setSalaryRange('salaryRange')}>
-              <Text
-                style={[
-                  styles.salaryType,
-                  salaryRange == 'salaryRange'
-                    ? {backgroundColor: Color.lightSky}
-                    : null,
-                ]}>
-                Salary Range
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => setSalaryRange('customSalary')}>
-              <Text
-                style={[
-                  styles.salaryType,
-                  salaryRange == 'customSalary'
-                    ? {backgroundColor: Color.lightSky}
-                    : null,
-                ]}>
-                Custom Salary
-              </Text>
-            </TouchableOpacity>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            {SalaryRangeData?.map((item, index) => {
+              return (
+                <View style={styles.salaryView} key={index}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setSalaryRange(item);
+                    }}>
+                    <Text
+                      style={[
+                        styles.salaryType,
+                        salaryRange?.name == item?.name
+                          ? {backgroundColor: Color.lightSky}
+                          : null,
+                      ]}>
+                      {item?.name}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              );
+            })}
           </View>
-
-          <View style={styles.salaryInputView}>
-            <View>
-              <Text style={styles.h2}>Minimum Salary</Text>
-              {/* <View style={styles.salaryInputView2}> */}
-              <TextInput
-                style={styles.salaryInput}
-                placeholder="₹ Minimum Salary"
-                placeholderTextColor={Color.cloudyGrey}
-                keyboardType="numeric"
-              />
-              {/* </View> */}
-            </View>
-            <View>
-              <Text style={styles.h2}>Maximum Salary</Text>
-              <View style={styles.salaryInputView2}>
+          {salaryRange?.value == 'range' && (
+            <View style={styles.salaryInputView}>
+              <View>
+                <Text style={styles.h2}>Minimum Salary</Text>
                 <TextInput
                   style={styles.salaryInput}
-                  placeholder="₹ Maximum Salary"
+                  placeholder="₹ Minimum Salary"
+                  value={min}
                   placeholderTextColor={Color.cloudyGrey}
                   keyboardType="numeric"
+                  onChangeText={text => {
+                    setMin(text);
+                  }}
                 />
               </View>
+              <View>
+                <Text style={styles.h2}>Maximum Salary</Text>
+                <View style={styles.salaryInputView2}>
+                  <TextInput
+                    style={styles.salaryInput}
+                    placeholder="₹ Maximum Salary"
+                    value={max}
+                    placeholderTextColor={Color.cloudyGrey}
+                    keyboardType="numeric"
+                    onChangeText={text => {
+                      setMax(text);
+                    }}
+                  />
+                </View>
+              </View>
             </View>
-          </View>
+          )}
 
           <>
             <Text style={styles.h2}>
@@ -145,32 +240,73 @@ const SalaryandBenefits = () => {
               selectedTextStyle={styles.selectedTextStyle}
               iconStyle={styles.iconStyle}
               iconColor={Color.smokeyGrey}
-              data={salaryTypes}
+              data={salaryTypeData}
               maxHeight={200}
-              labelField="label"
-              valueField="label"
-              placeholder="Design/Creative"
+              labelField="name"
+              valueField="name"
+              placeholder="Select Your Salary Type"
               value={salaryType}
               onChange={item => {
-                setSalaryType(item.label);
+                setSalaryType(item);
               }}
             />
           </>
 
           <>
-            <Text style={styles.h2}>Benefits</Text>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Text
+                style={{
+                  color: Color.black,
+                  fontSize: 16,
+                  fontFamily: Gilmer.Bold,
+                  flex: 1,
+                }}>
+                Benefits
+              </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  setBenifitsVisible(true);
+                }}>
+                <Text
+                  style={{
+                    color: Color.primary,
+                    fontSize: 16,
+                    fontFamily: Gilmer.Medium,
+                  }}>
+                  Add
+                </Text>
+              </TouchableOpacity>
+            </View>
             <View style={styles.tagsContainer}>
-              {tags.map((tag, index) => (
+              {benifitsData.map((item, index) => (
                 <TouchableOpacity
-                  style={[
-                    styles.tagList,
-                    selectedTags.includes(tag.toLowerCase()) == true
-                      ? {backgroundColor: Color.lightSky}
-                      : null,
-                  ]}
+                  style={{
+                    backgroundColor: benifitsSelectedItem.includes(
+                      item.benefit_id,
+                    )
+                      ? Color.lightSky
+                      : Color.white,
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    padding: 5,
+                    margin: 5,
+                    borderWidth: 1,
+                    borderColor: Color.blue,
+                    borderRadius: 50,
+                  }}
                   key={index}
-                  onPress={() => handleBenefits(tag.toLowerCase())}>
-                  <Text style={styles.p1}>{tag}</Text>
+                  onPress={() => {
+                    handleBenifitsPress(item?.benefit_id);
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: Gilmer.Medium,
+                      fontSize: 16,
+                      color: Color.black,
+                    }}>
+                    {item?.name}
+                  </Text>
                 </TouchableOpacity>
               ))}
             </View>
@@ -178,10 +314,92 @@ const SalaryandBenefits = () => {
         </View>
         <TouchableOpacity
           style={styles.nextView}
-          onPress={() => navigation.navigate('AdvanceInformation')}>
+          onPress={() => {
+            salary_details_data();
+          }}>
           <Text style={styles.next}>Next</Text>
         </TouchableOpacity>
       </ScrollView>
+      <Modal transparent visible={BenifitsVisible} animationType="slide">
+        <Pressable
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            padding: 10,
+            backgroundColor: Color.transparantBlack,
+          }}
+          onPress={() => {
+            setBenifitsVisible(false);
+          }}
+        />
+        <View
+          style={{
+            backgroundColor: Color.white,
+            borderRadius: 10,
+            padding: 10,
+          }}>
+          <Text
+            style={{
+              fontSize: 16,
+              color: Color.black,
+              fontFamily: Gilmer.Bold,
+              marginVertical: 10,
+            }}>
+            Enter Your Benifits
+          </Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter Your Benifits"
+            placeholderTextColor={Color.cloudyGrey}
+            value={queryBenefits}
+            onChangeText={text => {
+              setQueryBenefits(text);
+            }}
+          />
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Button
+              title={'Close'}
+              onPress={() => {
+                setBenifitsVisible(false);
+              }}
+              titleStyle={{
+                fontSize: 16,
+                fontFamily: Gilmer.SemiBold,
+                color: Color.white,
+              }}
+              buttonStyle={{
+                marginVertical: 20,
+                backgroundColor: '#DA000080',
+                borderRadius: 10,
+                marginHorizontal: 10,
+              }}
+              containerStyle={{
+                flex: 1,
+              }}
+            />
+            <Button
+              title={'Add Benifits'}
+              onPress={() => {
+                addBenifitsItem(queryBenefits);
+              }}
+              titleStyle={{
+                fontSize: 16,
+                fontFamily: Gilmer.SemiBold,
+                color: Color.white,
+              }}
+              buttonStyle={{
+                marginVertical: 20,
+                backgroundColor: Color.primary,
+                borderRadius: 10,
+                marginHorizontal: 10,
+              }}
+              containerStyle={{
+                flex: 1,
+              }}
+            />
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -198,7 +416,6 @@ const styles = StyleSheet.create({
     gap: 15,
   },
   inputContainer: {
-    // paddingHorizontal: 20,
     gap: 15,
   },
   h1: {

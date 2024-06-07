@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   FlatList,
   Image,
@@ -10,20 +10,74 @@ import {
 import Color from '../Global/Color';
 import {Gilmer} from '../Global/FontFamily';
 import {Iconviewcomponent} from './Icontag';
+import fetchData from '../Config/fetchData';
+import common_fn from '../Config/common_fn';
+import {useSelector} from 'react-redux';
+import {Media} from '../Global/Media';
 
 const ItemCard = props => {
-  const {item, navigation} = props;
+  const {item, navigation, getData} = props;
+  const userData = useSelector(state => state.UserReducer.userData);
+  var {token} = userData;
+
+  const getToggleJobs = async id => {
+    try {
+      var data = {candidate_id: id};
+      const Saved_Jobs = await fetchData.save_candidated(data, token);
+      if (Saved_Jobs) {
+        common_fn.showToast(Saved_Jobs?.message);
+        getData();
+      }
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
+  const job_profile_view = async id => {
+    try {
+      var data = {
+        candidate_id: id,
+      };
+      const job_view = await fetchData.company_profile_view(data, token);
+      if (job_view) {
+        navigation.navigate('applicantdetails', {id: id});
+      } else {
+        common_fn.showToast(job_view?.message);
+      }
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
+  const [visibleData, setVisibleData] = useState(
+    item?.candidate_skills?.slice(0, 4),
+  );
+  const [showLoadMore, setShowLoadMore] = useState(
+    item?.candidate_skills?.length > 4,
+  );
+
+  const loadMoreItems = () => {
+    const newVisibleData = item?.candidate_skills?.slice(
+      0,
+      visibleData?.length + 8,
+    );
+    setVisibleData(newVisibleData);
+    setShowLoadMore(newVisibleData.length < item?.candidate_skills?.length);
+  };
+
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate('applicantdetails', {item});
+        job_profile_view(item?.id);
       }}
       style={styles.card}>
       <View style={styles.header}>
-        <Image source={item?.image} style={styles.image} />
+        {item?.photo != null ? (
+          <Image source={item?.photo} style={styles.image} />
+        ) : (
+          <Image source={Media.user} style={styles.image} />
+        )}
         <View style={styles.details}>
           <Text style={styles.name} numberOfLines={1}>
-            {item?.name} | {item?.job_role}
+            {item?.name != null && `${item?.name}  | `} {item?.profession_name}
           </Text>
           <View style={styles.row}>
             <Iconviewcomponent
@@ -33,7 +87,7 @@ const ItemCard = props => {
               icon_color={'#309CD2'}
             />
             <Text style={styles.location} numberOfLines={1}>
-              {item?.location}
+              {item?.place}
             </Text>
           </View>
           <View style={styles.row}>
@@ -56,12 +110,16 @@ const ItemCard = props => {
                 icon_color={'#309CD2'}
               />
               <Text style={styles.ctc} numberOfLines={1}>
-                {item?.expectedCTC}
+                {item?.expected_ctc}
               </Text>
             </View>
           </View>
         </View>
-        <TouchableOpacity onPress={() => {}} style={{marginLeft: 10}}>
+        <TouchableOpacity
+          onPress={() => {
+            getToggleJobs(item?.candidate_id);
+          }}
+          style={{marginLeft: 10}}>
           <Iconviewcomponent
             Icontag={'FontAwesome'}
             iconname={item?.is_saved ? 'bookmark' : 'bookmark-o'}
@@ -72,9 +130,9 @@ const ItemCard = props => {
       </View>
       <View style={styles.skillsContainer}>
         <Text style={styles.skillsTitle}>Key Skills</Text>
-        {item?.skills?.length > 0 && (
+        {item?.candidate_skills?.length > 0 && (
           <View style={styles.skills}>
-            {item?.skills?.map((skill, index) => {
+            {visibleData?.map((skill, index) => {
               return (
                 <View key={index} style={styles.skill}>
                   <Text style={styles.skillText}>{skill?.name}</Text>
@@ -82,6 +140,24 @@ const ItemCard = props => {
               );
             })}
           </View>
+        )}
+        {showLoadMore && (
+          <TouchableOpacity
+            onPress={() => {
+              loadMoreItems();
+            }}>
+            <Text
+              style={{
+                fontSize: 14,
+                fontFamily: Gilmer.Bold,
+                color: Color.primary,
+                marginHorizontal: 5,
+                textDecorationLine: 'underline',
+                textAlign: 'center',
+              }}>
+              See more
+            </Text>
+          </TouchableOpacity>
         )}
       </View>
     </TouchableOpacity>

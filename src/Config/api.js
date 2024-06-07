@@ -30,6 +30,7 @@ export const api = {
   },
   postMethod: (url, data, token) => {
     var headers = api.header(token);
+    console.log('data', data);
     const formData = new FormData();
     Object.keys(data).map(obj => {
       formData.append(obj, data[obj]);
@@ -99,7 +100,6 @@ export const api = {
     });
   },
   deleteMethod: (url, token) => {
-    console.log('baseUrl + url', baseUrl + url);
     var headers = api.header(token);
     return new Promise((resolve, reject) => {
       axios

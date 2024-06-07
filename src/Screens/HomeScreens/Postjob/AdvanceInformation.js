@@ -7,94 +7,175 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import StepIndicator from 'react-native-step-indicator';
 import Color from '../../../Global/Color';
 import {Dropdown} from 'react-native-element-dropdown';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Fontisto from 'react-native-vector-icons/Fontisto';
-import Feather from 'react-native-vector-icons/Feather';
+import Entypo from 'react-native-vector-icons/Entypo';
 import {Gilmer} from '../../../Global/FontFamily';
+import fetchData from '../../../Config/fetchData';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import moment from 'moment';
+import {useSelector} from 'react-redux';
+import common_fn from '../../../Config/common_fn';
 
-const AdvanceInformation = () => {
+const customStyles = {
+  stepIndicatorSize: 25,
+  currentStepIndicatorSize: 30,
+  separatorStrokeWidth: 4,
+  currentStepStrokeWidth: 3,
+  stepStrokeCurrentColor: '#309CD2',
+  stepStrokeWidth: 3,
+  stepStrokeFinishedColor: '#309CD2',
+  stepStrokeUnFinishedColor: '#EAEAEF',
+  separatorFinishedColor: '#309CD2',
+  separatorUnFinishedColor: '#EAEAEF',
+  stepIndicatorFinishedColor: '#309CD2',
+  stepIndicatorUnFinishedColor: '#ffffff',
+  stepIndicatorCurrentColor: '#ffffff',
+  stepIndicatorLabelFontSize: 10,
+  currentStepIndicatorLabelFontSize: 15,
+  stepIndicatorLabelCurrentColor: '#309CD2',
+  stepIndicatorLabelFinishedColor: '#ffffff',
+  stepIndicatorLabelUnFinishedColor: '#EAEAEF',
+  labelColor: '#EAEAEF',
+  labelSize: 13,
+  currentStepLabelColor: Color.black,
+};
+const labels = ['JobDetails', 'Salary & Benefits', 'Advance Information'];
+
+const AdvanceInformation = ({route}) => {
+  const [jobTitle] = useState(route.params.jobTitle);
+  const [selectedCategory] = useState(route.params.Category);
+  const [selectedRole] = useState(route.params.role);
+  const [selectedSkills] = useState(route.params.selectedSkills);
+  const [selectedTags] = useState(route.params.selectedTags);
+  const [description] = useState(route.params.description);
+  const [salaryRange] = useState(route.params.salaryRange);
+  const [min] = useState(route.params.min);
+  const [max] = useState(route.params.max);
+  const [salaryType] = useState(route.params.salaryType);
+  const [selectedBenifits] = useState(route.params.selectedBenifits);
   const navigation = useNavigation();
-  const [Education, setEducation] = useState('');
-  const [Experience, setExperience] = useState('');
-  const labels = ['JobDetails', 'Salary & Benefits', 'Advance Information'];
+  const [Education, setEducation] = useState({});
+  const [Experience, setExperience] = useState({});
   const [totalVacancies, setTotalVacancies] = useState('');
+  const [jobType, setJobType] = useState({});
   const [selectedJobs, setSelectedJobs] = useState([]);
   const [remotePosition, setRemotePosition] = useState(false);
   const [screeningQues, setScreeningQues] = useState('');
-  const [applyJobOn, setApplyJobOn] = useState('');
-  const tags = [
-    'Full Time',
-    'Part Time',
-    'Contractual',
-    'Internship',
-    'Freelance',
-  ];
+  const [applyJobOn, setApplyJobOn] = useState({});
+  const [applyVenueData, setApplyVenueData] = useState('');
+  const [exactLocation, setExactLocation] = useState('');
+  const userData = useSelector(state => state.UserReducer.userData);
+  var {token, country} = userData;
 
-  const customStyles = {
-    stepIndicatorSize: 25,
-    currentStepIndicatorSize: 30,
-    separatorStrokeWidth: 4,
-    currentStepStrokeWidth: 3,
-    stepStrokeCurrentColor: '#309CD2',
-    stepStrokeWidth: 3,
-    stepStrokeFinishedColor: '#309CD2',
-    stepStrokeUnFinishedColor: '#EAEAEF',
-    separatorFinishedColor: '#309CD2',
-    separatorUnFinishedColor: '#EAEAEF',
-    stepIndicatorFinishedColor: '#309CD2',
-    stepIndicatorUnFinishedColor: '#ffffff',
-    stepIndicatorCurrentColor: '#ffffff',
-    stepIndicatorLabelFontSize: 10,
-    currentStepIndicatorLabelFontSize: 15,
-    stepIndicatorLabelCurrentColor: '#309CD2',
-    stepIndicatorLabelFinishedColor: '#ffffff',
-    stepIndicatorLabelUnFinishedColor: '#EAEAEF',
-    labelColor: '#EAEAEF',
-    labelSize: 13,
-    currentStepLabelColor: Color.black,
-  };
-
-  const EducationType = [
-    {label: 'Item 1', value: '1'},
-    {label: 'Item 2', value: '2'},
-    {label: 'Item 3', value: '3'},
-    {label: 'Item 4', value: '4'},
-  ];
-
-  const ExperienceYears = [
-    {label: '0 - 1 years', value: '1'},
-    {label: '1 - 2 years', value: '2'},
-    {label: '2 - 4 years', value: '3'},
-    {label: '4 - 9 years', value: '4'},
-  ];
-
-  const Vacancies = [
-    {label: '1 - 5', value: '1'},
-    {label: '5 - 10', value: '2'},
-    {label: '10 - 20', value: '3'},
-    {label: '20+', value: '4'},
-  ];
+  const [jobTypeData, setJobTypeData] = useState([]);
+  const [educationData, setEducationData] = useState([]);
+  const [experienceData, setExperienceData] = useState([]);
+  const [DeadlineExpired, setDeadlineExpired] = useState('');
 
   const applyJobOnList = [
-    {label: '1 - 5', value: '1'},
-    {label: '5 - 10', value: '2'},
-    {label: '10 - 20', value: '3'},
+    {label: 'App', value: 'app'},
+    {label: 'Email', value: 'email'},
+    {label: 'Website', value: 'website'},
   ];
 
-  const handleJobType = tag => {
-    if (selectedJobs.includes(tag)) {
-      const updatedTags = selectedJobs.filter(item => item !== tag);
-      setSelectedJobs(updatedTags);
-    } else {
-      setSelectedJobs([...selectedJobs, tag]);
+  useEffect(() => {
+    getData();
+  }, [getData]);
+
+  const getData = async () => {
+    try {
+      const job_data = await fetchData.jobtype({}, token);
+      setJobTypeData(job_data?.data);
+      const experience_data = await fetchData.experience({}, token);
+      setExperienceData(experience_data?.data);
+      const education_data = await fetchData.education({}, token);
+      setEducationData(education_data?.data);
+    } catch (error) {
+      console.error('Error fetching items:', error);
     }
   };
 
+  const [FromdatePickerVisible, setFromDatePickerVisible] = useState(false);
+  const showFromDatePicker = () => {
+    setFromDatePickerVisible(true);
+  };
+
+  const hideFromDatePicker = () => {
+    setFromDatePickerVisible(false);
+  };
+
+  const handleFromConfirm = date => {
+    setDeadlineExpired(date);
+  };
+
+  const postJob = async () => {
+    try {
+      if (
+        (Education?.name != '' &&
+          Experience?.name != '' &&
+          jobType?.name != '' &&
+          totalVacancies != '' &&
+          DeadlineExpired != '' &&
+          exactLocation != '' &&
+          applyJobOn?.value == 'app') ||
+        (applyJobOn?.value != 'app' && applyVenueData != '')
+      ) {
+        var data = {
+          title: jobTitle,
+          category_id: selectedCategory?.job_category_id,
+          role_id: selectedRole?.job_role_id,
+          tags: selectedTags.map(item => item.id),
+          skills: selectedSkills.map(item => item.id),
+          description: description,
+          salary_mode: salaryRange?.value,
+          custom_salary: 'Competitive',
+          min_salary: min,
+          max_salary: max,
+          salary_type_id: salaryType?.id,
+          benefits: selectedBenifits.map(item => item.benefit_id),
+          education_id: Education?.education_id,
+          experience_id: Experience?.experience_id,
+          job_type_id: jobType?.id,
+          vacancies: totalVacancies,
+          deadline: moment(DeadlineExpired).format('YYYY-MM-DD'),
+          exact_location: exactLocation,
+          country: country,
+          apply_on: applyJobOn?.value,
+          apply_email: applyJobOn?.value == 'email' ? applyVenueData : '',
+          apply_url: applyJobOn?.value == 'website' ? applyVenueData : '',
+        };
+        if (salaryRange?.value === 'range') {
+          if (min !== 0) {
+            data.min_salary = min;
+          }
+          if (max !== 0) {
+            data.max_salary = max;
+          }
+        }
+
+        if (salaryRange?.value === 'custom') {
+          data.custom_salary = 'Competitive';
+        }
+        const post_data = await fetchData.job_post(data, token);
+        if (post_data?.message == 'Job created successfully') {
+          navigation.replace('Congratulations');
+          common_fn.showToast(post_data?.message);
+        } else {
+          common_fn.showToast(post_data?.message);
+        }
+      } else {
+        common_fn.showToast(post_data?.message);
+      }
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
   return (
     <View style={{flex: 1, padding: 10, backgroundColor: Color.white}}>
       <StepIndicator
@@ -118,14 +199,14 @@ const AdvanceInformation = () => {
             selectedTextStyle={styles.selectedTextStyle}
             iconStyle={styles.iconStyle}
             iconColor={Color.smokeyGrey}
-            data={EducationType}
+            data={educationData}
             maxHeight={200}
-            labelField="label"
-            valueField="label"
-            placeholder="Required Education"
+            labelField="name"
+            valueField="name"
+            placeholder="select your education"
             value={Education}
             onChange={item => {
-              setEducation(item.label);
+              setEducation(item);
             }}
           />
 
@@ -140,14 +221,14 @@ const AdvanceInformation = () => {
             selectedTextStyle={styles.selectedTextStyle}
             iconStyle={styles.iconStyle}
             iconColor={Color.smokeyGrey}
-            data={ExperienceYears}
+            data={experienceData}
             maxHeight={200}
-            labelField="label"
-            valueField="label"
-            placeholder="Required Experience"
+            labelField="name"
+            valueField="name"
+            placeholder="Select your experience"
             value={Experience}
             onChange={item => {
-              setExperience(item.label);
+              setExperience(item);
             }}
           />
 
@@ -155,56 +236,105 @@ const AdvanceInformation = () => {
             Job Type <Text style={styles.star}>*</Text>
           </Text>
           <View style={styles.tagsContainer}>
-            {tags.map((tag, index) => (
+            {jobTypeData.map((item, index) => (
               <TouchableOpacity
-                style={[
-                  styles.tagList,
-                  selectedJobs.includes(tag.toLowerCase()) == true
-                    ? {backgroundColor: Color.lightSky}
-                    : null,
-                ]}
+                style={{
+                  backgroundColor:
+                    jobType?.name == item?.name ? Color.lightSky : Color.white,
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  padding: 5,
+                  margin: 5,
+                  borderWidth: 1,
+                  borderColor: Color.blue,
+                  borderRadius: 50,
+                }}
                 key={index}
-                onPress={() => handleJobType(tag.toLowerCase())}>
-                <Text style={styles.p1}>{tag}</Text>
+                onPress={() => {
+                  setJobType(item);
+                }}>
+                <Text
+                  style={{
+                    fontFamily: Gilmer.Medium,
+                    fontSize: 16,
+                    color: Color.black,
+                  }}>
+                  {item?.name}
+                </Text>
               </TouchableOpacity>
             ))}
           </View>
           <Text style={styles.h1}>
             Total Vacancies <Text style={styles.star}>*</Text>
           </Text>
-          <Dropdown
-            style={styles.dropdown}
-            containerStyle={styles.dropContainer}
-            itemTextStyle={styles.dropTextStyle}
-            placeholderStyle={styles.placeholderStyle}
-            selectedTextStyle={styles.selectedTextStyle}
-            iconStyle={styles.iconStyle}
-            iconColor={Color.smokeyGrey}
-            data={Vacancies}
-            maxHeight={200}
-            labelField="label"
-            valueField="label"
-            placeholder="Number of Vacancies"
+          <TextInput
+            style={{
+              color: Color.black,
+              fontFamily: Gilmer.Medium,
+              borderWidth: 1,
+              borderColor: Color.lightgrey,
+              paddingHorizontal: 10,
+              borderRadius: 5,
+              marginTop: 10,
+              padding: 10,
+            }}
+            placeholder="Enter Your Vacancies"
             value={totalVacancies}
-            onChange={item => {
-              setTotalVacancies(item.label);
+            placeholderTextColor={Color.cloudyGrey}
+            keyboardType="numeric"
+            onChangeText={text => {
+              setTotalVacancies(text);
             }}
           />
-          <Text style={styles.h1}>
-            Deadline Expired <Text style={styles.star}>*</Text>
-          </Text>
-          <View style={styles.dataView}>
-            <TextInput
-              style={styles.date}
-              placeholder="DD/MM/YYYY"
-              maxLength={10}
+          <View style={{marginVertical: 10}}>
+            <Text style={styles.h1}>
+              Deadline Expired <Text style={styles.star}>*</Text>
+            </Text>
+            <TouchableOpacity
+              onPress={() => showFromDatePicker()}
+              style={{
+                borderColor: Color.cloudyGrey,
+                borderWidth: 1,
+                borderRadius: 5,
+                marginVertical: 10,
+                paddingHorizontal: 10,
+                padding: 10,
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+              <Text
+                style={{
+                  flex: 1,
+                  fontSize: 14,
+                  color: Color.cloudyGrey,
+                  fontFamily: Gilmer.Medium,
+                }}>
+                {DeadlineExpired == ''
+                  ? 'Select Your Date'
+                  : moment(DeadlineExpired).format('YYYY MM DD')}
+              </Text>
+              <FontAwesome name="calendar" size={20} color={Color.black} />
+            </TouchableOpacity>
+            <DateTimePickerModal
+              date={DeadlineExpired || new Date()}
+              isVisible={FromdatePickerVisible}
+              mode="date"
+              onConfirm={handleFromConfirm}
+              onCancel={hideFromDatePicker}
             />
-            <FontAwesome name="calendar" size={20} color={Color.smokeyGrey} />
           </View>
           <Text style={styles.h1}>
             Location <Text style={styles.star}>*</Text>
           </Text>
-          <TextInput style={styles.input} placeholder="Enter Company Address" />
+          <TextInput
+            value={exactLocation}
+            onChangeText={text => {
+              setExactLocation(text);
+            }}
+            style={styles.input}
+            placeholder="Enter Company Address"
+          />
           <View style={styles.remotePositionView}>
             <TouchableOpacity
               activeOpacity={1}
@@ -216,7 +346,7 @@ const AdvanceInformation = () => {
             </TouchableOpacity>
             <Text style={styles.p}>Fully Remote Position-Worldwide</Text>
           </View>
-          <Text style={styles.h1}>Add Screening Questions</Text>
+          {/* <Text style={styles.h1}>Add Screening Questions</Text>
           <TextInput
             style={styles.input}
             placeholder="New screening question"
@@ -239,7 +369,7 @@ const AdvanceInformation = () => {
             </TouchableOpacity>
             <Text style={styles.p}>Save For Later</Text>
           </View>
-          <View style={styles.radioView}>
+          <View style={styles.radioVie1w}>
             <TouchableOpacity onPress={() => setScreeningQues('Required')}>
               {screeningQues === 'Required' ? (
                 <Fontisto
@@ -256,42 +386,68 @@ const AdvanceInformation = () => {
               )}
             </TouchableOpacity>
             <Text style={styles.p}>Required ( Candidate must answer )</Text>
-          </View>
+          </View> */}
 
           <View style={styles.applyJobOnView}>
             <Text style={styles.h1}>Apply for Job On</Text>
-            <Dropdown
-              style={styles.dropdown}
-              containerStyle={styles.dropContainer}
-              itemTextStyle={styles.dropTextStyle}
-              placeholderStyle={styles.placeholderStyle}
-              selectedTextStyle={styles.selectedTextStyle}
-              iconStyle={styles.iconStyle}
-              iconColor={Color.smokeyGrey}
-              data={applyJobOnList}
-              maxHeight={200}
-              labelField="label"
-              valueField="label"
-              placeholder="External Platform"
-              value={applyJobOn}
-              onChange={item => {
-                setApplyJobOn(item.label);
-              }}
-            />
             <Text style={styles.p2}>
               Candidate apply for a job on your website, all applications on
               your own website
             </Text>
           </View>
-          <Text style={styles.h1}>Apply for Job On</Text>
+          <Dropdown
+            style={styles.dropdown}
+            containerStyle={styles.dropContainer}
+            itemTextStyle={styles.dropTextStyle}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            iconStyle={styles.iconStyle}
+            iconColor={Color.smokeyGrey}
+            data={applyJobOnList}
+            maxHeight={200}
+            labelField="label"
+            valueField="label"
+            placeholder="Select Your Platform To Apply"
+            value={applyJobOn}
+            onChange={item => {
+              setApplyJobOn(item);
+            }}
+          />
           <View style={styles.urlView}>
-            <Feather name="link-2" size={20} color={Color.smokeyGrey} />
-            <TextInput style={styles.urlInput} placeholder="Website" />
+            {applyJobOn?.value != 'app' && (
+              <Entypo
+                name={
+                  applyJobOn?.value == 'website'
+                    ? 'link'
+                    : applyJobOn?.value == 'app'
+                    ? 'mobile'
+                    : 'mail'
+                }
+                size={20}
+                color={Color.smokeyGrey}
+              />
+            )}
+            {applyJobOn?.value != 'app' && (
+              <TextInput
+                style={styles.urlInput}
+                placeholder={
+                  applyJobOn?.value == 'website'
+                    ? 'Enter Your Webite'
+                    : 'Enter Your mail id'
+                }
+                value={applyVenueData}
+                onChangeText={text => {
+                  setApplyVenueData(text);
+                }}
+              />
+            )}
           </View>
         </View>
         <TouchableOpacity
           style={styles.nextView}
-          onPress={() => navigation.navigate('Congratulations')}>
+          onPress={() => {
+            postJob();
+          }}>
           <Text style={styles.next}>Next</Text>
         </TouchableOpacity>
       </ScrollView>

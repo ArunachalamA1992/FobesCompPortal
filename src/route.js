@@ -1,5 +1,5 @@
-import React from 'react';
-import {Text, View, TouchableOpacity} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, TouchableOpacity} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -11,20 +11,55 @@ import {NavigationDrawerStructure} from './Componens/Nav/NavDrawer';
 import {Iconviewcomponent} from './Componens/Icontag';
 import Color from './Global/Color';
 import HomeScreen from './Screens/HomeScreens/HomeScreen';
-import ProfileScreen from './Screens/Profile/ProfileScreen';
 import SearchScreen from './Screens/HomeScreens/Search/SearchScreen';
-import SearchDataList from './Screens/HomeScreens/Search/SearchDataList';
 import JobList from './Screens/JobPosted/JobList';
-import JobApplicants from './Screens/JobPosted/JobApplicants';
-import RecentJobList from './Screens/HomeScreens/RecentJobList';
-import BuySubscriptions from './Screens/BuySubscriptions';
-import PromoteJob from './Screens/SideMenu/PromoteJob';
 import {Gilmer} from './Global/FontFamily';
+import {useDispatch, useSelector} from 'react-redux';
+import fetchData from './Config/fetchData';
+import {setNotificationCount} from './Redux';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 export const HomeStack = () => {
+  const dispatch = useDispatch();
+  const [getData, setGetData] = useState([]);
+  const [UnreadCount, setUnreadCount] = useState([]);
+  const userData = useSelector(state => state.UserReducer.userData);
+  var {token} = userData;
+  const notificationCount = useSelector(
+    state => state.UserReducer.notificationCount,
+  );
+
+  const getNotificationData = async () => {
+    try {
+      const notifyData = await fetchData.notification(null, token);
+      if (notifyData) {
+        setGetData(notifyData.data);
+      }
+    } catch (error) {
+      console.log('catch in getNotification_Data : ', error);
+    }
+  };
+
+  useEffect(() => {
+    const notify = setInterval(() => {
+      getNotificationData();
+      unreadNotify();
+    }, 2000);
+    return () => {
+      clearInterval(notify);
+    };
+  }, [getData, userData, notificationCount]);
+
+  const unreadNotify = async () => {
+    let unreadNotifications = getData.filter(
+      notification => notification?.read_at == null,
+    );
+    setUnreadCount(unreadNotifications.length);
+    dispatch(setNotificationCount(unreadNotifications.length));
+  };
+
   return (
     <Stack.Navigator initialRouteName="Home">
       <Stack.Screen
@@ -52,7 +87,7 @@ export const HomeStack = () => {
                   backgroundColor: Color.red,
                 }}
                 style={{position: 'absolute', zIndex: 1, top: -5, right: -5}}>
-                {0}
+                {UnreadCount || 0}
               </Badge>
               <Iconviewcomponent
                 Icontag={'Ionicons'}
@@ -64,58 +99,6 @@ export const HomeStack = () => {
           ),
         })}
       />
-      <Stack.Screen
-        name="RecentJob"
-        component={RecentJobList}
-        options={({navigation, route}) => ({
-          headerTitle: 'Job Details',
-          headerTitleAlign: 'center',
-          headerTitleStyle: {
-            color: Color.white,
-            fontFamily: Gilmer.Bold,
-            fontSize: 18,
-          },
-          headerStyle: {backgroundColor: Color.primary},
-          headerLeft: () => (
-            <View style={{marginHorizontal: 10}}>
-              <Icon
-                name="arrow-back"
-                size={30}
-                color={Color.white}
-                onPress={() => navigation.goBack()}
-              />
-            </View>
-          ),
-        })}
-      />
-      <Stack.Screen
-        name="BuySubscriptions"
-        component={BuySubscriptions}
-        options={({navigation, route}) => ({
-          headerTitle: 'Buy Subscriptions',
-          headerTitleStyle: {
-            color: Color.black,
-            fontFamily: Gilmer.Bold,
-            fontSize: 18,
-          },
-          headerStyle: {backgroundColor: Color.white},
-          headerLeft: () => (
-            <View style={{marginHorizontal: 10}}>
-              <Icon
-                name="arrow-back"
-                size={30}
-                color={Color.black}
-                onPress={() => navigation.goBack()}
-              />
-            </View>
-          ),
-        })}
-      />
-      <Stack.Screen
-        name="PromoteJob"
-        component={PromoteJob}
-        options={{headerShown: false}}
-      />
     </Stack.Navigator>
   );
 };
@@ -126,30 +109,6 @@ export const SearchStack = () => {
       <Stack.Screen
         name="Search"
         component={SearchScreen}
-        options={({navigation, route}) => ({
-          headerTitle: '',
-          headerTitleAlign: 'center',
-          headerTitleStyle: {
-            color: Color.black,
-            fontFamily: Gilmer.Bold,
-            fontSize: 18,
-          },
-          headerStyle: {backgroundColor: Color.white},
-          headerLeft: () => (
-            <View style={{marginHorizontal: 10}}>
-              <Icon
-                name="arrow-back"
-                size={30}
-                color={Color.black}
-                onPress={() => navigation.goBack()}
-              />
-            </View>
-          ),
-        })}
-      />
-      <Stack.Screen
-        name="SearchDataList"
-        component={SearchDataList}
         options={({navigation, route}) => ({
           headerTitle: '',
           headerTitleAlign: 'center',
@@ -214,58 +173,6 @@ export const JobPostStack = () => {
         component={JobList}
         options={({navigation}) => ({
           headerTitle: 'Jobs',
-          headerTitleAlign: 'center',
-          headerTitleStyle: {
-            color: Color.black,
-            fontFamily: Gilmer.Bold,
-            fontSize: 18,
-          },
-          headerStyle: {backgroundColor: Color.white},
-          headerLeft: () => (
-            <View style={{marginHorizontal: 10}}>
-              <Icon
-                name="arrow-back"
-                size={30}
-                color={Color.black}
-                onPress={() => navigation.goBack()}
-              />
-            </View>
-          ),
-        })}
-      />
-      <Stack.Screen
-        name="JobApplicants"
-        component={JobApplicants}
-        options={({navigation, route}) => ({
-          headerTitle: route?.params?.item?.job_role,
-          headerTitleStyle: {
-            color: Color.white,
-            fontFamily: Gilmer.Bold,
-            fontSize: 18,
-          },
-          headerStyle: {backgroundColor: Color.primary},
-          headerLeft: () => (
-            <View style={{marginHorizontal: 10}}>
-              <Icon
-                name="arrow-back"
-                size={30}
-                color={Color.white}
-                onPress={() => navigation.goBack()}
-              />
-            </View>
-          ),
-          headerRight: () => (
-            <View style={{marginHorizontal: 10}}>
-              <Icon name="list" size={30} color={Color.white} />
-            </View>
-          ),
-        })}
-      />
-      <Stack.Screen
-        name="profile"
-        component={ProfileScreen}
-        options={({navigation}) => ({
-          headerTitle: '',
           headerTitleAlign: 'center',
           headerTitleStyle: {
             color: Color.black,

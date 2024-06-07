@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -8,22 +8,45 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Color from '../../Global/Color';
-import { Gilmer } from '../../Global/FontFamily';
+import {Gilmer} from '../../Global/FontFamily';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useTheme } from 'react-native-paper';
-import { Iconviewcomponent } from '../../Componens/Icontag';
+import {useTheme} from 'react-native-paper';
+import {Iconviewcomponent} from '../../Componens/Icontag';
+import fetchData from '../../Config/fetchData';
+import common_fn from '../../Config/common_fn';
 
-const Register = ({ navigation }) => {
-  var { replace } = navigation;
+const Register = ({navigation}) => {
   const [username, setUsername] = useState('');
   const [checked, setChecked] = useState(false);
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  const [emailValidError, setEmailValidError] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [minPass, setMinPass] = useState('');
-  const { colors } = useTheme();
   const [password_visible, setPasswordvisibility] = useState(false);
+  const [confirmPassword_visible, setConfirmPasswordVisibility] =
+    useState(false);
+
+  const register = async () => {
+    try {
+      var data = {
+        name: username,
+        email: email,
+        phone: phone,
+        password: password,
+        role: 'company',
+      };
+      const register_data = await fetchData.register(data, null);
+      if (register_data?.message == 'Registered Successfully') {
+        navigation.navigate('Login');
+        common_fn.showToast(register_data?.message);
+      } else {
+        common_fn.showToast(register_data?.message);
+      }
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -62,10 +85,10 @@ const Register = ({ navigation }) => {
           Icontag={'Ionicons'}
           iconname={'person'}
           icon_size={22}
-          iconstyle={{ color: Color.transparantBlack }}
+          iconstyle={{color: Color.transparantBlack}}
         />
         <TextInput
-          style={[styles.numberTextBox, { paddingHorizontal: 10 }]}
+          style={[styles.numberTextBox, {paddingHorizontal: 10}]}
           placeholder="HR Name"
           placeholderTextColor={Color.transparantBlack}
           value={username}
@@ -81,15 +104,16 @@ const Register = ({ navigation }) => {
           Icontag={'Ionicons'}
           iconname={'mail'}
           icon_size={22}
-          iconstyle={{ color: Color.transparantBlack }}
+          iconstyle={{color: Color.transparantBlack}}
         />
         <TextInput
-          style={[styles.numberTextBox, { paddingHorizontal: 10 }]}
+          style={[styles.numberTextBox, {paddingHorizontal: 10}]}
           placeholder="Official Email Address"
+          value={email}
           placeholderTextColor={Color.transparantBlack}
           onChangeText={text => {
             setEmail(text);
-            handleValidEmail(text);
+            // handleValidEmail(text);
           }}
           keyboardType="email-address"
         />
@@ -100,10 +124,10 @@ const Register = ({ navigation }) => {
           Icontag={'Ionicons'}
           iconname={'call'}
           icon_size={22}
-          iconstyle={{ color: Color.transparantBlack }}
+          iconstyle={{color: Color.transparantBlack}}
         />
         <TextInput
-          style={[styles.numberTextBox, { paddingHorizontal: 10 }]}
+          style={[styles.numberTextBox, {paddingHorizontal: 10}]}
           placeholder="Mobile Number"
           placeholderTextColor={Color.transparantBlack}
           value={phone}
@@ -118,22 +142,19 @@ const Register = ({ navigation }) => {
           Icontag={'MaterialCommunityIcons'}
           iconname={'lock'}
           icon_size={22}
-          iconstyle={{ color: Color.transparantBlack }}
+          iconstyle={{color: Color.transparantBlack}}
         />
         <TextInput
-          style={[styles.numberTextBox, { paddingHorizontal: 10 }]}
+          style={[styles.numberTextBox, {paddingHorizontal: 10}]}
           placeholder="Password"
           placeholderTextColor={Color.transparantBlack}
           secureTextEntry={!password_visible}
           value={password}
           onChangeText={text => {
-            // setPassword(text),
             if (text.length < 6) {
-              // console.log("min --------- ", text)
               setMinPass('set minimum character as 6');
               setPassword(text);
             } else {
-              // console.log("max --------- ", text);
               setPassword(text);
               setMinPass('');
             }
@@ -147,7 +168,7 @@ const Register = ({ navigation }) => {
             Icontag={'MaterialCommunityIcons'}
             iconname={!password_visible ? 'eye-off' : 'eye'}
             icon_size={22}
-            iconstyle={{ color: Color.transparantBlack }}
+            iconstyle={{color: Color.transparantBlack}}
           />
         </TouchableOpacity>
       </View>
@@ -157,36 +178,33 @@ const Register = ({ navigation }) => {
           Icontag={'MaterialCommunityIcons'}
           iconname={'lock'}
           icon_size={22}
-          iconstyle={{ color: Color.transparantBlack }}
+          iconstyle={{color: Color.transparantBlack}}
         />
         <TextInput
-          style={[styles.numberTextBox, { paddingHorizontal: 10 }]}
+          style={[styles.numberTextBox, {paddingHorizontal: 10}]}
           placeholder="Confirm Password"
           placeholderTextColor={Color.transparantBlack}
-          secureTextEntry={!password_visible}
-          value={password}
+          secureTextEntry={!confirmPassword_visible}
+          value={confirmPassword}
           onChangeText={text => {
-            // setPassword(text),
             if (text.length < 6) {
-              // console.log("min --------- ", text)
               setMinPass('set minimum character as 6');
-              setPassword(text);
+              setConfirmPassword(text);
             } else {
-              // console.log("max --------- ", text);
-              setPassword(text);
+              setConfirmPassword(text);
               setMinPass('');
             }
           }}
           keyboardType="name-phone-pad"
         />
         <TouchableOpacity
-          onPress={() => setPasswordvisibility(!password_visible)}
+          onPress={() => setConfirmPasswordVisibility(!confirmPassword_visible)}
           style={styles.numberCountryCode}>
           <Iconviewcomponent
             Icontag={'MaterialCommunityIcons'}
-            iconname={!password_visible ? 'eye-off' : 'eye'}
+            iconname={!confirmPassword_visible ? 'eye-off' : 'eye'}
             icon_size={22}
-            iconstyle={{ color: Color.transparantBlack }}
+            iconstyle={{color: Color.transparantBlack}}
           />
         </TouchableOpacity>
       </View>
@@ -207,7 +225,7 @@ const Register = ({ navigation }) => {
           <MCIcon
             name={!checked ? 'checkbox-blank-outline' : 'checkbox-marked'}
             size={24}
-            color={Color.cloudyGrey}
+            color={checked ? Color.primary : Color.cloudyGrey}
           />
         </TouchableOpacity>
         <View
@@ -220,11 +238,12 @@ const Register = ({ navigation }) => {
             style={{
               fontSize: 14,
               color: Color.cloudyGrey,
-              textAlign: 'center', fontFamily: Gilmer.Medium
+              textAlign: 'center',
+              fontFamily: Gilmer.Medium,
             }}>
             I've read and agree with{' '}
           </Text>
-          <TouchableOpacity onPress={() => { }}>
+          <TouchableOpacity onPress={() => {}}>
             <Text
               style={{
                 fontSize: 14,
@@ -239,16 +258,19 @@ const Register = ({ navigation }) => {
       </View>
 
       <TouchableOpacity
-        onPress={() => { }}
+        onPress={() => {
+          register();
+        }}
         disabled={!checked}
         style={{
           height: 45,
-          backgroundColor: Color.primary,
+          backgroundColor: checked ? Color.primary : Color.lightgrey,
           justifyContent: 'center',
           alignItems: 'center',
-          borderRadius: 5, marginVertical: 20
+          borderRadius: 5,
+          marginVertical: 20,
         }}>
-        <Text style={{ fontSize: 14, color: Color.white, textAlign: 'center' }}>
+        <Text style={{fontSize: 14, color: Color.white, textAlign: 'center'}}>
           Create Account
         </Text>
       </TouchableOpacity>
@@ -256,24 +278,31 @@ const Register = ({ navigation }) => {
       <View
         style={{
           width: '100%',
-          flexDirection: 'row', justifyContent: 'center',
-          alignItems: 'center', marginVertical: 20
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginVertical: 20,
         }}>
         <Text
           style={{
             fontSize: 14,
             color: Color.cloudyGrey,
-            textAlign: 'center', fontFamily: Gilmer.Medium
+            textAlign: 'center',
+            fontFamily: Gilmer.Medium,
           }}>
           Already have an account?
         </Text>
-        <TouchableOpacity onPress={() => { navigation.navigate("Login")}}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('Login');
+          }}>
           <Text
             style={{
               fontSize: 16,
               color: Color.primary,
               fontFamily: Gilmer.Bold,
-              textDecorationLine: 'underline', paddingHorizontal: 5
+              textDecorationLine: 'underline',
+              paddingHorizontal: 5,
             }}>
             Login
           </Text>
@@ -298,8 +327,9 @@ const styles = StyleSheet.create({
     height: 50,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 10, marginVertical: 15,
-    borderRadius: 5, elevation: 0.2
+    paddingHorizontal: 10,
+    marginVertical: 15,
+    borderRadius: 5,
   },
   numberCountryCode: {
     color: Color.black,

@@ -2,8 +2,11 @@ import React from 'react';
 import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import Color from '../../Global/Color';
 import {Gilmer} from '../../Global/FontFamily';
+import {setOnBoardVisible} from '../../Redux';
+import {useDispatch} from 'react-redux';
 
 const OnboardOne = ({navigation}) => {
+  const dispatch = useDispatch();
   return (
     <View style={styles.container}>
       <Image
@@ -47,6 +50,7 @@ const OnboardOne = ({navigation}) => {
         }}>
         <TouchableOpacity
           onPress={() => {
+            dispatch(setOnBoardVisible(true));
             navigation.navigate('Auth');
           }}
           style={{

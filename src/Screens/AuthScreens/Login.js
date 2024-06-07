@@ -13,9 +13,11 @@ import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Color from '../../Global/Color';
 import {Gilmer} from '../../Global/FontFamily';
-import {useNavigation} from '@react-navigation/native';
+import {StackActions, useNavigation} from '@react-navigation/native';
 import common_fn from '../../Config/common_fn';
 import {Iconviewcomponent} from '../../Componens/Icontag';
+import fetchData from '../../Config/fetchData';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const DismissKeyboard = ({children}) => (
   <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -32,22 +34,6 @@ const Login = () => {
   const [password_visible, setPasswordvisibility] = useState(false);
   const [minPass, setMinPass] = useState('');
 
-  const signIn = async () => {
-    try {
-      if (email != '' && password != '') {
-        var data = {
-          email: email,
-          password: password,
-        };
-        navigation.navigate("TabNavigator")
-      } else {
-        common_fn.showToast('Invalid Email or Password');
-      }
-    } catch (error) {
-      console.log('error', error);
-    }
-  };
-
   const handleValidEmail = val => {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     if (val.length === 0) {
@@ -56,6 +42,57 @@ const Login = () => {
       setEmailValidError('Enter valid email address');
     } else if (reg.test(val) === true) {
       setEmailValidError('');
+    }
+  };
+
+  const setLogin = async () => {
+    try {
+      if (email && password) {
+        const data = {email, password};
+        const login = await fetchData.login_with_pass(data, null);
+
+        if (login?.message === 'Login Successful') {
+          const combinedData = {
+            ...login.data,
+            token: login.token,
+          };
+          await AsyncStorage.setItem('user_data', JSON.stringify(combinedData));
+
+          if (!login.data.logo || !login.data.name) {
+            navigation.dispatch(StackActions.replace('basicDetails'));
+          } else if (
+            !login.data.industry_type?.name ||
+            !login.data.origanization_type?.name ||
+            !login.data.team_size?.name ||
+            !login.data.website
+          ) {
+            navigation.dispatch(StackActions.replace('profileDetails'));
+          } else if (
+            !login.data.social_links ||
+            login.data.social_links.length === 0
+          ) {
+            navigation.dispatch(StackActions.replace('SocialMedia'));
+          } else if (
+            !login.data.country ||
+            !login.data.district ||
+            !login.data.address ||
+            !login.data.contactInfo?.phone ||
+            !login.data.email
+          ) {
+            navigation.dispatch(StackActions.replace('ContactDetails'));
+          } else {
+            navigation.dispatch(StackActions.replace('TabNavigator'));
+          }
+          common_fn.showToast(login.message);
+        } else {
+          common_fn.showToast(login?.message || 'Login failed');
+        }
+      } else {
+        common_fn.showToast('Invalid Email or Password');
+      }
+    } catch (error) {
+      console.log('error', error);
+      common_fn.showToast('An error occurred during login');
     }
   };
 
@@ -221,7 +258,7 @@ const Login = () => {
             // onPress={() => {
             //   navigation.navigate('ForgotPassword');
             // }}
-            >
+          >
             <Text
               style={{
                 fontFamily: Gilmer.Medium,
@@ -235,7 +272,7 @@ const Login = () => {
         </View>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate('basicDetails');
+            setLogin();
           }}
           style={{
             height: 50,

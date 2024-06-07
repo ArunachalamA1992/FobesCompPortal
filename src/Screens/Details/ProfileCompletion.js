@@ -56,10 +56,8 @@ const ProfileCompletion = ({navigation}) => {
       </View>
       <Button
         mode="contained"
-        onPress={async () => {
-          try {
-            navigation.navigate('JobDetails');
-          } catch (err) {}
+        onPress={() => {
+          navigation.replace('JobDetails');
         }}
         style={{
           backgroundColor: Color.primary,
@@ -72,10 +70,8 @@ const ProfileCompletion = ({navigation}) => {
       </Button>
       <Button
         mode="contained"
-        onPress={async () => {
-          try {
-            navigation.navigate('TabNavigator');
-          } catch (err) {}
+        onPress={() => {
+          navigation.replace('TabNavigator');
         }}
         style={{
           backgroundColor: '#E5EBF5',

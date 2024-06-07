@@ -8,7 +8,12 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {Button, Divider, Searchbar} from 'react-native-paper';
+import {
+  ActivityIndicator,
+  Button,
+  Divider,
+  Searchbar,
+} from 'react-native-paper';
 import F6Icon from 'react-native-vector-icons/FontAwesome6';
 import FIcon from 'react-native-vector-icons/FontAwesome';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -18,9 +23,16 @@ import {Gilmer} from '../../../Global/FontFamily';
 import axios from 'axios';
 import {job_data} from '../../../Config/Content';
 import ItemCard from '../../../Componens/ItemCard';
+import fetchData from '../../../Config/fetchData';
+import {useSelector} from 'react-redux';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 const {height} = Dimensions.get('screen');
-const SearchDataList = ({navigation}) => {
+const SearchDataList = ({navigation, route}) => {
+  const [searchLocation, setSearchLocation] = useState(route.params.location);
+  const [typeID, setTypeID] = useState(route.params.typeID);
+  const [type, setType] = useState(route.params.type);
+  const [searchJob, setSearchJob] = useState(route.params.jobs);
   const [jobData, setJobData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [SearchloadMore, setSearchLoadMore] = useState(false);
@@ -38,53 +50,34 @@ const SearchDataList = ({navigation}) => {
     visible: false,
   });
   const [isSearchModalVisible, setSearchModalVisible] = useState(false);
-  const [recentSearch] = useState([
-    {
-      id: 1,
-      name: 'Fresher',
-      value: 'fresher',
-    },
-    {
-      id: 2,
-      name: 'Experienced',
-      value: 'experienced',
-    },
-  ]);
-  const [MostSearch] = useState([
-    {
-      id: 1,
-      name: 'Fresher',
-      value: 'fresher',
-    },
-    {
-      id: 2,
-      name: 'Experienced',
-      value: 'experienced',
-    },
-  ]);
+  const userData = useSelector(state => state.UserReducer.userData);
+  var {token} = userData;
 
   const getData = useCallback(async () => {
     try {
       setLoading(true);
-      // var data = `place=${searchLocation}&${type}=${searchJob}`;
-      // console.log('data', data);
-      // const job_list = await fetchData.filter_job(data, token);
-      setJobData([]);
+
+      var data =
+        typeID == null
+          ? `place=${searchLocation}&${type}=${searchJob}`
+          : `place=${searchLocation}&${type}=${typeID}`;
+      const job_list = await fetchData.candidate_list(data, token);
+      setJobData(job_list?.data);
     } catch (error) {
       console.log('error', error);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [searchLocation, searchJob, type, typeID, token]);
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [token]);
 
   const handleSearch = async () => {
     try {
-      // const data = `string=${searchJob}`;
-      // const getData = await fetchData.add_search(data, token);
+      const data = `string=${searchJob}`;
+      const getData = await fetchData.add_search(data, token);
       setSearchModalVisible(false);
       getData();
     } catch (error) {
@@ -95,15 +88,63 @@ const SearchDataList = ({navigation}) => {
   const propertySearch = async data => {
     setSearchJob(data);
     try {
-      // const data = `search=${searchJob}&page=1&limit=10`;
-      // const getData = await fetchData.search(data, token);
+      const data = `search=${searchJob}&page=1&limit=10`;
+      const getData = await fetchData.search(data, token);
       setJobSuggestions({
-        // data: getData?.data?.keyword,
-        data: [],
+        data: getData?.data?.keyword,
         visible: true,
       });
     } catch (error) {
       console.log('error', error);
+    }
+  };
+
+  const loadSearchMoreData = async () => {
+    if (SearchloadMore || SearchendReached) {
+      return;
+    }
+    setSearchLoadMore(true);
+    try {
+      const nextPage = page + 1;
+      var data = `search=${searchJob}&page=${nextPage}&limit=10`;
+      const filterData = await fetchData.search(data, token);
+      if (filterData.length > 0) {
+        setSearchPage(nextPage);
+        const updatedData = [...jobSuggestions, ...filterData];
+        setJobSuggestions(updatedData);
+      } else {
+        setSearchEndReached(true);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setSearchLoadMore(false);
+    }
+  };
+
+  const loadMoreData = async () => {
+    if (loadMore || endReached) {
+      return;
+    }
+    setLoadMore(true);
+    try {
+      const nextPage = page + 1;
+      var data =
+        typeID == null
+          ? `place=${searchLocation}&${type}=${searchJob}`
+          : `place=${searchLocation}&${type}=${typeID}`;
+      const filterData = await fetchData.candidate_list(data, token);
+      if (filterData?.data?.length > 0) {
+        setPage(nextPage);
+        const updatedData = [...jobData, ...filterData?.data];
+        setJobData(updatedData);
+      } else {
+        setEndReached(true);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoadMore(false);
     }
   };
 
@@ -146,47 +187,136 @@ const SearchDataList = ({navigation}) => {
             marginHorizontal: 10,
           }}
           numberOfLines={1}>
-          {`skills for `}
+          {`skills for ${searchJob}`}
         </Text>
       </TouchableOpacity>
-      <FlatList
-        data={job_data}
-        showsVerticalScrollIndicator={false}
-        renderItem={({item, index}) => {
-          return <ItemCard item={item} navigation={navigation} />;
-        }}
-        ListEmptyComponent={() => {
-          return (
-            <View
-              style={{
-                height: height / 2,
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginVertical: 10,
-                width: '100%',
-              }}>
-              <MCIcon
-                name="briefcase-variant-off"
-                color={Color.primary}
-                size={20}
+      {loading ? (
+        <View style={{padding: 10}}>
+          <SkeletonPlaceholder>
+            <SkeletonPlaceholder.Item style={{}}>
+              <SkeletonPlaceholder.Item
+                width={'100%'}
+                height={100}
+                borderRadius={10}
+                marginTop={10}
               />
-              <Text
+              <SkeletonPlaceholder.Item
+                width={'100%'}
+                height={100}
+                borderRadius={10}
+                marginTop={10}
+              />
+              <SkeletonPlaceholder.Item
+                width={'100%'}
+                height={100}
+                borderRadius={10}
+                marginTop={10}
+              />
+              <SkeletonPlaceholder.Item
+                width={'100%'}
+                height={100}
+                borderRadius={10}
+                marginTop={10}
+              />
+              <SkeletonPlaceholder.Item
+                width={'100%'}
+                height={100}
+                borderRadius={10}
+                marginTop={10}
+              />
+              <SkeletonPlaceholder.Item
+                width={'100%'}
+                height={100}
+                borderRadius={10}
+                marginTop={10}
+              />
+              <SkeletonPlaceholder.Item
+                width={'100%'}
+                height={100}
+                borderRadius={10}
+                marginTop={10}
+              />
+              <SkeletonPlaceholder.Item
+                width={'100%'}
+                height={100}
+                borderRadius={10}
+                marginTop={10}
+              />
+              <SkeletonPlaceholder.Item
+                width={'100%'}
+                height={100}
+                borderRadius={10}
+                marginTop={10}
+              />
+            </SkeletonPlaceholder.Item>
+          </SkeletonPlaceholder>
+        </View>
+      ) : (
+        <FlatList
+          data={jobData}
+          showsVerticalScrollIndicator={false}
+          renderItem={({item, index}) => {
+            return (
+              <ItemCard item={item} navigation={navigation} getData={getData} />
+            );
+          }}
+          ListEmptyComponent={() => {
+            return (
+              <View
                 style={{
-                  fontSize: 12,
-                  padding: 5,
-                  paddingHorizontal: 20,
-                  marginStart: 5,
-                  borderRadius: 5,
+                  height: height / 2,
+                  alignItems: 'center',
+                  justifyContent: 'center',
                   marginVertical: 10,
-                  color: Color.primary,
-                  fontFamily: Gilmer.Bold,
+                  width: '100%',
                 }}>
-                Job Not Found
-              </Text>
-            </View>
-          );
-        }}
-      />
+                <MCIcon
+                  name="briefcase-variant-off"
+                  color={Color.primary}
+                  size={20}
+                />
+                <Text
+                  style={{
+                    fontSize: 12,
+                    padding: 5,
+                    paddingHorizontal: 20,
+                    marginStart: 5,
+                    borderRadius: 5,
+                    marginVertical: 10,
+                    color: Color.primary,
+                    fontFamily: Gilmer.Bold,
+                  }}>
+                  Job Not Found
+                </Text>
+              </View>
+            );
+          }}
+          onEndReached={() => {
+            loadMoreData();
+          }}
+          ListFooterComponent={() => {
+            return (
+              <View style={{alignItems: 'center', justifyContent: 'center'}}>
+                {loadMore && (
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        color: Color.black,
+                        marginHorizontal: 10,
+                        fontFamily: Gilmer.Medium,
+                      }}>
+                      Loading...
+                    </Text>
+                    <ActivityIndicator />
+                  </View>
+                )}
+              </View>
+            );
+          }}
+          onEndReachedThreshold={3}
+        />
+      )}
       <Modal
         visible={isSearchModalVisible}
         transparent={true}
@@ -214,11 +344,61 @@ const SearchDataList = ({navigation}) => {
             placeholder="Search Jobs, Companies"
             placeholderTextColor={Color.grey}
             style={styles.searchView}
-            value={'searchJob'}
+            value={searchJob}
             iconColor={Color.grey}
             inputStyle={{color: Color.black}}
             onChangeText={search => propertySearch(search)}
           />
+
+          {jobSuggestions?.visible == true && (
+            <View
+              style={{
+                maxHeight: 200,
+                padding: 10,
+                backgroundColor: Color.white,
+                elevation: 3,
+                borderRadius: 5,
+                marginTop: 5,
+              }}>
+              <FlatList
+                data={jobSuggestions?.data}
+                keyExtractor={(item, index) => item + index}
+                renderItem={({item, index}) => {
+                  return (
+                    <TouchableOpacity
+                      key={index}
+                      onPress={() => {
+                        console.log('item', item);
+                        setSearchJob(item?.keyword);
+                        setType(item?.type);
+                        setTypeID(item?.typeID);
+                        setJobSuggestions({
+                          data: [],
+                          visible: false,
+                        });
+                      }}>
+                      <Text
+                        style={{
+                          fontSize: 16,
+                          fontFamily: Gilmer.Medium,
+                          color: Color.black,
+                        }}>
+                        {item?.keyword}
+                      </Text>
+                      {index < jobSuggestions?.data.length - 1 && (
+                        <Divider style={{height: 1, marginVertical: 5}} />
+                      )}
+                    </TouchableOpacity>
+                  );
+                }}
+                onEndReached={() => {
+                  loadSearchMoreData();
+                }}
+                onEndReachedThreshold={3}
+              />
+            </View>
+          )}
+
           <Text
             style={{
               fontSize: 14,
@@ -232,7 +412,7 @@ const SearchDataList = ({navigation}) => {
             placeholder="Search Location"
             placeholderTextColor={Color.grey}
             style={styles.searchView}
-            value={'searchLocation'}
+            value={searchLocation}
             icon={() => (
               <F6Icon name="location-dot" size={20} color={Color.lightgrey} />
             )}
@@ -243,6 +423,43 @@ const SearchDataList = ({navigation}) => {
               fetchSuggestions(search);
             }}
           />
+          {LocationSuggestion?.data?.length != 0 && (
+            <View
+              style={{
+                maxHeight: 200,
+                padding: 10,
+                backgroundColor: Color.white,
+                elevation: 3,
+                borderRadius: 5,
+                marginTop: 5,
+              }}>
+              {LocationSuggestion?.data?.map((item, index) => {
+                return (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => {
+                      setSearchLocation(item?.display_name?.split(',')[0]);
+                      setLocationSuggestion({
+                        data: [],
+                        visible: false,
+                      });
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        fontFamily: Gilmer.Medium,
+                        color: Color.black,
+                      }}>
+                      {item?.display_name?.split(',')[0]}
+                    </Text>
+                    {index < LocationSuggestion?.data.length - 1 && (
+                      <Divider style={{height: 1, marginVertical: 5}} />
+                    )}
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          )}
           <View
             style={{
               flexDirection: 'row',

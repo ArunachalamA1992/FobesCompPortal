@@ -30,6 +30,10 @@ import SalaryandBenefits from './Screens/HomeScreens/Postjob/SalaryandBenefits';
 import RecentJobList from './Screens/HomeScreens/RecentJobList';
 import HomeScreen from './Screens/HomeScreens/HomeScreen';
 import JobDetails from './Screens/HomeScreens/Postjob/JobDetails';
+import BuySubscriptions from './Screens/BuySubscriptions';
+import PromoteJob from './Screens/SideMenu/PromoteJob';
+import SearchDataList from './Screens/HomeScreens/Search/SearchDataList';
+import ProfileScreen from './Screens/Profile/ProfileScreen';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -39,11 +43,11 @@ const MyDrawer = () => {
     <PaperProvider>
       <NavigationContainer ref={navigationRef}>
         <Drawer.Navigator
-          initialRouteName="Home"
+          initialRouteName="HomeDrawer"
           screenOptions={{swipeEnabled: false}}
           drawerContent={props => <CustomDrawerContent {...props} />}>
           <Drawer.Screen
-            name="Home"
+            name="HomeDrawer"
             component={MainApp}
             options={{headerShown: false}}
           />
@@ -65,7 +69,7 @@ const MainApp = () => {
   return (
     <>
       <StatusBar backgroundColor={Color.primary} />
-      <Stack.Navigator initialRouteName="TabNavigator">
+      <Stack.Navigator initialRouteName="Splash">
         <Stack.Screen
           name="Splash"
           component={SplashScreen}
@@ -84,6 +88,129 @@ const MainApp = () => {
         <Stack.Screen
           name="TabNavigator"
           component={TabNavigator}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="RecentJob"
+          component={RecentJobList}
+          options={({navigation, route}) => ({
+            headerTitle: 'Recent Job',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              color: Color.white,
+              fontFamily: Gilmer.Bold,
+              fontSize: 18,
+            },
+            headerStyle: {backgroundColor: Color.primary},
+            headerLeft: () => (
+              <View style={{marginHorizontal: 10}}>
+                <Icon
+                  name="arrow-back"
+                  size={30}
+                  color={Color.white}
+                  onPress={() => navigation.goBack()}
+                />
+              </View>
+            ),
+          })}
+        />
+        <Stack.Screen
+          name="BuySubscriptions"
+          component={BuySubscriptions}
+          options={({navigation, route}) => ({
+            headerTitle: 'Buy Subscriptions',
+            headerTitleStyle: {
+              color: Color.black,
+              fontFamily: Gilmer.Bold,
+              fontSize: 18,
+            },
+            headerStyle: {backgroundColor: Color.white},
+            headerLeft: () => (
+              <View style={{marginHorizontal: 10}}>
+                <Icon
+                  name="arrow-back"
+                  size={30}
+                  color={Color.black}
+                  onPress={() => navigation.goBack()}
+                />
+              </View>
+            ),
+          })}
+        />
+        <Stack.Screen
+          name="SearchDataList"
+          component={SearchDataList}
+          options={({navigation, route}) => ({
+            headerTitle: '',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              color: Color.black,
+              fontFamily: Gilmer.Bold,
+              fontSize: 18,
+            },
+            headerStyle: {backgroundColor: Color.white},
+            headerLeft: () => (
+              <View style={{marginHorizontal: 10}}>
+                <Icon
+                  name="arrow-back"
+                  size={30}
+                  color={Color.black}
+                  onPress={() => navigation.goBack()}
+                />
+              </View>
+            ),
+          })}
+        />
+        <Stack.Screen
+          name="JobApplicants"
+          component={JobApplicants}
+          options={({navigation, route}) => ({
+            headerTitle: route?.params?.title,
+            headerTitleStyle: {
+              color: Color.white,
+              fontFamily: Gilmer.Bold,
+              fontSize: 18,
+            },
+            headerStyle: {backgroundColor: Color.primary},
+            headerLeft: () => (
+              <View style={{marginHorizontal: 10}}>
+                <Icon
+                  name="arrow-back"
+                  size={30}
+                  color={Color.white}
+                  onPress={() => navigation.goBack()}
+                />
+              </View>
+            ),
+          })}
+        />
+        <Stack.Screen
+          name="profile"
+          component={ProfileScreen}
+          options={({navigation}) => ({
+            headerTitle: '',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              color: Color.black,
+              fontFamily: Gilmer.Bold,
+              fontSize: 18,
+            },
+            headerStyle: {backgroundColor: Color.white},
+            headerLeft: () => (
+              <View style={{marginHorizontal: 10}}>
+                <Icon
+                  name="arrow-back"
+                  size={30}
+                  color={Color.black}
+                  onPress={() => navigation.goBack()}
+                />
+              </View>
+            ),
+          })}
+        />
+        <Stack.Screen
+          name="PromoteJob"
+          component={PromoteJob}
           options={{headerShown: false}}
         />
         <Stack.Screen
@@ -218,7 +345,7 @@ const MainApp = () => {
           name="ContactDetails"
           component={ContactDetails}
           options={({navigation, route}) => ({
-            headerTitle: 'Social Media',
+            headerTitle: 'Contact Details',
             headerTitleStyle: {
               color: Color.black,
               fontFamily: Gilmer.Bold,
@@ -255,35 +382,6 @@ const MainApp = () => {
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="JobApplicants"
-          component={JobApplicants}
-          options={({navigation, route}) => ({
-            headerTitle: route?.params?.item?.job_role,
-            headerTitleStyle: {
-              color: Color.white,
-              fontFamily: Gilmer.Bold,
-              fontSize: 18,
-            },
-            headerStyle: {backgroundColor: Color.primary},
-            headerLeft: () => (
-              <View style={{marginHorizontal: 10}}>
-                <Icon
-                  name="arrow-back"
-                  size={30}
-                  color={Color.white}
-                  onPress={() => navigation.goBack()}
-                />
-              </View>
-            ),
-            headerRight: () => (
-              <View style={{marginHorizontal: 10}}>
-                <Icon name="list" size={30} color={Color.white} />
-              </View>
-            ),
-          })}
-        />
-
-        <Stack.Screen
           name="Home"
           component={HomeScreen}
           options={({navigation}) => ({
@@ -317,30 +415,6 @@ const MainApp = () => {
                   icon_color={Color.white}
                 />
               </TouchableOpacity>
-            ),
-          })}
-        />
-        <Stack.Screen
-          name="RecentJob"
-          component={RecentJobList}
-          options={({navigation, route}) => ({
-            headerTitle: 'Job Details',
-            headerTitleAlign: 'center',
-            headerTitleStyle: {
-              color: Color.white,
-              fontFamily: Gilmer.Bold,
-              fontSize: 18,
-            },
-            headerStyle: {backgroundColor: Color.primary},
-            headerLeft: () => (
-              <View style={{marginHorizontal: 10}}>
-                <Icon
-                  name="arrow-back"
-                  size={30}
-                  color={Color.white}
-                  onPress={() => navigation.goBack()}
-                />
-              </View>
             ),
           })}
         />

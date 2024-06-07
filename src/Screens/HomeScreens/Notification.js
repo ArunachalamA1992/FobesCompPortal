@@ -1,52 +1,80 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {
-  Dimensions,
-  FlatList,
-  Image,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Dimensions, FlatList, Text, TouchableOpacity, View} from 'react-native';
 import Color from '../../Global/Color';
-import {Media} from '../../Global/Media';
 import {Gilmer} from '../../Global/FontFamily';
 import Icon from 'react-native-vector-icons/Ionicons';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import FIcon from 'react-native-vector-icons/FontAwesome';
 import fetchData from '../../Config/fetchData';
 import {useSelector} from 'react-redux';
 import moment from 'moment';
 import common_fn from '../../Config/common_fn';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 const {height} = Dimensions.get('window');
 
 const Notification = ({navigation}) => {
-  const [notificationData, setNotificationData] = useState([
-    {
-      id: 1,
-      name: '23 applies',
-      role: "‘UX/UI Designer” Job position'",
-      created_at: '2024-05-18T12:06:03.566Z',
-    },
-    {
-      id: 2,
-      name: '23 applies',
-      role: "‘UX/UI Designer” Job position'",
-      created_at: '2024-05-18T12:06:03.566Z',
-    },
-    {
-      id: 3,
-      name: '23 applies',
-      role: "‘UX/UI Designer” Job position'",
-      created_at: '2024-05-18T12:06:03.566Z',
-    },
-    {
-      id: 4,
-      name: '23 applies',
-      role: "‘UX/UI Designer” Job position'",
-      created_at: '2024-05-17T11:06:03.566Z',
-    },
-  ]);
+  const [notificationData, setNotificationData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const userData = useSelector(state => state.UserReducer.userData);
+  var {token} = userData;
+
+  useEffect(() => {
+    setLoading(true);
+    getNotification()
+      .then(() => setLoading(false))
+      .catch(error => {
+        console.log('Error fetching data:', error);
+        setLoading(false);
+      });
+  }, [token]);
+
+  const getNotification = useCallback(async () => {
+    try {
+      const notification_list = await fetchData.notification(null, token);
+      if (notification_list) {
+        setNotificationData(notification_list?.data);
+      }
+    } catch (error) {
+      console.log('error', error);
+    }
+  }, [token]);
+
+  const single_notification = async id => {
+    try {
+      const data = id;
+      const notification_list = await fetchData.update_notification(
+        data,
+        token,
+      );
+      console.log(
+        'notification_list-----------------------------',
+        notification_list,
+      );
+      if (notification_list) {
+        common_fn?.showToast(notification_list?.message);
+        getNotification();
+      }
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
+
+  const getMarkAllData = useCallback(async () => {
+    try {
+      const notification_list = await fetchData.mark_all_notification(
+        {},
+        token,
+      );
+
+      if (notification_list) {
+        common_fn?.showToast(notification_list?.message);
+        getNotification();
+      }
+    } catch (error) {
+      console.log('error', error);
+    }
+  }, [token]);
+
   const groupNotificationsByDate = () => {
     const today = new Date();
     const yesterday = new Date(today);
@@ -72,156 +100,252 @@ const Notification = ({navigation}) => {
   };
 
   const groupedNotifications = groupNotificationsByDate();
-
   return (
     <View style={{flex: 1, backgroundColor: Color.white, padding: 10}}>
-      <FlatList
-        data={[
-          {category: 'Today', data: groupedNotifications['Today']},
-          {category: 'Yesterday', data: groupedNotifications['Yesterday']},
-          {category: 'Earlier', data: groupedNotifications['Earlier']},
-        ]}
-        keyExtractor={(item, index) => item.category}
-        renderItem={({item, index}) => {
-          return (
-            <View key={index}>
-              {item.data.length > 0 && (
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}>
-                  <Text
-                    style={{
-                      flex: 1,
-                      fontSize: 16,
-                      color: Color.lightBlack,
-                      fontFamily: Gilmer.Bold,
-                      marginVertical: 5,
-                    }}>
-                    {item.category}
-                  </Text>
-                  {/* <TouchableOpacity
-                    onPress={() => {
-                      getMarkAllData();
-                    }}>
-                    <Text
-                      style={{
-                        fontSize: 14,
-                        color: Color.cloudyGrey,
-                        fontFamily: Gilmer.Medium,
-                        marginVertical: 5,
-                      }}>
-                      {'Mark all as read'}
-                    </Text>
-                  </TouchableOpacity> */}
-                </View>
-              )}
-              {item.data.map((single_notify, index) => (
-                <TouchableOpacity
-                  key={index}
-                  style={{
-                    flex: 1,
-                    borderColor: Color.lightgrey,
-                    borderWidth: 1,
-                    padding: 10,
-                    borderRadius: 10,
-                    marginVertical: 5,
-                  }}
-                  onPress={() => {}}>
+      {loading ? (
+        <View style={{padding: 10}}>
+          <SkeletonPlaceholder>
+            <SkeletonPlaceholder.Item style={{}}>
+              <SkeletonPlaceholder.Item
+                width={'100%'}
+                height={100}
+                borderRadius={10}
+                marginTop={10}
+              />
+              <SkeletonPlaceholder.Item
+                width={'100%'}
+                height={100}
+                borderRadius={10}
+                marginTop={10}
+              />
+              <SkeletonPlaceholder.Item
+                width={'100%'}
+                height={100}
+                borderRadius={10}
+                marginTop={10}
+              />
+              <SkeletonPlaceholder.Item
+                width={'100%'}
+                height={100}
+                borderRadius={10}
+                marginTop={10}
+              />
+              <SkeletonPlaceholder.Item
+                width={'100%'}
+                height={100}
+                borderRadius={10}
+                marginTop={10}
+              />
+              <SkeletonPlaceholder.Item
+                width={'100%'}
+                height={100}
+                borderRadius={10}
+                marginTop={10}
+              />
+              <SkeletonPlaceholder.Item
+                width={'100%'}
+                height={100}
+                borderRadius={10}
+                marginTop={10}
+              />
+              <SkeletonPlaceholder.Item
+                width={'100%'}
+                height={100}
+                borderRadius={10}
+                marginTop={10}
+              />
+              <SkeletonPlaceholder.Item
+                width={'100%'}
+                height={100}
+                borderRadius={10}
+                marginTop={10}
+              />
+            </SkeletonPlaceholder.Item>
+          </SkeletonPlaceholder>
+        </View>
+      ) : notificationData.length > 0 ? (
+        <FlatList
+          data={[
+            {category: 'Today', data: groupedNotifications['Today']},
+            {category: 'Yesterday', data: groupedNotifications['Yesterday']},
+            {category: 'Earlier', data: groupedNotifications['Earlier']},
+          ]}
+          keyExtractor={(item, index) => item.category}
+          renderItem={({item, index}) => {
+            return (
+              <View key={index}>
+                {item.data.length > 0 && (
                   <View
                     style={{
                       flexDirection: 'row',
                       alignItems: 'center',
-                      justifyContent: 'flex-start',
+                      marginVertical: 10,
                     }}>
-                    <View
-                      style={{
-                        width: 50,
-                        height: 50,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        backgroundColor: Color.lightgrey,
-                        borderRadius: 100,
-                      }}>
-                      <FIcon name="group" size={20} color={Color.cloudyGrey} />
-                    </View>
-                    <View
+                    <Text
                       style={{
                         flex: 1,
-                        justifyContent: 'center',
-                        alignItems: 'flex-start',
-                        paddingHorizontal: 10,
+                        fontSize: 18,
+                        color: Color.lightBlack,
+                        fontFamily: Gilmer.Bold,
+                        marginVertical: 5,
+                      }}>
+                      {item.category}
+                    </Text>
+                    <TouchableOpacity
+                      onPress={() => {
+                        getMarkAllData();
                       }}>
                       <Text
                         style={{
-                          fontSize: 16,
-                          color: Color.black,
-                          fontFamily: Gilmer.Bold,
+                          fontSize: 14,
+                          color: Color.cloudyGrey,
+                          fontFamily: Gilmer.Medium,
                           marginVertical: 5,
-                          lineHeight: 20,
                         }}>
-                        {single_notify?.name}{' '}
+                        {'Mark all as read'}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
+                {item.data.map((single_notify, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    style={{
+                      flex: 1,
+                      borderColor: Color.lightgrey,
+                      borderWidth: 1,
+                      padding: 10,
+                      borderRadius: 10,
+                    }}
+                    disabled={single_notify?.read_at != null}
+                    onPress={() => {
+                      single_notification(single_notify?.id);
+                    }}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'flex-start',
+                      }}>
+                      {/* <Image
+                  source={single_notify.image}
+                  style={{width: 80, height: 80, resizeMode: 'contain'}}
+                /> */}
+                      <View
+                        style={{
+                          flex: 1,
+                          justifyContent: 'center',
+                          alignItems: 'flex-start',
+                          paddingHorizontal: 10,
+                        }}>
+                        <Text
+                          style={{
+                            fontSize: 16,
+                            color: Color.lightBlack,
+                            fontFamily: Gilmer.Bold,
+                            marginVertical: 5,
+                          }}>
+                          {single_notify?.notification?.title}
+                        </Text>
                         <Text
                           style={{
                             fontSize: 14,
                             color: Color.cloudyGrey,
                             fontFamily: Gilmer.Medium,
-                            marginVertical: 5,
-                            lineHeight: 20,
-                          }}>
-                          {single_notify?.role}
+                          }}
+                          numberOfLines={2}>
+                          {single_notify?.notification?.title2}
                         </Text>
-                      </Text>
-                      <Text
-                        style={{
-                          fontSize: 12,
-                          color: Color.cloudyGrey,
-                          fontFamily: Gilmer.Medium,
-                        }}
-                        numberOfLines={2}>
-                        {moment(single_notify?.created_at).format('HH:mm:ss')}
-                      </Text>
+                      </View>
+                      <View style={{alignItems: 'center'}}>
+                        <Icon
+                          name="information-circle"
+                          size={20}
+                          color={Color.primary}
+                          style={{
+                            flex: 1,
+                          }}
+                        />
+                        <Text
+                          style={{
+                            flex: 1,
+                            fontSize: 12,
+                            color: Color.cloudyGrey,
+                            fontFamily: Gilmer.Medium,
+                          }}
+                          numberOfLines={2}>
+                          {/* {single_notify.time} */}
+                          {moment(single_notify?.created_at).format('HH:mm:ss')}
+                        </Text>
+                      </View>
                     </View>
-                  </View>
-                </TouchableOpacity>
-              ))}
-            </View>
-          );
-        }}
-        ListEmptyComponent={() => {
-          return (
-            <View
-              style={{
-                height: height / 1.5,
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginVertical: 10,
-                width: '100%',
-              }}>
-              <MCIcon
-                name="briefcase-variant-off"
-                color={Color.primary}
-                size={20}
-              />
-              <Text
+                  </TouchableOpacity>
+                ))}
+              </View>
+            );
+          }}
+          ListEmptyComponent={() => {
+            return (
+              <View
                 style={{
-                  fontSize: 12,
-                  padding: 5,
-                  paddingHorizontal: 20,
-                  marginStart: 5,
-                  borderRadius: 5,
+                  height: height / 1.5,
+                  alignItems: 'center',
+                  justifyContent: 'center',
                   marginVertical: 10,
-                  color: Color.primary,
-                  fontFamily: Gilmer.Bold,
+                  width: '100%',
                 }}>
-                No Notification Found
-              </Text>
-            </View>
-          );
-        }}
-        showsVerticalScrollIndicator={false}
-      />
+                <MCIcon
+                  name="briefcase-variant-off"
+                  color={Color.primary}
+                  size={20}
+                />
+                <Text
+                  style={{
+                    fontSize: 12,
+                    padding: 5,
+                    paddingHorizontal: 20,
+                    marginStart: 5,
+                    borderRadius: 5,
+                    marginVertical: 10,
+                    color: Color.primary,
+                    fontFamily: Gilmer.Bold,
+                  }}>
+                  No Notification Found
+                </Text>
+              </View>
+            );
+          }}
+          showsVerticalScrollIndicator={false}
+        />
+      ) : (
+        <View
+          style={{
+            height: height / 1.5,
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginVertical: 10,
+            width: '100%',
+          }}>
+          <MCIcon
+            name="briefcase-variant-off"
+            color={Color.primary}
+            size={20}
+          />
+          <Text
+            style={{
+              fontSize: 12,
+              padding: 5,
+              paddingHorizontal: 20,
+              marginStart: 5,
+              borderRadius: 5,
+              marginVertical: 10,
+              color: Color.primary,
+              fontFamily: Gilmer.Bold,
+            }}>
+            No Notification Found
+          </Text>
+        </View>
+      )}
     </View>
   );
 };

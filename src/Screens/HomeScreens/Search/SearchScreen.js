@@ -1,14 +1,18 @@
 import React, {useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Color from '../../../Global/Color';
-import {Searchbar} from 'react-native-paper';
+import {Divider, Searchbar} from 'react-native-paper';
 import F6Icon from 'react-native-vector-icons/FontAwesome6';
 import common_fn from '../../../Config/common_fn';
 import {Gilmer} from '../../../Global/FontFamily';
+import fetchData from '../../../Config/fetchData';
+import {useSelector} from 'react-redux';
+import axios from 'axios';
 
 const SearchScreen = ({navigation}) => {
   const [searchJob, setSearchJob] = useState('');
   const [type, setType] = useState('');
+  const [typeID, setTypeID] = useState(null);
   const [searchLocation, setSearchLocation] = useState('');
   const [TopCompany, setTopCompany] = useState([]);
   const [loadMore, setLoadMore] = useState(false);
@@ -22,6 +26,8 @@ const SearchScreen = ({navigation}) => {
     data: [],
     visible: false,
   });
+  const userData = useSelector(state => state.UserReducer.userData);
+  var {token} = userData;
 
   const [recentSearch] = useState([
     {
@@ -51,11 +57,10 @@ const SearchScreen = ({navigation}) => {
   const propertySearch = async data => {
     setSearchJob(data);
     try {
-      // const data = `search=${searchJob}&page=1&limit=10`;
-      // const getData = await fetchData.search(data);
+      const data = `search=${searchJob}&page=1&limit=10`;
+      const getData = await fetchData.search(data);
       setJobSuggestions({
-        // data: getData?.data?.keyword,
-        data: [],
+        data: getData?.data?.keyword,
         visible: true,
       });
     } catch (error) {
@@ -63,21 +68,59 @@ const SearchScreen = ({navigation}) => {
     }
   };
 
+  const loadMoreData = async () => {
+    if (loadMore || endReached) {
+      return;
+    }
+    setLoadMore(true);
+    try {
+      const nextPage = page + 1;
+      var data = `search=${searchJob}&page=${nextPage}&limit=10`;
+      const filterData = await fetchData.search(data, token);
+      if (filterData.length > 0) {
+        setPage(nextPage);
+        const updatedData = [...jobSuggestions, ...filterData];
+        setJobSuggestions(updatedData);
+      } else {
+        setEndReached(true);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoadMore(false);
+    }
+  };
+
   const getSearchData = async () => {
     try {
-      // if (searchJob != '' && searchLocation != '') {
-      // const data = `string=${searchJob}`;
-      // const getData = await fetchData.add_search(data, token);
-      navigation.navigate('SearchDataList', {
-        location: searchLocation,
-        jobs: searchJob,
-        type: type,
-      });
-      // } else {
-      //   common_fn.showToast('Please select the Job and Location');
-      // }
+      if (searchJob != '' && searchLocation != '') {
+        const data = `string=${searchJob}`;
+        const getData = await fetchData.add_search(data, token);
+        navigation.navigate('SearchDataList', {
+          location: searchLocation,
+          jobs: searchJob,
+          type: type,
+          typeID: typeID,
+        });
+      } else {
+        common_fn.showToast('Please select the Job and Location');
+      }
     } catch (error) {
       console.log('error', error);
+    }
+  };
+
+  const fetchSuggestions = async text => {
+    try {
+      const response = await axios.get(
+        `https://nominatim.openstreetmap.org/search?format=json&limit=1&city=${text}`,
+      );
+      setLocationSuggestion({
+        data: response?.data,
+        visible: true,
+      });
+    } catch (error) {
+      console.error('Error fetching suggestions:', error);
     }
   };
   return (
@@ -91,6 +134,53 @@ const SearchScreen = ({navigation}) => {
         inputStyle={{color: Color.black}}
         onChangeText={search => propertySearch(search)}
       />
+      {jobSuggestions?.visible == true && (
+        <View
+          style={{
+            maxHeight: 200,
+            padding: 10,
+            backgroundColor: Color.white,
+            elevation: 3,
+            borderRadius: 5,
+            marginTop: 5,
+          }}>
+          <FlatList
+            data={jobSuggestions?.data}
+            keyExtractor={(item, index) => item + index}
+            renderItem={({item, index}) => {
+              return (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => {
+                    setSearchJob(item?.keyword);
+                    setType(item?.type);
+                    setTypeID(item?.type_id);
+                    setJobSuggestions({
+                      data: [],
+                      visible: false,
+                    });
+                  }}>
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      fontFamily: Gilmer.Medium,
+                      color: Color.black,
+                    }}>
+                    {item?.keyword}
+                  </Text>
+                  {index < jobSuggestions?.data.length - 1 && (
+                    <Divider style={{height: 1, marginVertical: 5}} />
+                  )}
+                </TouchableOpacity>
+              );
+            }}
+            onEndReached={() => {
+              loadMoreData();
+            }}
+            onEndReachedThreshold={3}
+          />
+        </View>
+      )}
       <Searchbar
         placeholder="Search Location"
         placeholderTextColor={Color.grey}
@@ -101,8 +191,48 @@ const SearchScreen = ({navigation}) => {
         )}
         iconColor={Color.grey}
         inputStyle={{color: Color.black}}
-        onChangeText={search => {}}
+        onChangeText={search => {
+          setSearchLocation(search);
+          fetchSuggestions(search);
+        }}
       />
+      {LocationSuggestion?.data?.length != 0 && (
+        <View
+          style={{
+            maxHeight: 200,
+            padding: 10,
+            backgroundColor: Color.white,
+            elevation: 3,
+            borderRadius: 5,
+            marginTop: 5,
+          }}>
+          {LocationSuggestion?.data?.map((item, index) => {
+            return (
+              <TouchableOpacity
+                key={index}
+                onPress={() => {
+                  setSearchLocation(item?.display_name?.split(',')[0]);
+                  setLocationSuggestion({
+                    data: [],
+                    visible: false,
+                  });
+                }}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontFamily: Gilmer.Medium,
+                    color: Color.black,
+                  }}>
+                  {item?.display_name?.split(',')[0]}
+                </Text>
+                {index < LocationSuggestion?.data.length - 1 && (
+                  <Divider style={{height: 1, marginVertical: 5}} />
+                )}
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+      )}
       <TouchableOpacity
         activeOpacity={0.7}
         style={{

@@ -4,9 +4,40 @@ import Color from '../../Global/Color';
 import {Dropdown} from 'react-native-element-dropdown';
 import {Gilmer} from '../../Global/FontFamily';
 import {Button} from 'react-native-paper';
+import fetchData from '../../Config/fetchData';
+import {useSelector} from 'react-redux';
+import {StackActions} from '@react-navigation/native';
+import common_fn from '../../Config/common_fn';
+import {baseUrl} from '../../Config/base_url';
+import axios from 'axios';
 
-const ContactDetails = ({navigation}) => {
-  const [yearCompletionData, setYearCompletionData] = useState([]);
+const ContactDetails = ({navigation, route}) => {
+  const [country, setCountry] = useState('');
+  const [city, setCity] = useState('');
+  const [address, setAddress] = useState('');
+  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
+  const userData = useSelector(state => state.UserReducer.userData);
+  var {token} = userData;
+
+  const setCompleteData = async () => {
+    try {
+      var data = {
+        country: country,
+        district: city,
+        address: address,
+        phone: phone,
+        email: email,
+      };
+      const complete_data = await fetchData.update_company_details(data, token);
+      console.log('complete_data', complete_data);
+      if (complete_data?.message == 'Profile Updated Successfully') {
+        navigation.dispatch(StackActions.replace('ProfileCompletion'));
+      }
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
   return (
     <View style={styles.container}>
       <View style={{}}>
@@ -41,20 +72,23 @@ const ContactDetails = ({navigation}) => {
               }}>
               Country
             </Text>
-            <Dropdown
-              style={[styles.dropdown]}
-              placeholderStyle={styles.placeholderStyle}
-              selectedTextStyle={styles.selectedTextStyle}
-              inputSearchStyle={styles.inputSearchStyle}
-              iconStyle={styles.iconStyle}
-              data={yearCompletionData}
-              value={''}
-              maxHeight={300}
-              labelField="name"
-              valueField="name"
-              placeholder={'Country'}
-              searchPlaceholder="Search..."
-              onChange={item => {}}
+            <TextInput
+              placeholder="Enter Contry name"
+              placeholderTextColor={Color.cloudyGrey}
+              value={country}
+              onChangeText={text => {
+                setCountry(text);
+              }}
+              style={{
+                borderColor: Color.lightgrey,
+                borderWidth: 1,
+                borderRadius: 5,
+                marginVertical: 10,
+                paddingHorizontal: 10,
+                fontSize: 14,
+                color: Color.cloudyGrey,
+                fontFamily: Gilmer.Medium,
+              }}
             />
           </View>
           <View style={{marginVertical: 10}}>
@@ -69,8 +103,10 @@ const ContactDetails = ({navigation}) => {
             <TextInput
               placeholder="Enter city name"
               placeholderTextColor={Color.cloudyGrey}
-              value={''}
-              onChangeText={text => {}}
+              value={city}
+              onChangeText={text => {
+                setCity(text);
+              }}
               style={{
                 borderColor: Color.lightgrey,
                 borderWidth: 1,
@@ -104,8 +140,10 @@ const ContactDetails = ({navigation}) => {
                 placeholder="Enter full address"
                 placeholderTextColor={Color.cloudyGrey}
                 multiline={true}
-                value={''}
-                onChangeText={text => {}}
+                value={address}
+                onChangeText={text => {
+                  setAddress(text);
+                }}
                 returnKeyType={'done'}
                 style={{
                   color: 'black',
@@ -119,6 +157,7 @@ const ContactDetails = ({navigation}) => {
                   textAlign: 'justify',
                   fontFamily: Gilmer.Medium,
                   paddingHorizontal: 10,
+                  lineHeight: 20,
                 }}
                 textAlignVertical="top"
                 showSoftInputOnFocus={true}
@@ -137,8 +176,10 @@ const ContactDetails = ({navigation}) => {
             <TextInput
               placeholder="Enter Mobile Number"
               placeholderTextColor={Color.cloudyGrey}
-              value={''}
-              onChangeText={text => {}}
+              value={phone}
+              onChangeText={text => {
+                setPhone(text);
+              }}
               style={{
                 borderColor: Color.lightgrey,
                 borderWidth: 1,
@@ -163,8 +204,10 @@ const ContactDetails = ({navigation}) => {
             <TextInput
               placeholder="Enter email address"
               placeholderTextColor={Color.cloudyGrey}
-              value={''}
-              onChangeText={text => {}}
+              value={email}
+              onChangeText={text => {
+                setEmail(text);
+              }}
               style={{
                 borderColor: Color.lightgrey,
                 borderWidth: 1,
@@ -180,17 +223,15 @@ const ContactDetails = ({navigation}) => {
         </View>
         <Button
           mode="contained"
-          onPress={async () => {
-            try {
-              navigation.navigate('ProfileCompletion');
-            } catch (err) {}
+          onPress={() => {
+            setCompleteData();
           }}
           style={{
             backgroundColor: Color.primary,
             marginHorizontal: 10,
           }}
           textColor={Color.white}>
-          Next
+          Complete
         </Button>
       </ScrollView>
     </View>

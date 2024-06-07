@@ -1,16 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import {View, Image, StyleSheet, Animated} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {StackActions, useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {setAsync, setUserData} from './Redux';
 import {useDispatch} from 'react-redux';
 import Color from './Global/Color';
-import { Gilmer } from './Global/FontFamily';
+import {Gilmer} from './Global/FontFamily';
 
 const SplashScreen = ({navigation}) => {
-  const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
-  var {replace} = navigation;
+  const imageScale = new Animated.Value(0.1);
 
   useEffect(() => {
     try {
@@ -37,34 +36,64 @@ const SplashScreen = ({navigation}) => {
 
   const getloginData = async () => {
     try {
-      const value = await AsyncStorage.getItem('UserState');
-      if (value !== null) {
-        const {onboardVisible} = JSON.parse(value);
+      const userStateValue = await AsyncStorage.getItem('UserState');
+      if (userStateValue) {
+        const {onboardVisible} = JSON.parse(userStateValue);
         if (onboardVisible) {
           navigation.replace('OnboardOne');
           return;
         }
       }
 
-      const user_data = await AsyncStorage.getItem('user_data');
-      if (!user_data) {
-        navigation.replace('OnboardOne');
+      const userDataValue = await AsyncStorage.getItem('user_data');
+      if (!userDataValue) {
+        navigation.replace('Auth');
         return;
       }
 
-      // const {token} = JSON.parse(user_data);
-      // if (!token) {
-      //   navigation.replace('OnboardOne');
-      // } else {
-      //   dispatch(setUserData(user_data));
-      //   navigation.replace('TabNavigator');
-      // }
+      const userData = JSON.parse(userDataValue);
+
+      if (!userData.logo || !userData.name) {
+        navigation.dispatch(StackActions.replace('basicDetails'));
+        return;
+      }
+
+      if (
+        !userData.industry_type?.name ||
+        !userData.origanization_type?.name ||
+        !userData.team_size?.name ||
+        !userData.website
+      ) {
+        navigation.dispatch(StackActions.replace('profileDetails'));
+        return;
+      }
+
+      if (!userData.social_links || userData.social_links.length === 0) {
+        navigation.dispatch(StackActions.replace('SocialMedia'));
+        return;
+      }
+      if (
+        !userData.country ||
+        !userData.district ||
+        !userData.address ||
+        !userData?.contactInfo?.phone ||
+        !userData.email
+      ) {
+        navigation.dispatch(StackActions.replace('ContactDetails'));
+        return;
+      }
+
+      const {token} = userData;
+      if (!token) {
+        navigation.replace('OnboardOne');
+      } else {
+        dispatch(setUserData(userData));
+        navigation.replace('TabNavigator');
+      }
     } catch (e) {
       console.log(e);
     }
   };
-
-  const imageScale = new Animated.Value(0.1);
 
   Animated.timing(imageScale, {
     toValue: 1,

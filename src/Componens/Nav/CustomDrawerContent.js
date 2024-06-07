@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   Text,
   View,
@@ -9,22 +9,23 @@ import {
   FlatList,
   LayoutAnimation,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Divider } from 'react-native-paper';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {Divider} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { useSelector, useDispatch } from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Color from '../../Global/Color';
-import { Media } from '../../Global/Media';
-import { Gilmer } from '../../Global/FontFamily';
-import { Iconviewcomponent } from '../Icontag';
+import {Media} from '../../Global/Media';
+import {Gilmer} from '../../Global/FontFamily';
+import {Iconviewcomponent} from '../Icontag';
 import common_fn from '../../Config/common_fn';
+import {setUserData} from '../../Redux';
 
 const CustomDrawerContent = props => {
   const [itemSelected, setItemSelected] = useState('');
-  const userData = useSelector(state => state.UserReducer.userData);
-  var { first_name, last_name, name, email, role } = userData;
   const dispatch = useDispatch();
+  const userData = useSelector(state => state.UserReducer.userData);
+  var {email, name} = userData;
 
   const [visible, setVisible] = useState(false);
 
@@ -87,7 +88,7 @@ const CustomDrawerContent = props => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Color.white }}>
+    <SafeAreaView style={{flex: 1, backgroundColor: Color.white}}>
       <TouchableOpacity
         onPress={() => {
           props.navigation.navigate('ProfileTab');
@@ -110,7 +111,7 @@ const CustomDrawerContent = props => {
             marginTop: 20,
           }}
         />
-        <View style={{ flex: 1, marginHorizontal: 5, marginVertical: 10 }}>
+        <View style={{flex: 1, marginHorizontal: 5, marginVertical: 10}}>
           <Text
             style={{
               fontSize: 16,
@@ -119,7 +120,7 @@ const CustomDrawerContent = props => {
               textTransform: 'capitalize',
             }}
             numberOfLines={1}>
-            Arunachalam Annamalai
+            {name}
           </Text>
           <Text
             style={{
@@ -128,12 +129,12 @@ const CustomDrawerContent = props => {
               fontFamily: Gilmer.SemiBold,
               marginVertical: 5,
             }}>
-            arunachalam@avanexa.com
+            {email}
           </Text>
         </View>
       </TouchableOpacity>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{ marginVertical: 10, marginBottom: 10 }}>
+        <View style={{marginVertical: 10, marginBottom: 10}}>
           <View
             style={{
               backgroundColor:
@@ -213,7 +214,7 @@ const CustomDrawerContent = props => {
             </TouchableOpacity>
           </View>
 
-          <Divider style={{ height: 1, marginVertical: 10 }} />
+          <Divider style={{height: 1, marginVertical: 10}} />
           <View
             style={{
               backgroundColor:
@@ -272,7 +273,7 @@ const CustomDrawerContent = props => {
               marginVertical: 0,
             }}>
             {visible && (
-              <View style={{ paddingHorizontal: 10 }}>
+              <View style={{paddingHorizontal: 10}}>
                 <View
                   style={{
                     backgroundColor:
@@ -512,11 +513,7 @@ const CustomDrawerContent = props => {
               }}>
               <Iconviewcomponent
                 Icontag={'Feather'}
-                iconname={
-                  itemSelected === 'share'
-                    ? 'share-2'
-                    : 'share-2'
-                }
+                iconname={itemSelected === 'share' ? 'share-2' : 'share-2'}
                 icon_size={22}
                 icon_color={
                   itemSelected === 'share' ? Color.white : Color.primary
@@ -554,11 +551,7 @@ const CustomDrawerContent = props => {
               }}>
               <Iconviewcomponent
                 Icontag={'Feather'}
-                iconname={
-                  itemSelected === 'Settings'
-                    ? 'settings'
-                    : 'settings'
-                }
+                iconname={itemSelected === 'Settings' ? 'settings' : 'settings'}
                 icon_size={22}
                 icon_color={
                   itemSelected === 'Settings' ? Color.white : Color.primary
@@ -568,7 +561,8 @@ const CustomDrawerContent = props => {
                 style={{
                   fontSize: 16,
                   marginLeft: 10,
-                  color: itemSelected === 'Settings' ? Color.white : Color.black,
+                  color:
+                    itemSelected === 'Settings' ? Color.white : Color.black,
                   fontFamily:
                     itemSelected === 'Settings' ? Gilmer.Bold : Gilmer.Medium,
                 }}>
@@ -595,7 +589,7 @@ const CustomDrawerContent = props => {
                 setItemSelected('Logout');
                 props.navigation.navigate('Auth');
                 AsyncStorage.clear();
-                // dispatch(setUserData({}));
+                dispatch(setUserData({}));
               }}>
               <Iconviewcomponent
                 Icontag={'MaterialCommunityIcons'}
@@ -622,18 +616,5 @@ const CustomDrawerContent = props => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  customRatingBarStyle: {
-    justifyContent: 'center',
-    flexDirection: 'row',
-    marginTop: 10,
-  },
-  starImageStyle: {
-    width: 40,
-    height: 40,
-    resizeMode: 'cover',
-  },
-});
 
 export default CustomDrawerContent;
