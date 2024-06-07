@@ -36,9 +36,9 @@ const AboutProfile = ({navigation, itemData}) => {
         }}>
         <View style={styles.skillsContainer}>
           <Text style={styles.skillsTitle}>Key Skills</Text>
-          {itemData?.profile?.candidate_skills?.length > 0 && (
+          {itemData?.candidate_skills?.length > 0 && (
             <View style={styles.skills}>
-              {itemData?.profile?.candidate_skills?.map((skill, index) => {
+              {itemData?.candidate_skills?.map((skill, index) => {
                 return (
                   <View key={index} style={styles.skill}>
                     <Text style={styles.skillText}>{skill?.name}</Text>
@@ -48,7 +48,7 @@ const AboutProfile = ({navigation, itemData}) => {
             </View>
           )}
         </View>
-        {itemData?.profile?.candidate_experiences?.length > 0 && (
+        {itemData?.candidate_experiences?.length > 0 && (
           <View>
             <Text
               style={{
@@ -59,7 +59,7 @@ const AboutProfile = ({navigation, itemData}) => {
               }}>
               Work Experience
             </Text>
-            {itemData?.profile?.candidate_experiences?.map((item, index) => {
+            {itemData?.candidate_experiences?.map((item, index) => {
               return (
                 <View
                   key={index}
@@ -111,7 +111,7 @@ const AboutProfile = ({navigation, itemData}) => {
             })}
           </View>
         )}
-        {itemData?.profile?.candidate_education?.length > 0 && (
+        {itemData?.candidate_educations?.length > 0 && (
           <View>
             <Text
               style={{
@@ -122,7 +122,7 @@ const AboutProfile = ({navigation, itemData}) => {
               }}>
               Education
             </Text>
-            {itemData?.profile?.candidate_education?.map((item, index) => {
+            {itemData?.candidate_educations?.map((item, index) => {
               return (
                 <TouchableOpacity
                   key={index}
@@ -188,7 +188,7 @@ const AboutProfile = ({navigation, itemData}) => {
             }}>
             Contact Info
           </Text>
-          {itemData?.profile?.phone != null && (
+          {itemData?.phone != null && (
             <View style={{marginTop: 10}}>
               <Text
                 style={{
@@ -209,11 +209,11 @@ const AboutProfile = ({navigation, itemData}) => {
                   fontFamily: Gilmer.Medium,
                   lineHeight: 25,
                 }}>
-                {itemData?.profile?.phone}
+                {itemData?.phone}
               </Text>
             </View>
           )}
-          {itemData?.profile?.email != null && (
+          {itemData?.email != null && (
             <View style={{}}>
               <Text
                 style={{
@@ -234,11 +234,11 @@ const AboutProfile = ({navigation, itemData}) => {
                   fontFamily: Gilmer.Medium,
                   lineHeight: 25,
                 }}>
-                {itemData?.profile?.email}
+                {itemData?.email}
               </Text>
             </View>
           )}
-          {itemData?.profile?.website != null && (
+          {itemData?.website != null && (
             <View style={{}}>
               <Text
                 style={{
@@ -259,11 +259,11 @@ const AboutProfile = ({navigation, itemData}) => {
                   fontFamily: Gilmer.Medium,
                   lineHeight: 25,
                 }}>
-                {itemData?.profile?.website}
+                {itemData?.website}
               </Text>
             </View>
           )}
-          {itemData?.profile?.address != null && (
+          {itemData?.address != null && (
             <View style={{}}>
               <Text
                 style={{
@@ -284,7 +284,7 @@ const AboutProfile = ({navigation, itemData}) => {
                   fontFamily: Gilmer.Medium,
                   lineHeight: 25,
                 }}>
-                {itemData?.profile?.address}
+                {itemData?.address}
               </Text>
             </View>
           )}
@@ -303,7 +303,7 @@ const AboutProfile = ({navigation, itemData}) => {
             }}>
             Other Details
           </Text>
-          {itemData?.profile?.gender != null && (
+          {itemData?.gender != null && (
             <View style={{flex: 1, marginVertical: 10}}>
               <Text
                 style={{
@@ -324,11 +324,11 @@ const AboutProfile = ({navigation, itemData}) => {
                   marginHorizontal: 20,
                   marginTop: 5,
                 }}>
-                {itemData?.profile?.gender}
+                {itemData?.gender}
               </Text>
             </View>
           )}
-          {itemData?.profile?.marital_status != null && (
+          {itemData?.marital_status != null && (
             <View style={{flex: 1, marginVertical: 10}}>
               <Text
                 style={{
@@ -349,11 +349,11 @@ const AboutProfile = ({navigation, itemData}) => {
                   marginHorizontal: 20,
                   marginTop: 5,
                 }}>
-                {itemData?.profile?.marital_status}
+                {itemData?.marital_status}
               </Text>
             </View>
           )}
-          {itemData?.profile?.candidate_language?.length > 0 && (
+          {itemData?.candidate_language?.length > 0 && (
             <View style={{flex: 1, marginVertical: 10}}>
               <Text
                 style={{
@@ -365,7 +365,7 @@ const AboutProfile = ({navigation, itemData}) => {
                 }}>
                 Languages Known
               </Text>
-              {itemData?.profile?.candidate_language?.map((item, index) => {
+              {itemData?.candidate_language?.map((item, index) => {
                 return (
                   <Text
                     key={index}
@@ -383,7 +383,7 @@ const AboutProfile = ({navigation, itemData}) => {
               })}
             </View>
           )}
-          {itemData?.profile?.birth_date != null && (
+          {itemData?.birth_date != null && (
             <View style={{flex: 1, marginVertical: 10}}>
               <Text
                 style={{
@@ -404,7 +404,7 @@ const AboutProfile = ({navigation, itemData}) => {
                   marginHorizontal: 20,
                   marginTop: 5,
                 }}>
-                {moment(itemData?.profile?.birth_date).format('YYYY-MM-DD')}
+                {moment(itemData?.birth_date).format('YYYY-MM-DD')}
               </Text>
             </View>
           )}
@@ -443,98 +443,61 @@ const Resume = ({itemData}) => {
 
   return (
     <View style={{flex: 1, backgroundColor: Color.white, padding: 10}}>
-      <View
-        style={{
-          marginVertical: 10,
-          borderRadius: 10,
-        }}>
-        <View
-          style={{
-            flex: 1,
-            padding: 10,
-            justifyContent: 'space-between',
-          }}>
-          <View style={{flex: 1, marginHorizontal: 5}}></View>
-        </View>
-        <Button
-          mode="contained"
-          onPress={async () => {
-            try {
-              downloadResume(itemData?.resume?.file, itemData?.resume?.name);
-            } catch (err) {}
-          }}
-          style={{
-            backgroundColor: Color.white,
-            marginHorizontal: 10,
-            borderWidth: 1.5,
-            borderRadius: 5,
-            borderColor: Color.primary,
-          }}
-          icon={() => (
-            <MCIcon name="download" size={20} color={Color.primary} />
-          )}
-          textColor={Color.primary}>
-          Download Resume
-        </Button>
-      </View>
+      {itemData?.candidate_resume?.map((item, index) => {
+        return (
+          <View
+            key={index}
+            style={{
+              marginVertical: 10,
+              borderRadius: 10,
+            }}>
+            <View
+              style={{
+                flex: 1,
+                padding: 10,
+                justifyContent: 'space-between',
+              }}>
+              <View style={{flex: 1, marginHorizontal: 5}}>
+                <Text
+                  style={{
+                    fontFamily: Gilmer.Bold,
+                    fontSize: 16,
+                    color: Color.black,
+                    textTransform: 'capitalize',
+                  }}>
+                  {item?.name}
+                </Text>
+              </View>
+            </View>
+            <Button
+              mode="contained"
+              onPress={async () => {
+                try {
+                  downloadResume(item?.file, itemData?.name);
+                } catch (err) {}
+              }}
+              style={{
+                backgroundColor: Color.white,
+                marginHorizontal: 10,
+                borderWidth: 1.5,
+                borderRadius: 5,
+                borderColor: Color.primary,
+              }}
+              icon={() => (
+                <MCIcon name="download" size={20} color={Color.primary} />
+              )}
+              textColor={Color.primary}>
+              Download Resume
+            </Button>
+          </View>
+        );
+      })}
     </View>
   );
 };
 
-const CoverLetter = ({itemData}) => {
-  return (
-    <View style={{flex: 1, backgroundColor: Color.white, padding: 10}}>
-      {itemData?.cover_letter != '' && itemData?.cover_letter != null ? (
-        <View
-          style={{
-            backgroundColor: Color.white,
-            marginVertical: 10,
-          }}>
-          <Text
-            style={{
-              fontFamily: Gilmer.Bold,
-              fontSize: 16,
-              color: Color.black,
-              textTransform: 'capitalize',
-            }}>
-            Cover Letter
-          </Text>
-          <Text
-            style={{
-              fontFamily: Gilmer.Medium,
-              fontSize: 14,
-              color: Color.black,
-              textTransform: 'capitalize',
-              borderColor: Color.cloudyGrey,
-              borderWidth: 1,
-              padding: 15,
-              borderRadius: 10,
-              marginVertical: 10,
-            }}>
-            {itemData?.cover_letter}
-          </Text>
-        </View>
-      ) : (
-        <View
-          style={{
-            height: height / 2,
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginVertical: 10,
-            width: '100%',
-          }}>
-          <Image
-            source={Media.empty_cover}
-            style={{width: 150, height: 150, resizeMode: 'contain'}}
-          />
-        </View>
-      )}
-    </View>
-  );
-};
-const ApplicantDetails = ({navigation, route}) => {
+const CandidateDetails = ({navigation, route}) => {
   const [id] = useState(route.params.id);
-  console.log('id------------------', id);
   const [itemData, setItemData] = useState({});
   const [SelectedShorlist, setSelectedShorlist] = useState({});
   const [GroupsData, setGroupsData] = useState([]);
@@ -547,7 +510,6 @@ const ApplicantDetails = ({navigation, route}) => {
   const [routes] = React.useState([
     {key: 'about profile', title: 'about profile'},
     {key: 'resume', title: 'resume'},
-    {key: 'cover letter', title: 'cover letter'},
   ]);
 
   const renderScene = ({route}) => {
@@ -556,8 +518,6 @@ const ApplicantDetails = ({navigation, route}) => {
         return <AboutProfile navigation={navigation} itemData={itemData} />;
       case 'resume':
         return <Resume itemData={itemData} />;
-      case 'cover letter':
-        return <CoverLetter itemData={itemData} />;
     }
   };
 
@@ -573,9 +533,8 @@ const ApplicantDetails = ({navigation, route}) => {
 
   const getData = useCallback(async () => {
     try {
-      var data = `applicant_id=${id}`;
-      const company_job = await fetchData.job_applicants(data, token);
-      console.log('company_job', company_job);
+      var data = `id=${id}`;
+      const company_job = await fetchData.candidate_list(data, token);
       setItemData(company_job?.data?.[0]);
       const get_groups_data = await fetchData.get_groups('', token);
       setGroupsData(get_groups_data?.data);
@@ -619,9 +578,8 @@ const ApplicantDetails = ({navigation, route}) => {
     }
   };
 
-  const rejected_item = GroupsData.find(item => itemData?.name === 'Rejected');
+  const rejected_item = GroupsData.find(item => item?.name === 'Rejected');
   const rejected_id_find = rejected_item ? rejected_item.id : null;
-  console.log('itemData?.name', JSON.stringify(itemData));
   return (
     <View style={styles.container}>
       {loading ? (
@@ -946,8 +904,7 @@ const ApplicantDetails = ({navigation, route}) => {
                   fontFamily: Gilmer.Medium,
                   marginBottom: 5,
                 }}>
-                Applied on{' '}
-                {moment(itemData?.profile?.created_at).format('DD MMM YY')}
+                Applied on {moment(itemData?.created_at).format('DD MMM YY')}
               </Text>
             </View>
             <View style={styles.header}>
@@ -958,9 +915,8 @@ const ApplicantDetails = ({navigation, route}) => {
               )}
               <View style={styles.details}>
                 <Text style={styles.name} numberOfLines={1}>
-                  {itemData?.profile?.name != null &&
-                    `${itemData?.profile?.name}  | `}{' '}
-                  {itemData?.job}
+                  {itemData?.name != null && `${itemData?.name}  | `}{' '}
+                  {itemData?.profession_name}
                 </Text>
                 <View style={styles.row}>
                   <Iconviewcomponent
@@ -970,7 +926,7 @@ const ApplicantDetails = ({navigation, route}) => {
                     icon_color={Color.white}
                   />
                   <Text style={styles.location} numberOfLines={1}>
-                    {itemData?.profile?.exact_location}
+                    {itemData?.place}
                   </Text>
                 </View>
                 <View style={styles.row}>
@@ -982,20 +938,22 @@ const ApplicantDetails = ({navigation, route}) => {
                       icon_color={Color.white}
                     />
                     <Text style={styles.experience} numberOfLines={1}>
-                      {itemData?.experience}
+                      {itemData?.experience_name}
                     </Text>
                   </View>
-                  <View style={styles.row}>
-                    <Iconviewcomponent
-                      Icontag={'Entypo'}
-                      iconname={'wallet'}
-                      icon_size={16}
-                      icon_color={Color.white}
-                    />
-                    <Text style={styles.ctc} numberOfLines={1}>
-                      {itemData?.profile?.expected_ctc}
-                    </Text>
-                  </View>
+                  {itemData?.expected_ctc != null && (
+                    <View style={styles.row}>
+                      <Iconviewcomponent
+                        Icontag={'Entypo'}
+                        iconname={'wallet'}
+                        icon_size={16}
+                        icon_color={Color.white}
+                      />
+                      <Text style={styles.ctc} numberOfLines={1}>
+                        {itemData?.expected_ctc}
+                      </Text>
+                    </View>
+                  )}
                 </View>
               </View>
             </View>
@@ -1131,7 +1089,7 @@ const ApplicantDetails = ({navigation, route}) => {
   );
 };
 
-export default ApplicantDetails;
+export default CandidateDetails;
 
 const styles = StyleSheet.create({
   container: {

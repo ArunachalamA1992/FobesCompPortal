@@ -34,6 +34,7 @@ import BuySubscriptions from './Screens/BuySubscriptions';
 import PromoteJob from './Screens/SideMenu/PromoteJob';
 import SearchDataList from './Screens/HomeScreens/Search/SearchDataList';
 import ProfileScreen from './Screens/Profile/ProfileScreen';
+import CandidateDetails from './Screens/HomeScreens/CandidateDetails';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -379,6 +380,11 @@ const MainApp = () => {
         <Stack.Screen
           name="applicantdetails"
           component={ApplicantDetails}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="candidateDetails"
+          component={CandidateDetails}
           options={{headerShown: false}}
         />
         <Stack.Screen

@@ -39,7 +39,7 @@ const ItemCard = props => {
       };
       const job_view = await fetchData.company_profile_view(data, token);
       if (job_view) {
-        navigation.navigate('applicantdetails', {id: id});
+        navigation.navigate('candidateDetails', {id: id});
       } else {
         common_fn.showToast(job_view?.message);
       }
@@ -66,7 +66,7 @@ const ItemCard = props => {
   return (
     <TouchableOpacity
       onPress={() => {
-        job_profile_view(item?.id);
+        job_profile_view(item?.candidate_id);
       }}
       style={styles.card}>
       <View style={styles.header}>

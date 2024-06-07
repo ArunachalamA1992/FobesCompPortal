@@ -25,20 +25,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import fetchData from '../../Config/fetchData';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
-const All = ({acticityData, navigation, activityLoading}) => {
-  const job_profile_view = async id => {
-    try {
-      var data = {
-        candidate_id: id,
-      };
-      const job_view = await fetchData.company_profile_view(data, token);
-      if (job_view) {
-        navigation.navigate('applicantdetails', {id: id});
-      }
-    } catch (error) {
-      console.log('error', error);
-    }
-  };
+const All = ({acticityData, navigation, activityLoading, token}) => {
   return (
     <View style={{flex: 1}}>
       {activityLoading ? (
@@ -110,7 +97,9 @@ const All = ({acticityData, navigation, activityLoading}) => {
             return (
               <TouchableOpacity
                 onPress={() => {
-                  job_profile_view(item?.id);
+                  navigation.navigate('candidateDetails', {
+                    id: item?.candidate_id,
+                  });
                 }}
                 key={index}
                 style={{
@@ -226,20 +215,7 @@ const All = ({acticityData, navigation, activityLoading}) => {
     </View>
   );
 };
-const Called = ({acticityData, navigation, activityLoading}) => {
-  const job_profile_view = async id => {
-    try {
-      var data = {
-        candidate_id: id,
-      };
-      const job_view = await fetchData.company_profile_view(data, token);
-      if (job_view) {
-        navigation.navigate('applicantdetails', {id: id});
-      }
-    } catch (error) {
-      console.log('error', error);
-    }
-  };
+const Called = ({acticityData, navigation, activityLoading, token}) => {
   return (
     <View style={{flex: 1}}>
       {activityLoading ? (
@@ -311,7 +287,9 @@ const Called = ({acticityData, navigation, activityLoading}) => {
             return (
               <TouchableOpacity
                 onPress={() => {
-                  job_profile_view(item?.id);
+                  navigation.navigate('candidateDetails', {
+                    id: item?.candidate_id,
+                  });
                 }}
                 key={index}
                 style={{
@@ -423,20 +401,7 @@ const Called = ({acticityData, navigation, activityLoading}) => {
     </View>
   );
 };
-const Viewed = ({acticityData, navigation, activityLoading}) => {
-  const job_profile_view = async id => {
-    try {
-      var data = {
-        candidate_id: id,
-      };
-      const job_view = await fetchData.company_profile_view(data, token);
-      if (job_view) {
-        navigation.navigate('applicantdetails', {id: id});
-      }
-    } catch (error) {
-      console.log('error', error);
-    }
-  };
+const Viewed = ({acticityData, navigation, activityLoading, token}) => {
   return (
     <View style={{flex: 1}}>
       {activityLoading ? (
@@ -508,7 +473,9 @@ const Viewed = ({acticityData, navigation, activityLoading}) => {
             return (
               <TouchableOpacity
                 onPress={() => {
-                  job_profile_view(item?.id);
+                  navigation.navigate('candidateDetails', {
+                    id: item?.candidate_id,
+                  });
                 }}
                 key={index}
                 style={{
@@ -620,20 +587,7 @@ const Viewed = ({acticityData, navigation, activityLoading}) => {
     </View>
   );
 };
-const Mailed = ({acticityData, navigation, activityLoading}) => {
-  const job_profile_view = async id => {
-    try {
-      var data = {
-        candidate_id: id,
-      };
-      const job_view = await fetchData.company_profile_view(data, token);
-      if (job_view) {
-        navigation.navigate('applicantdetails', {id: id});
-      }
-    } catch (error) {
-      console.log('error', error);
-    }
-  };
+const Mailed = ({acticityData, navigation, activityLoading, token}) => {
   return (
     <View style={{flex: 1}}>
       {activityLoading ? (
@@ -705,7 +659,9 @@ const Mailed = ({acticityData, navigation, activityLoading}) => {
             return (
               <TouchableOpacity
                 onPress={() => {
-                  job_profile_view(item?.id);
+                  navigation.navigate('candidateDetails', {
+                    id: item?.candidate_id,
+                  });
                 }}
                 key={index}
                 style={{
@@ -984,6 +940,7 @@ const HomeScreen = ({navigation}) => {
             acticityData={acticityData}
             navigation={navigation}
             activityLoading={activityLoading}
+            token={token}
           />
         );
       case 'called':
@@ -992,6 +949,7 @@ const HomeScreen = ({navigation}) => {
             acticityData={acticityData}
             navigation={navigation}
             activityLoading={activityLoading}
+            token={token}
           />
         );
       case 'viewed':
@@ -1000,6 +958,7 @@ const HomeScreen = ({navigation}) => {
             acticityData={acticityData}
             navigation={navigation}
             activityLoading={activityLoading}
+            token={token}
           />
         );
       case 'mailed':
@@ -1008,6 +967,7 @@ const HomeScreen = ({navigation}) => {
             acticityData={acticityData}
             navigation={navigation}
             activityLoading={activityLoading}
+            token={token}
           />
         );
     }
