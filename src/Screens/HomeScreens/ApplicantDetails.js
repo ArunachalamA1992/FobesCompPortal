@@ -986,7 +986,7 @@ const ApplicantDetails = ({navigation, route}) => {
                       icon_color={Color.white}
                     />
                     <Text style={styles.experience} numberOfLines={1}>
-                      {itemData?.experience}
+                      {itemData?.experience_name}
                     </Text>
                   </View>
                   <View style={styles.row}>
@@ -1069,6 +1069,7 @@ const ApplicantDetails = ({navigation, route}) => {
                 placeholderStyle={styles.placeholderStyle}
                 selectedTextStyle={styles.selectedTextStyle}
                 inputSearchStyle={styles.inputSearchStyle}
+                itemTextStyle={{color: Color.black}}
                 iconStyle={styles.iconStyle}
                 data={GroupsData}
                 value={SelectedShorlist}

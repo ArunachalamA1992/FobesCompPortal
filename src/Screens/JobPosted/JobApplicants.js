@@ -1,4 +1,4 @@
-import React, {act, useCallback, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Dimensions,
   FlatList,
@@ -13,13 +13,10 @@ import {
 import Color from '../../Global/Color';
 import {TabBar, TabView} from 'react-native-tab-view';
 import {Gilmer} from '../../Global/FontFamily';
-import {job_data} from '../../Config/Content';
-import FeIcon from 'react-native-vector-icons/Feather';
 import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Iconviewcomponent} from '../../Componens/Icontag';
-import {Button} from 'react-native-paper';
 import {Dropdown} from 'react-native-element-dropdown';
 import {useSelector} from 'react-redux';
 import fetchData from '../../Config/fetchData';
@@ -34,11 +31,11 @@ const Applies = ({
   navigation,
   job_posting,
   getToggleJobs,
-  GroupsData,
   token,
   loading,
   getActivityData,
 }) => {
+  const [GroupsData, setGroupsData] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState({
     id: 1,
     name: 'All',
@@ -46,10 +43,23 @@ const Applies = ({
   });
   const [SelectedShorlist, setSelectedShorlist] = useState({});
 
-  const job_profile_view = async id => {
+  useEffect(() => {
+    getGroupData();
+  }, [token]);
+
+  const getGroupData = async () => {
+    try {
+      const get_groups_data = await fetchData.get_groups('', token);
+      setGroupsData(get_groups_data?.data);
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
+
+  const job_profile_view = async (candidate_id, id) => {
     try {
       var data = {
-        candidate_id: id,
+        candidate_id: candidate_id,
       };
       const job_view = await fetchData.company_profile_view(data, token);
       if (job_view) {
@@ -61,6 +71,7 @@ const Applies = ({
   };
 
   const candidate_result = async (groupId, id, status) => {
+    console.log('groupId------------', groupId);
     try {
       let data = {
         applicant_id: id,
@@ -73,7 +84,9 @@ const Applies = ({
       } else if (status === 'group') {
         data.application_group_id = groupId;
       }
+      console.log('data------group', data);
       const job_view = await fetchData.result_applicants(data, token);
+      console.log('job_view', job_view);
       if (job_view) {
         common_fn.showToast(job_view?.message);
       }
@@ -84,7 +97,15 @@ const Applies = ({
 
   const rejected_item = GroupsData.find(item => item?.name === 'Rejected');
   const rejected_id_find = rejected_item ? rejected_item.id : null;
+  const [selectedValues, setSelectedValues] = useState({});
 
+  const handleChange = (group, itemId) => {
+    setSelectedValues(prevValues => ({
+      ...prevValues,
+      [itemId]: group,
+    }));
+    candidate_result(group?.id, itemId, 'group');
+  };
   return (
     <View style={{flex: 1}}>
       {loading ? (
@@ -261,11 +282,12 @@ const Applies = ({
           <FlatList
             data={job_posting}
             showsVerticalScrollIndicator={false}
-            renderItem={({item}) => {
+            renderItem={({item, index}) => {
               return (
                 <TouchableOpacity
+                  key={index}
                   onPress={() => {
-                    job_profile_view(item?.id);
+                    job_profile_view(item?.candidate_id, item?.id);
                   }}
                   style={styles.card}>
                   <View
@@ -326,7 +348,7 @@ const Applies = ({
                               icon_color={Color.cloudyGrey}
                             />
                             <Text style={styles.experience} numberOfLines={1}>
-                              {item?.experience}
+                              {item?.experience_name}
                             </Text>
                           </View>
                           <View style={styles.row}>
@@ -369,16 +391,18 @@ const Applies = ({
                       selectedTextStyle={styles.selectedTextStyle}
                       inputSearchStyle={styles.inputSearchStyle}
                       iconStyle={styles.iconStyle}
+                      itemTextStyle={{color: Color.black}}
                       data={GroupsData}
                       value={SelectedShorlist}
                       labelField="name"
                       valueField="name"
                       placeholder={'Shorlist'}
                       searchPlaceholder="Search..."
-                      onChange={group => {
-                        setSelectedShorlist(group);
-                        candidate_result(group?.id, item?.id, 'group');
-                      }}
+                      // onChange={group => {
+                      //   setSelectedShorlist(group);
+                      //   candidate_result(group?.id, item?.id, 'group');
+                      // }}
+                      onChange={group => handleChange(group, item.id)}
                     />
                     <TouchableOpacity
                       onPress={() => {
@@ -477,10 +501,10 @@ const Applies = ({
 };
 
 const Shortlisted = ({navigation, job_posting, token, loading}) => {
-  const job_profile_view = async id => {
+  const job_profile_view = async (candidate_id, id) => {
     try {
       var data = {
-        candidate_id: id,
+        candidate_id: candidate_id,
       };
       const job_view = await fetchData.company_profile_view(data, token);
       if (job_view) {
@@ -562,7 +586,7 @@ const Shortlisted = ({navigation, job_posting, token, loading}) => {
             return (
               <TouchableOpacity
                 onPress={() => {
-                  job_profile_view(item?.id);
+                  job_profile_view(item?.candidate_id, item?.id);
                 }}
                 style={styles.card}>
                 <View
@@ -605,7 +629,7 @@ const Shortlisted = ({navigation, job_posting, token, loading}) => {
                           icon_color={Color.cloudyGrey}
                         />
                         <Text style={styles.experience} numberOfLines={1}>
-                          {item?.experience}
+                          {item?.experience_name}
                         </Text>
                       </View>
                       <View style={styles.row}>
@@ -666,10 +690,10 @@ const Shortlisted = ({navigation, job_posting, token, loading}) => {
 };
 
 const Rejected = ({navigation, job_posting, token, loading}) => {
-  const job_profile_view = async id => {
+  const job_profile_view = async (candidate_id, id) => {
     try {
       var data = {
-        candidate_id: id,
+        candidate_id: candidate_id,
       };
       const job_view = await fetchData.company_profile_view(data, token);
       if (job_view) {
@@ -751,7 +775,7 @@ const Rejected = ({navigation, job_posting, token, loading}) => {
             return (
               <TouchableOpacity
                 onPress={() => {
-                  job_profile_view(item?.id);
+                  job_profile_view(item?.candidate_id, item?.id);
                 }}
                 style={styles.card}>
                 <View
@@ -794,7 +818,7 @@ const Rejected = ({navigation, job_posting, token, loading}) => {
                           icon_color={Color.cloudyGrey}
                         />
                         <Text style={styles.experience} numberOfLines={1}>
-                          {item?.experience}
+                          {item?.experience_name}
                         </Text>
                       </View>
                       <View style={styles.row}>
@@ -859,7 +883,6 @@ const JobApplicants = ({navigation, route}) => {
   const layout = useWindowDimensions();
   const [job_posting, setJobPosting] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [GroupsData, setGroupsData] = useState([]);
   const userData = useSelector(state => state.UserReducer.userData);
   var {token} = userData;
 
@@ -914,8 +937,6 @@ const JobApplicants = ({navigation, route}) => {
       const company_job = await fetchData.job_applicants(data, token);
       console.log('company_job?.data', company_job?.data);
       setJobPosting(company_job?.data);
-      const get_groups_data = await fetchData.get_groups('', token);
-      setGroupsData(get_groups_data?.data);
     } catch (error) {
       console.log('error', error);
     } finally {
@@ -957,7 +978,6 @@ const JobApplicants = ({navigation, route}) => {
             job_posting={job_posting}
             token={token}
             getToggleJobs={getToggleJobs}
-            GroupsData={GroupsData}
             loading={loading}
             getActivityData={getActivityData}
           />
@@ -1127,6 +1147,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 5,
     marginHorizontal: 10,
+    color: Color.black,
   },
   icon: {
     marginRight: 5,
@@ -1160,7 +1181,7 @@ const styles = StyleSheet.create({
   inputSearchStyle: {
     height: 40,
     fontSize: 16,
-    color: Color.primary,
+    color: Color.black,
     fontFamily: Gilmer.Medium,
   },
 });

@@ -286,7 +286,7 @@ const TabNavigator = () => {
                   Icontag={'MaterialIcons'}
                   iconname={'person-search'}
                   icon_size={25}
-                  icon_color={Color}
+                  icon_color={color}
                 />
                 {/* <Text
                   style={{
@@ -330,7 +330,7 @@ const TabNavigator = () => {
                   Icontag={'Ionicons'}
                   iconname={'bookmark'}
                   icon_size={25}
-                  icon_color={Color}
+                  icon_color={color}
                 />
                 {/* <Text
                   style={{
@@ -374,7 +374,7 @@ const TabNavigator = () => {
                   Icontag={'FontAwesome'}
                   iconname={'briefcase'}
                   icon_size={25}
-                  icon_color={Color}
+                  icon_color={color}
                 />
                 {/* <Text
                   style={{

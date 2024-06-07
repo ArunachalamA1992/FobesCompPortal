@@ -134,6 +134,7 @@ const Profile = ({navigation, route}) => {
               selectedTextStyle={styles.selectedTextStyle}
               inputSearchStyle={styles.inputSearchStyle}
               iconStyle={styles.iconStyle}
+              itemTextStyle={{color: Color.black}}
               data={OrganizationData}
               value={OrganizationType}
               maxHeight={300}
@@ -161,6 +162,7 @@ const Profile = ({navigation, route}) => {
               placeholderStyle={styles.placeholderStyle}
               selectedTextStyle={styles.selectedTextStyle}
               inputSearchStyle={styles.inputSearchStyle}
+              itemTextStyle={{color: Color.black}}
               iconStyle={styles.iconStyle}
               data={IndustryData}
               value={IndustryType}
@@ -189,6 +191,7 @@ const Profile = ({navigation, route}) => {
               placeholderStyle={styles.placeholderStyle}
               selectedTextStyle={styles.selectedTextStyle}
               inputSearchStyle={styles.inputSearchStyle}
+              itemTextStyle={{color: Color.black}}
               iconStyle={styles.iconStyle}
               data={TeamSizeData}
               value={TeamSize}

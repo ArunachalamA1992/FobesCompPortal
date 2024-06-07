@@ -118,6 +118,7 @@ const SocialMedia = ({navigation, route}) => {
                   placeholderStyle={styles.placeholderStyle}
                   selectedTextStyle={styles.selectedTextStyle}
                   inputSearchStyle={styles.inputSearchStyle}
+                  itemTextStyle={{color: Color.black}}
                   iconStyle={styles.iconStyle}
                   data={socialData}
                   maxHeight={300}

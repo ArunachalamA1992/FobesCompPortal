@@ -103,7 +103,7 @@ const ItemCard = props => {
                 icon_color={'#309CD2'}
               />
               <Text style={styles.experience} numberOfLines={1}>
-                {item?.experience}
+                {item?.experience_name}
               </Text>
             </View>
             <View style={styles.row}>

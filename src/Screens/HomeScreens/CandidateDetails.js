@@ -1028,6 +1028,7 @@ const CandidateDetails = ({navigation, route}) => {
                 selectedTextStyle={styles.selectedTextStyle}
                 inputSearchStyle={styles.inputSearchStyle}
                 iconStyle={styles.iconStyle}
+                itemTextStyle={{color: Color.black}}
                 data={GroupsData}
                 value={SelectedShorlist}
                 labelField="name"
