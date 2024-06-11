@@ -26,25 +26,43 @@ const Register = ({navigation}) => {
   const [password_visible, setPasswordvisibility] = useState(false);
   const [confirmPassword_visible, setConfirmPasswordVisibility] =
     useState(false);
+  const [error, setError] = useState('');
 
   const register = async () => {
+    if (!username || !email || !phone || !password || !confirmPassword) {
+      common_fn.showToast('All fields are required');
+      return;
+    }
+
+    if (password.length < 6 || confirmPassword.length < 6) {
+      common_fn.showToast('Password must be at least 6 characters long');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      common_fn.showToast('Passwords do not match');
+      return;
+    }
+
+    const data = {
+      name: username,
+      email: email,
+      phone: phone,
+      password: password,
+      role: 'company',
+    };
+
     try {
-      var data = {
-        name: username,
-        email: email,
-        phone: phone,
-        password: password,
-        role: 'company',
-      };
-      const register_data = await fetchData.register(data, null);
-      if (register_data?.message == 'Registered Successfully') {
+      const registerData = await fetchData.register(data, null);
+      if (registerData?.message === 'Registered Successfully') {
+        common_fn.showToast(registerData?.message);
         navigation.navigate('Login');
-        common_fn.showToast(register_data?.message);
       } else {
-        common_fn.showToast(register_data?.message);
+        common_fn.showToast(registerData?.message);
       }
     } catch (error) {
-      console.log('error', error);
+      console.error('Registration error', error);
+      common_fn.showToast('Registration failed. Please try again.');
     }
   };
 
