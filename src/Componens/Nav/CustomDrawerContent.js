@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   Text,
   View,
@@ -9,23 +9,23 @@ import {
   FlatList,
   LayoutAnimation,
 } from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {Divider} from 'react-native-paper';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Divider } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {useSelector, useDispatch} from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Color from '../../Global/Color';
-import {Media} from '../../Global/Media';
-import {Gilmer} from '../../Global/FontFamily';
-import {Iconviewcomponent} from '../Icontag';
+import { Media } from '../../Global/Media';
+import { Gilmer } from '../../Global/FontFamily';
+import { Iconviewcomponent } from '../Icontag';
 import common_fn from '../../Config/common_fn';
-import {setUserData} from '../../Redux';
+import { setUserData } from '../../Redux';
 
 const CustomDrawerContent = props => {
   const [itemSelected, setItemSelected] = useState('');
   const dispatch = useDispatch();
   const userData = useSelector(state => state.UserReducer.userData);
-  var {email, name} = userData;
+  var { email, name } = userData;
 
   const [visible, setVisible] = useState(false);
 
@@ -88,7 +88,7 @@ const CustomDrawerContent = props => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: Color.white}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Color.white }}>
       <TouchableOpacity
         onPress={() => {
           props.navigation.navigate('ProfileTab');
@@ -111,7 +111,7 @@ const CustomDrawerContent = props => {
             marginTop: 20,
           }}
         />
-        <View style={{flex: 1, marginHorizontal: 5, marginVertical: 10}}>
+        <View style={{ flex: 1, marginHorizontal: 5, marginVertical: 10 }}>
           <Text
             style={{
               fontSize: 16,
@@ -134,11 +134,11 @@ const CustomDrawerContent = props => {
         </View>
       </TouchableOpacity>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{marginVertical: 10, marginBottom: 10}}>
+        <View style={{ marginVertical: 10, marginBottom: 10 }}>
           <View
             style={{
               backgroundColor:
-                itemSelected === 'jobs' ? Color.primary : Color.white,
+                itemSelected === 'Home' ? Color.primary : Color.white,
               marginVertical: 0,
             }}>
             <TouchableOpacity
@@ -150,26 +150,26 @@ const CustomDrawerContent = props => {
                 padding: 10,
               }}
               onPress={() => {
-                setItemSelected('jobs');
-                props.navigation.navigate('AppliedJobs');
+                setItemSelected('Home');
+                props.navigation.navigate('TabNavigator');
               }}>
               <Iconviewcomponent
                 Icontag={'Ionicons'}
                 iconname={'home'}
                 icon_size={22}
                 icon_color={
-                  itemSelected === 'jobs' ? Color.white : Color.primary
+                  itemSelected === 'Home' ? Color.white : Color.primary
                 }
               />
               <Text
                 style={{
                   fontSize: 16,
                   marginLeft: 10,
-                  color: itemSelected === 'jobs' ? Color.white : Color.black,
+                  color: itemSelected === 'Home' ? Color.white : Color.black,
                   fontFamily:
-                    itemSelected === 'jobs' ? Gilmer.Bold : Gilmer.Medium,
+                    itemSelected === 'Home' ? Gilmer.Bold : Gilmer.Medium,
                 }}>
-                Applied Jobs
+                Dashboard
               </Text>
             </TouchableOpacity>
           </View>
@@ -214,7 +214,7 @@ const CustomDrawerContent = props => {
             </TouchableOpacity>
           </View>
 
-          <Divider style={{height: 1, marginVertical: 10}} />
+          <Divider style={{ height: 1, marginVertical: 10 }} />
           <View
             style={{
               backgroundColor:
@@ -273,7 +273,7 @@ const CustomDrawerContent = props => {
               marginVertical: 0,
             }}>
             {visible && (
-              <View style={{paddingHorizontal: 10}}>
+              <View style={{ paddingHorizontal: 10 }}>
                 <View
                   style={{
                     backgroundColor:
@@ -460,7 +460,7 @@ const CustomDrawerContent = props => {
               }}
               onPress={() => {
                 setItemSelected('termscondition');
-                props.navigation.navigate('TermsCondition');
+                props.navigation.navigate('TermsandConditions');
               }}>
               <Iconviewcomponent
                 Icontag={'FontAwesome'}
@@ -532,7 +532,7 @@ const CustomDrawerContent = props => {
             </TouchableOpacity>
           </View>
 
-          <View
+          {/* <View
             style={{
               backgroundColor:
                 itemSelected === 'Settings' ? Color.primary : Color.white,
@@ -569,7 +569,7 @@ const CustomDrawerContent = props => {
                 Settings
               </Text>
             </TouchableOpacity>
-          </View>
+          </View> */}
 
           <View
             style={{

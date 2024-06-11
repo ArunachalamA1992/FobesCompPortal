@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -8,25 +8,50 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Color from '../../Global/Color';
-import {Gilmer} from '../../Global/FontFamily';
+import { Gilmer } from '../../Global/FontFamily';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useTheme} from 'react-native-paper';
-import {Iconviewcomponent} from '../../Componens/Icontag';
+import { useTheme } from 'react-native-paper';
+import { Iconviewcomponent } from '../../Componens/Icontag';
 import fetchData from '../../Config/fetchData';
 import common_fn from '../../Config/common_fn';
 
-const Register = ({navigation}) => {
+const Register = ({ navigation }) => {
   const [username, setUsername] = useState('');
   const [checked, setChecked] = useState(false);
   const [email, setEmail] = useState('');
+  const [emailValidError, setEmailValidError] = useState('');
+
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [minPass, setMinPass] = useState('');
+  const [minconPass, setMinConPass] = useState('');
   const [password_visible, setPasswordvisibility] = useState(false);
-  const [confirmPassword_visible, setConfirmPasswordVisibility] =
-    useState(false);
-  const [error, setError] = useState('');
+  const [confirmPassword_visible, setConfirmPasswordVisibility] = useState(false);
+  const [confirmPasserror, setConfirmPassError] = useState('');
+
+
+  const handleValidEmail = val => {
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+    if (val.length === 0) {
+      setEmailValidError('Email address must be enter');
+    } else if (reg.test(val) === false) {
+      setEmailValidError('Enter valid email address');
+    } else if (reg.test(val) === true) {
+      setEmailValidError('');
+    }
+  };
+
+
+  const handleConfirmPasswordChange = (value) => {
+    setConfirmPassword(value);
+    if (password !== value) {
+      setConfirmPassError('Passwords do not match');
+    } else {
+      setConfirmPassError('');
+    }
+  };
+
 
   const register = async () => {
     if (!username || !email || !phone || !password || !confirmPassword) {
@@ -98,134 +123,203 @@ const Register = ({navigation}) => {
         </Text>
       </View>
 
-      <View style={styles.textContainer}>
-        <Iconviewcomponent
-          Icontag={'Ionicons'}
-          iconname={'person'}
-          icon_size={22}
-          iconstyle={{color: Color.transparantBlack}}
-        />
-        <TextInput
-          style={[styles.numberTextBox, {paddingHorizontal: 10}]}
-          placeholder="HR Name"
-          placeholderTextColor={Color.transparantBlack}
-          value={username}
-          onChangeText={text => {
-            setUsername(text);
-          }}
-          keyboardType="name-phone-pad"
-        />
+      <View style={{ marginVertical: 5 }}>
+        <Text style={{ textAlign: 'left', fontSize: 15, paddingHorizontal: 10, paddingVertical: 5, color: Color.cloudyGrey, fontFamily: Gilmer.Bold }}>
+          HR Name *
+        </Text>
+        <View style={styles.textContainer}>
+          <Iconviewcomponent
+            Icontag={'Ionicons'}
+            iconname={'person'}
+            icon_size={22}
+            iconstyle={{ color: Color.transparantBlack }}
+          />
+          <TextInput
+            style={[styles.numberTextBox, { paddingHorizontal: 10 }]}
+            placeholder="Enter HR Name"
+            placeholderTextColor={Color.transparantBlack}
+            value={username}
+            onChangeText={text => {
+              setUsername(text);
+            }}
+            keyboardType="name-phone-pad"
+          />
+        </View>
       </View>
 
-      <View style={styles.textContainer}>
-        <Iconviewcomponent
-          Icontag={'Ionicons'}
-          iconname={'mail'}
-          icon_size={22}
-          iconstyle={{color: Color.transparantBlack}}
-        />
-        <TextInput
-          style={[styles.numberTextBox, {paddingHorizontal: 10}]}
-          placeholder="Official Email Address"
-          value={email}
-          placeholderTextColor={Color.transparantBlack}
-          onChangeText={text => {
-            setEmail(text);
-            // handleValidEmail(text);
-          }}
-          keyboardType="email-address"
-        />
+      <View style={{ marginVertical: 5 }}>
+        <Text style={{ textAlign: 'left', fontSize: 15, paddingHorizontal: 10, paddingVertical: 5, color: Color.cloudyGrey, fontFamily: Gilmer.Bold }}>
+          Official Email Address *
+        </Text>
+        <View style={styles.textContainer}>
+          <Iconviewcomponent
+            Icontag={'Ionicons'}
+            iconname={'mail'}
+            icon_size={22}
+            iconstyle={{ color: Color.transparantBlack }}
+          />
+          <TextInput
+            style={[styles.numberTextBox, { paddingHorizontal: 10 }]}
+            placeholder="Official Email Address"
+            value={email}
+            placeholderTextColor={Color.transparantBlack}
+            onChangeText={value => {
+              setEmail(value);
+              handleValidEmail(value);
+            }}
+            keyboardType="email-address"
+          />
+        </View>
+        {emailValidError ? (
+          <Text
+            style={{
+              width: '100%',
+              textAlign: 'left',
+              fontFamily: Gilmer.Regular,
+              fontSize: 14,
+              color: 'red',
+            }}>
+            {emailValidError}
+          </Text>
+        ) : null}
       </View>
 
-      <View style={styles.textContainer}>
-        <Iconviewcomponent
-          Icontag={'Ionicons'}
-          iconname={'call'}
-          icon_size={22}
-          iconstyle={{color: Color.transparantBlack}}
-        />
-        <TextInput
-          style={[styles.numberTextBox, {paddingHorizontal: 10}]}
-          placeholder="Mobile Number"
-          placeholderTextColor={Color.transparantBlack}
-          value={phone}
-          onChangeText={text => setPhone(text)}
-          keyboardType="number-pad"
-          maxLength={10}
-        />
+      <View style={{ marginVertical: 5 }}>
+        <Text style={{ textAlign: 'left', fontSize: 15, paddingHorizontal: 10, paddingVertical: 5, color: Color.cloudyGrey, fontFamily: Gilmer.Bold }}>
+          Mobile Number *
+        </Text>
+        <View style={styles.textContainer}>
+          <Iconviewcomponent
+            Icontag={'Ionicons'}
+            iconname={'call'}
+            icon_size={22}
+            iconstyle={{ color: Color.transparantBlack }}
+          />
+          <TextInput
+            style={[styles.numberTextBox, { paddingHorizontal: 10 }]}
+            placeholder="Mobile Number"
+            placeholderTextColor={Color.transparantBlack}
+            value={phone}
+            onChangeText={text => setPhone(text)}
+            keyboardType="number-pad"
+            maxLength={10}
+          />
+        </View>
       </View>
 
-      <View style={styles.textContainer}>
-        <Iconviewcomponent
-          Icontag={'MaterialCommunityIcons'}
-          iconname={'lock'}
-          icon_size={22}
-          iconstyle={{color: Color.transparantBlack}}
-        />
-        <TextInput
-          style={[styles.numberTextBox, {paddingHorizontal: 10}]}
-          placeholder="Password"
-          placeholderTextColor={Color.transparantBlack}
-          secureTextEntry={!password_visible}
-          value={password}
-          onChangeText={text => {
-            if (text.length < 6) {
-              setMinPass('set minimum character as 6');
-              setPassword(text);
-            } else {
-              setPassword(text);
-              setMinPass('');
-            }
-          }}
-          keyboardType="name-phone-pad"
-        />
-        <TouchableOpacity
-          onPress={() => setPasswordvisibility(!password_visible)}
-          style={styles.numberCountryCode}>
+      <View style={{ marginVertical: 5 }}>
+        <Text style={{ textAlign: 'left', fontSize: 15, paddingHorizontal: 10, paddingVertical: 5, color: Color.cloudyGrey, fontFamily: Gilmer.Bold }}>
+          Password *
+        </Text>
+        <View style={styles.textContainer}>
           <Iconviewcomponent
             Icontag={'MaterialCommunityIcons'}
-            iconname={!password_visible ? 'eye-off' : 'eye'}
+            iconname={'lock'}
             icon_size={22}
-            iconstyle={{color: Color.transparantBlack}}
+            iconstyle={{ color: Color.transparantBlack }}
           />
-        </TouchableOpacity>
+          <TextInput
+            style={[styles.numberTextBox, { paddingHorizontal: 10 }]}
+            placeholder="Password"
+            placeholderTextColor={Color.transparantBlack}
+            secureTextEntry={!password_visible}
+            value={password}
+            onChangeText={password => {
+              if (password.length < 6) {
+                setMinPass('set minimum character as 6');
+                setPassword(password);
+              } else {
+                setPassword(password);
+                setMinPass('');
+              }
+            }}
+            keyboardType="name-phone-pad"
+          />
+          <TouchableOpacity
+            onPress={() => setPasswordvisibility(!password_visible)}
+            style={styles.numberCountryCode}>
+            <Iconviewcomponent
+              Icontag={'MaterialCommunityIcons'}
+              iconname={!password_visible ? 'eye-off' : 'eye'}
+              icon_size={22}
+              iconstyle={{ color: Color.transparantBlack }}
+            />
+          </TouchableOpacity>
+        </View>
+        {minPass != 'null' ? (
+          <Text
+            style={{
+              width: '95%', paddingHorizontal: 5,
+              fontSize: 14,
+              color: 'red',
+            }}>
+            {minPass}
+          </Text>
+        ) : null}
       </View>
 
-      <View style={styles.textContainer}>
-        <Iconviewcomponent
-          Icontag={'MaterialCommunityIcons'}
-          iconname={'lock'}
-          icon_size={22}
-          iconstyle={{color: Color.transparantBlack}}
-        />
-        <TextInput
-          style={[styles.numberTextBox, {paddingHorizontal: 10}]}
-          placeholder="Confirm Password"
-          placeholderTextColor={Color.transparantBlack}
-          secureTextEntry={!confirmPassword_visible}
-          value={confirmPassword}
-          onChangeText={text => {
-            if (text.length < 6) {
-              setMinPass('set minimum character as 6');
-              setConfirmPassword(text);
-            } else {
-              setConfirmPassword(text);
-              setMinPass('');
-            }
-          }}
-          keyboardType="name-phone-pad"
-        />
-        <TouchableOpacity
-          onPress={() => setConfirmPasswordVisibility(!confirmPassword_visible)}
-          style={styles.numberCountryCode}>
+
+
+
+      <View style={{ marginVertical: 0 }}>
+        <Text style={{ textAlign: 'left', fontSize: 15, paddingHorizontal: 10, paddingVertical: 5, color: Color.cloudyGrey, fontFamily: Gilmer.Bold }}>
+          Confirm Password *
+        </Text>
+        <View style={styles.textContainer}>
           <Iconviewcomponent
             Icontag={'MaterialCommunityIcons'}
-            iconname={!confirmPassword_visible ? 'eye-off' : 'eye'}
+            iconname={'lock'}
             icon_size={22}
-            iconstyle={{color: Color.transparantBlack}}
+            iconstyle={{ color: Color.transparantBlack }}
           />
-        </TouchableOpacity>
+          <TextInput
+            style={[styles.numberTextBox, { paddingHorizontal: 10 }]}
+            placeholder="Confirm Password"
+            placeholderTextColor={Color.transparantBlack}
+            secureTextEntry={!confirmPassword_visible}
+            value={confirmPassword}
+            onChangeText={confirmPassword => {
+              if (confirmPassword.length < 6) {
+                setMinConPass('set minimum character as 6');
+                handleConfirmPasswordChange(confirmPassword);
+              } else {
+                handleConfirmPasswordChange(confirmPassword);
+                setMinConPass('');
+              }
+            }}
+            keyboardType="name-phone-pad"
+          />
+          <TouchableOpacity
+            onPress={() => setConfirmPasswordVisibility(!confirmPassword_visible)}
+            style={styles.numberCountryCode}>
+            <Iconviewcomponent
+              Icontag={'MaterialCommunityIcons'}
+              iconname={!confirmPassword_visible ? 'eye-off' : 'eye'}
+              icon_size={22}
+              iconstyle={{ color: Color.transparantBlack }}
+            />
+          </TouchableOpacity>
+        </View>
+        {minconPass != 'null' ? (
+          <Text
+            style={{
+              width: '95%', paddingHorizontal: 5,
+              fontSize: 14,
+              color: 'red',
+            }}>
+            {minconPass}</Text>
+        ) : null}
+        {confirmPasserror != 'null' ? (
+          <Text
+            style={{
+              width: '95%', paddingHorizontal: 5,
+              fontSize: 14,
+              color: 'red',
+            }}>
+            {confirmPasserror}</Text>
+        ) : null}
       </View>
+
 
       <View
         style={{
@@ -233,7 +327,6 @@ const Register = ({navigation}) => {
           justifyContent: 'flex-start',
           flexDirection: 'row',
           alignItems: 'center',
-          marginVertical: 10,
         }}>
         <TouchableOpacity
           style={{}}
@@ -261,7 +354,7 @@ const Register = ({navigation}) => {
             }}>
             I've read and agree with{' '}
           </Text>
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity onPress={() => { navigation.navigate('TermsandConditions'); }}>
             <Text
               style={{
                 fontSize: 14,
@@ -288,7 +381,7 @@ const Register = ({navigation}) => {
           borderRadius: 5,
           marginVertical: 20,
         }}>
-        <Text style={{fontSize: 14, color: Color.white, textAlign: 'center'}}>
+        <Text style={{ fontSize: 14, color: Color.white, textAlign: 'center' }}>
           Create Account
         </Text>
       </TouchableOpacity>
@@ -338,7 +431,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   textContainer: {
-    marginVertical: 10,
     borderColor: '#EEEEEE',
     backgroundColor: '#EAEAEF50',
     borderWidth: 0.5,
@@ -346,7 +438,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 10,
-    marginVertical: 15,
     borderRadius: 5,
   },
   numberCountryCode: {
@@ -368,7 +459,7 @@ const styles = StyleSheet.create({
     color: Color.black,
     fontSize: 14,
     padding: 5,
-    fontFamily: Gilmer.SemiBold,
+    fontFamily: Gilmer.Regular,
     alignItems: 'flex-start',
   },
 });

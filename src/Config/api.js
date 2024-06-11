@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import {baseUrl} from './base_url';
+import { baseUrl } from './base_url';
 
 export const api = {
   header: token => {
@@ -30,14 +30,15 @@ export const api = {
   },
   postMethod: (url, data, token) => {
     var headers = api.header(token);
-    console.log('data', data);
     const formData = new FormData();
     Object.keys(data).map(obj => {
       formData.append(obj, data[obj]);
     });
     return new Promise((resolve, reject) => {
       axios
-        .post(baseUrl + url, data, {headers: headers})
+        .post(baseUrl + url, data, {
+          headers: headers
+        })
         .then(res => {
           if (res.status == 200) {
             resolve(res.data);
