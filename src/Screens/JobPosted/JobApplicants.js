@@ -34,6 +34,7 @@ const Applies = ({
   token,
   loading,
   getActivityData,
+  getData,
 }) => {
   const [GroupsData, setGroupsData] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState({
@@ -71,7 +72,6 @@ const Applies = ({
   };
 
   const candidate_result = async (groupId, id, status) => {
-    console.log('groupId------------', groupId);
     try {
       let data = {
         applicant_id: id,
@@ -84,11 +84,10 @@ const Applies = ({
       } else if (status === 'group') {
         data.application_group_id = groupId;
       }
-      console.log('data------group', data);
       const job_view = await fetchData.result_applicants(data, token);
-      console.log('job_view', job_view);
       if (job_view) {
         common_fn.showToast(job_view?.message);
+        getData();
       }
     } catch (error) {
       console.log('error', error);
@@ -300,9 +299,10 @@ const Applies = ({
                     {item?.status != 'No Group' && (
                       <Text
                         style={{
-                          fontSize: 14,
+                          fontSize: 16,
                           color:
-                            item?.status == 'Shortlisted'
+                            item?.status == 'Shortlisted' ||
+                            item?.status == 'Interview'
                               ? Color.green
                               : item?.status == 'Rejected'
                               ? Color.red
@@ -980,6 +980,7 @@ const JobApplicants = ({navigation, route}) => {
             getToggleJobs={getToggleJobs}
             loading={loading}
             getActivityData={getActivityData}
+            getData={getData}
           />
         );
       case 'shortlisted':

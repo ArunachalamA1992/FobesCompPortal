@@ -4,4 +4,5 @@ export {
   setAsync,
   setOnBoardVisible,
   setNotificationCount,
+  setEmailVerify,
 } from './user/UserAction';

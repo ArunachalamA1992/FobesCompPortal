@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -10,15 +10,21 @@ import {
 import Color from '../../Global/Color';
 import {Gilmer} from '../../Global/FontFamily';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useTheme} from 'react-native-paper';
+import {Button, useTheme} from 'react-native-paper';
 import {Iconviewcomponent} from '../../Componens/Icontag';
 import fetchData from '../../Config/fetchData';
 import common_fn from '../../Config/common_fn';
+import OTPInput from '../../Componens/OTPInput';
+import {useDispatch, useSelector} from 'react-redux';
+import {setEmailVerify} from '../../Redux';
 
 const Register = ({navigation}) => {
+  const dispatch = useDispatch();
   const [username, setUsername] = useState('');
   const [checked, setChecked] = useState(false);
   const [email, setEmail] = useState('');
+  const [emailVisible, setEmailVisible] = useState(false);
+  const [token, setToken] = useState('');
   const [emailValidError, setEmailValidError] = useState('');
 
   const [phone, setPhone] = useState('');
@@ -31,6 +37,23 @@ const Register = ({navigation}) => {
     useState(false);
   const [confirmPasserror, setConfirmPassError] = useState('');
   const [mailErrorMessage, setMailErrorMessage] = useState('');
+  const inputRef = useRef();
+  const [otpCode, setOTPCode] = useState('');
+  const [isPinReady, setIsPinReady] = useState(false);
+  const [error, setError] = useState(false);
+  const emailVerify = useSelector(state => state.UserReducer.emailVerify);
+  const chkOTPError = OTP => {
+    let reg = /^[6-9][0-9]*$/;
+
+    if (OTP.length === 0) {
+      setError('Enter Your OTP Code');
+    } else if (reg.test(OTP) === false) {
+      setError(false);
+      setError(false);
+    } else if (reg.test(OTP) === true) {
+      setError('');
+    }
+  };
 
   const handleValidEmail = value => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -62,18 +85,22 @@ const Register = ({navigation}) => {
     }
   };
 
-  const handleEmailVerification = async value => {
+  const handleEmailVerification = async () => {
     try {
+      if (mailErrorMessage) {
+        common_fn.showToast('Enter your valid Email address');
+        return;
+      }
       var data = {
         email: email,
       };
       const email_verification = await fetchData.verify_email(data, null);
       if (email_verification?.status == true) {
         common_fn.showToast(email_verification?.message);
-        navigation.navigate('EmailOtpVerify', {
-          email,
-          token: email_verification?.token,
-        });
+        setEmailVisible(true);
+        setToken(email_verification?.token);
+      } else {
+        common_fn.showToast(email_verification?.message);
       }
     } catch (error) {
       console.log('error', error);
@@ -81,10 +108,6 @@ const Register = ({navigation}) => {
   };
 
   const register = async () => {
-    if (!mailErrorMessage) {
-      common_fn.showToast('Enter your valid Email address');
-      return;
-    }
     if (!username || !email || !phone || !password || !confirmPassword) {
       common_fn.showToast('All fields are required');
       return;
@@ -111,9 +134,8 @@ const Register = ({navigation}) => {
     try {
       const registerData = await fetchData.register(data, null);
       if (registerData?.message === 'Registered Successfully') {
-        // common_fn.showToast(registerData?.message);
-        // navigation.navigate('Login');
-        handleEmailVerification();
+        common_fn.showToast(registerData?.message);
+        navigation.navigate('Login');
       } else {
         common_fn.showToast(registerData?.message);
       }
@@ -123,6 +145,27 @@ const Register = ({navigation}) => {
     }
   };
 
+  const VerifyOTP = async navigation => {
+    if (otpCode.length == 6) {
+      var data = {otp: otpCode};
+      const VerifyOTP = await fetchData.verify_email_otp(data, token);
+
+      if (VerifyOTP?.message == 'Success') {
+        common_fn.showToast(VerifyOTP?.message);
+        setEmailVisible(false);
+        dispatch(setEmailVerify(true));
+      } else {
+        setOTPCode('');
+        inputRef.current.focus();
+        var msg = VerifyOTP?.message;
+        setError(msg);
+      }
+    } else {
+      common_fn.showToast(
+        'Invalid OTP Code Please Enter Your 6 Digit OTP Code',
+      );
+    }
+  };
   return (
     <View style={styles.container}>
       <View
@@ -217,6 +260,16 @@ const Register = ({navigation}) => {
             }}
             keyboardType="email-address"
           />
+
+          {email && (
+            <Button
+              onPress={() => {
+                handleEmailVerification();
+              }}
+              textColor={Color.primary}>
+              Verify
+            </Button>
+          )}
         </View>
         {mailErrorMessage ? (
           <Text
@@ -227,6 +280,43 @@ const Register = ({navigation}) => {
             {mailErrorMessage}
           </Text>
         ) : null}
+        {emailVisible && (
+          <View
+            style={{
+              marginVertical: 10,
+            }}>
+            <OTPInput
+              inputRef={inputRef}
+              code={otpCode}
+              setCode={setOTPCode}
+              maximumLength={6}
+              setIsPinReady={setIsPinReady}
+              chkOTPError={chkOTPError}
+            />
+            <Button
+              mode="contained"
+              onPress={() => {
+                VerifyOTP();
+              }}
+              style={{
+                backgroundColor: Color.primary,
+                marginHorizontal: 10,
+                marginVertical: 20,
+              }}
+              textColor={Color.white}>
+              Verify OTP
+            </Button>
+            <Text
+              style={{
+                fontSize: 14,
+                fontFamily: Gilmer.Bold,
+                color: Color.red,
+                textAlign: 'center',
+              }}>
+              {error}
+            </Text>
+          </View>
+        )}
       </View>
 
       <View style={{marginVertical: 5}}>
@@ -253,6 +343,7 @@ const Register = ({navigation}) => {
             placeholder="Mobile Number"
             placeholderTextColor={Color.transparantBlack}
             value={phone}
+            editable={emailVerify}
             onChangeText={text => setPhone(text)}
             keyboardType="number-pad"
             maxLength={10}
@@ -285,6 +376,7 @@ const Register = ({navigation}) => {
             placeholderTextColor={Color.transparantBlack}
             secureTextEntry={!password_visible}
             value={password}
+            editable={emailVerify}
             onChangeText={password => {
               if (password.length < 6) {
                 setMinPass('set minimum character as 6');
@@ -345,6 +437,7 @@ const Register = ({navigation}) => {
             placeholderTextColor={Color.transparantBlack}
             secureTextEntry={!confirmPassword_visible}
             value={confirmPassword}
+            editable={emailVerify}
             onChangeText={confirmPassword => {
               if (confirmPassword.length < 6) {
                 setMinConPass('set minimum character as 6');

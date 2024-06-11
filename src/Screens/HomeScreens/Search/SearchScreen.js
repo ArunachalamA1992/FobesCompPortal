@@ -58,11 +58,12 @@ const SearchScreen = ({navigation}) => {
     setSearchJob(data);
     try {
       const data = `search=${searchJob}&page=1&limit=10`;
-      const getData = await fetchData.search(data);
+      const getData = await fetchData.search(data, token);
       setJobSuggestions({
         data: getData?.data?.keyword,
         visible: true,
       });
+      console.log('getData?.data?.keyword', getData?.data?.keyword);
     } catch (error) {
       console.log('error', error);
     }

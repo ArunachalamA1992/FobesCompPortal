@@ -535,7 +535,6 @@ const CoverLetter = ({itemData}) => {
 };
 const ApplicantDetails = ({navigation, route}) => {
   const [id] = useState(route.params.id);
-  console.log('id------------------', id);
   const [itemData, setItemData] = useState({});
   const [SelectedShorlist, setSelectedShorlist] = useState({});
   const [GroupsData, setGroupsData] = useState([]);
@@ -1104,7 +1103,7 @@ const ApplicantDetails = ({navigation, route}) => {
                 }}>
                 <TouchableOpacity
                   onPress={() => {
-                    getToggleJobs(itemData?.id);
+                    getToggleJobs(itemData?.candidate_id);
                   }}
                   style={styles.iconContainer}>
                   <MCIcon

@@ -28,6 +28,21 @@ import {base_image_url} from '../../Config/base_url';
 import {SafeAreaView} from 'react-native';
 
 const All = ({acticityData, navigation, activityLoading, token}) => {
+  const job_profile_view = async id => {
+    try {
+      var data = {
+        candidate_id: id,
+      };
+      const job_view = await fetchData.company_profile_view(data, token);
+      if (job_view) {
+        navigation.navigate('candidateDetails', {id: id});
+      } else {
+        common_fn.showToast(job_view?.message);
+      }
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
   return (
     <SafeAreaView style={{flex: 1}}>
       {activityLoading ? (
@@ -99,9 +114,7 @@ const All = ({acticityData, navigation, activityLoading, token}) => {
             return (
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate('candidateDetails', {
-                    id: item?.candidate_id,
-                  });
+                  job_profile_view(item?.candidate_id);
                 }}
                 key={index}
                 style={{
@@ -159,21 +172,23 @@ const All = ({acticityData, navigation, activityLoading, token}) => {
                     {moment(item?.created_at).format('DD MMM YY')}
                   </Text>
                 </View>
-                {item?.is_called == true ? (
+                {item?.is_called == true && (
                   <FeIcon
                     name="phone-call"
                     size={20}
                     color={'#309CD2'}
                     style={{padding: 10}}
                   />
-                ) : item?.is_mailed == true ? (
+                )}
+                {item?.is_mailed == true && (
                   <Icon
                     name="mail"
                     size={20}
                     color={'#309CD2'}
                     style={{padding: 10}}
                   />
-                ) : (
+                )}
+                {item?.is_viewed == true && (
                   <MCIcon
                     name="account-search"
                     size={20}
@@ -218,6 +233,21 @@ const All = ({acticityData, navigation, activityLoading, token}) => {
   );
 };
 const Called = ({acticityData, navigation, activityLoading, token}) => {
+  const job_profile_view = async id => {
+    try {
+      var data = {
+        candidate_id: id,
+      };
+      const job_view = await fetchData.company_profile_view(data, token);
+      if (job_view) {
+        navigation.navigate('candidateDetails', {id: id});
+      } else {
+        common_fn.showToast(job_view?.message);
+      }
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
   return (
     <SafeAreaView style={{flex: 1}}>
       {activityLoading ? (
@@ -289,9 +319,7 @@ const Called = ({acticityData, navigation, activityLoading, token}) => {
             return (
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate('candidateDetails', {
-                    id: item?.candidate_id,
-                  });
+                  job_profile_view(item?.candidate_id);
                 }}
                 key={index}
                 style={{
@@ -349,23 +377,9 @@ const Called = ({acticityData, navigation, activityLoading, token}) => {
                     {moment(item?.created_at).format('DD MMM YY')}
                   </Text>
                 </View>
-                {item?.is_called == true ? (
+                {item?.is_called == true && (
                   <FeIcon
                     name="phone-call"
-                    size={20}
-                    color={'#309CD2'}
-                    style={{padding: 10}}
-                  />
-                ) : item?.is_mailed == true ? (
-                  <Icon
-                    name="mail"
-                    size={20}
-                    color={'#309CD2'}
-                    style={{padding: 10}}
-                  />
-                ) : (
-                  <MCIcon
-                    name="account-search"
                     size={20}
                     color={'#309CD2'}
                     style={{padding: 10}}
@@ -404,6 +418,21 @@ const Called = ({acticityData, navigation, activityLoading, token}) => {
   );
 };
 const Viewed = ({acticityData, navigation, activityLoading, token}) => {
+  const job_profile_view = async id => {
+    try {
+      var data = {
+        candidate_id: id,
+      };
+      const job_view = await fetchData.company_profile_view(data, token);
+      if (job_view) {
+        navigation.navigate('candidateDetails', {id: id});
+      } else {
+        common_fn.showToast(job_view?.message);
+      }
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
   return (
     <SafeAreaView style={{flex: 1}}>
       {activityLoading ? (
@@ -475,9 +504,7 @@ const Viewed = ({acticityData, navigation, activityLoading, token}) => {
             return (
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate('candidateDetails', {
-                    id: item?.candidate_id,
-                  });
+                  job_profile_view(item?.candidate_id);
                 }}
                 key={index}
                 style={{
@@ -535,21 +562,7 @@ const Viewed = ({acticityData, navigation, activityLoading, token}) => {
                     {moment(item?.created_at).format('DD MMM YY')}
                   </Text>
                 </View>
-                {item?.is_called == true ? (
-                  <FeIcon
-                    name="phone-call"
-                    size={20}
-                    color={'#309CD2'}
-                    style={{padding: 10}}
-                  />
-                ) : item?.is_mailed == true ? (
-                  <Icon
-                    name="mail"
-                    size={20}
-                    color={'#309CD2'}
-                    style={{padding: 10}}
-                  />
-                ) : (
+                {item?.is_viewed == true && (
                   <MCIcon
                     name="account-search"
                     size={20}
@@ -595,6 +608,21 @@ const Viewed = ({acticityData, navigation, activityLoading, token}) => {
   );
 };
 const Mailed = ({acticityData, navigation, activityLoading, token}) => {
+  const job_profile_view = async id => {
+    try {
+      var data = {
+        candidate_id: id,
+      };
+      const job_view = await fetchData.company_profile_view(data, token);
+      if (job_view) {
+        navigation.navigate('candidateDetails', {id: id});
+      } else {
+        common_fn.showToast(job_view?.message);
+      }
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
   return (
     <SafeAreaView style={{flex: 1}}>
       {activityLoading ? (
@@ -666,9 +694,7 @@ const Mailed = ({acticityData, navigation, activityLoading, token}) => {
             return (
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate('candidateDetails', {
-                    id: item?.candidate_id,
-                  });
+                  job_profile_view(item?.candidate_id);
                 }}
                 key={index}
                 style={{
@@ -726,23 +752,9 @@ const Mailed = ({acticityData, navigation, activityLoading, token}) => {
                     {moment(item?.created_at).format('DD MMM YY')}
                   </Text>
                 </View>
-                {item?.is_called == true ? (
-                  <FeIcon
-                    name="phone-call"
-                    size={20}
-                    color={'#309CD2'}
-                    style={{padding: 10}}
-                  />
-                ) : item?.is_mailed == true ? (
+                {item?.is_mailed == true && (
                   <Icon
                     name="mail"
-                    size={20}
-                    color={'#309CD2'}
-                    style={{padding: 10}}
-                  />
-                ) : (
-                  <MCIcon
-                    name="account-search"
                     size={20}
                     color={'#309CD2'}
                     style={{padding: 10}}

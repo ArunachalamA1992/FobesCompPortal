@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   SET_ASYNC,
   SET_COMPLETE_PROFILE,
+  SET_EMAIL_VERIFY,
   SET_NOTIFICATION_COUNT,
   SET_ONBOARD,
   SET_USER_DATA,
@@ -15,6 +16,8 @@ const initialState = {
     details: {},
   },
   onboardVisible: false,
+  notificationCount: 0,
+  emailVerify: false,
 };
 
 const storeCartData = async UserState => {
@@ -72,14 +75,30 @@ const UserReducer = (state = initialState, action) => {
         ...state,
         notificationCount: action.payload,
       };
+    case SET_EMAIL_VERIFY:
+      storeCartData({
+        ...state,
+        emailVerify: action.payload,
+      });
+      return {
+        ...state,
+        emailVerify: action.payload,
+      };
     case SET_ASYNC:
-      var {userData, profile_complete, onboardVisible} = action.payload;
+      var {
+        userData,
+        profile_complete,
+        onboardVisible,
+        notificationCount,
+        emailVerify,
+      } = action.payload;
       return {
         ...state,
         userData,
         profile_complete,
         onboardVisible,
         notificationCount,
+        emailVerify,
       };
     default:
       return state;

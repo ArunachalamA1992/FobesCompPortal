@@ -1062,7 +1062,7 @@ const CandidateDetails = ({navigation, route}) => {
                 }}>
                 <TouchableOpacity
                   onPress={() => {
-                    getToggleJobs(itemData?.id);
+                    getToggleJobs(itemData?.candidate_id);
                   }}
                   style={styles.iconContainer}>
                   <MCIcon

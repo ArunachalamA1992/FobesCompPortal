@@ -103,12 +103,8 @@ export default {
     let url = api_name + 'job/benefits?' + data;
     return api.getMethod(url, token);
   },
-  benefits: (data, token) => {
-    let url = api_name + 'job/benefits';
-    return api.getMethod(url, token);
-  },
   create_benifits: (data, token) => {
-    let url = api_name + 'job/create_benefit';
+    let url = api_name + 'job/benefits';
     return api.postMethod(url, data, token);
   },
   salarytype: (data, token) => {
@@ -120,7 +116,7 @@ export default {
     return api.getMethod(url, token);
   },
   create_role: (data, token) => {
-    let url = api_name + 'job/create_jobroles';
+    let url = api_name + 'job/jobroles';
     return api.postMethod(url, data, token);
   },
   jobcategory: (data, token) => {
@@ -128,7 +124,7 @@ export default {
     return api.getMethod(url, token);
   },
   create_category: (data, token) => {
-    let url = api_name + 'job/create_jobcategory';
+    let url = api_name + 'job/jobcategory';
     return api.postMethod(url, data, token);
   },
   tags: (data, token) => {
@@ -144,7 +140,7 @@ export default {
     return api.getMethod(url, token);
   },
   create_skills: (data, token) => {
-    let url = api_name + 'job/create_skill';
+    let url = api_name + 'job/skills';
     return api.postMethod(url, data, token);
   },
   salarytype: (data, token) => {
