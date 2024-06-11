@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Image,
   StyleSheet,
@@ -10,21 +10,21 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
-import {Media} from '../../Global/Media';
-import {Button} from 'react-native-elements';
+import { Media } from '../../Global/Media';
+import { Button } from 'react-native-elements';
 import common_fn from '../../Config/common_fn';
 import fetchData from '../../Config/fetchData';
-import {Gilmer} from '../../Global/FontFamily';
+import { Gilmer } from '../../Global/FontFamily';
 import Color from '../../Global/Color';
 import OTPInput from '../../Componens/OTPInput';
 
-const DismissKeyboard = ({children}) => (
+const DismissKeyboard = ({ children }) => (
   <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
     {children}
   </TouchableWithoutFeedback>
 );
 
-const PassOtpVerify = ({navigation, route}) => {
+const PassOtpVerify = ({ navigation, route }) => {
   const [id] = useState(route.params.id);
   const [data] = useState(route.params.data);
   const inputRef = useRef();
@@ -88,8 +88,10 @@ const PassOtpVerify = ({navigation, route}) => {
         id: id,
         otp: otpCode,
       });
-      if (VerifyOTP?.message == 'Success') {
-        navigation.navigate('ResetPass', {email});
+
+      console.log("Success ============ : ", data.email);
+      if (VerifyOTP) {
+        navigation.navigate('ResetPass', { email: data.email });
         common_fn.showToast(VerifyOTP?.message);
       } else {
         setOTPCode('');
@@ -106,7 +108,7 @@ const PassOtpVerify = ({navigation, route}) => {
 
   return (
     <ScrollView
-      contentContainerStyle={{justifyContent: 'center', flex: 1}}
+      contentContainerStyle={{ justifyContent: 'center', flex: 1 }}
       keyboardShouldPersistTaps="handled">
       <DismissKeyboard>
         <View
@@ -122,7 +124,7 @@ const PassOtpVerify = ({navigation, route}) => {
             }}>
             <Image
               source={Media.logo}
-              style={{width: 100, height: 100, resizeMode: 'contain'}}
+              style={{ width: 100, height: 100, resizeMode: 'contain' }}
             />
           </View>
           <View

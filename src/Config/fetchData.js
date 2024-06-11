@@ -187,4 +187,8 @@ export default {
     let url = api_name + 'company/activity?' + data;
     return api.getMethod(url, token);
   },
+  contactUsData: (data, token) => {
+    let url = api_name + 'job/contact';
+    return api.postMethod(url, data, token);
+  },
 };

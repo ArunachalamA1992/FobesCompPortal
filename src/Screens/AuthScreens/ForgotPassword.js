@@ -55,7 +55,7 @@ const ForgotPassword = ({navigation}) => {
           common_fn.showToast(forgot_password?.message);
         }
       } else {
-        common_fn.showToast('Enter Mobile Number Or Email ID');
+        common_fn.showToast('Enter Email ID');
       }
     } catch (error) {
       console.log('catch in forgotfn :', error);

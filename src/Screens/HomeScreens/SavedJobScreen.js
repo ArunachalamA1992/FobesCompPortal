@@ -1,22 +1,22 @@
-import React, {useState, useEffect, useCallback} from 'react';
-import {Dimensions, FlatList, StyleSheet, Text, View} from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Dimensions, FlatList, StyleSheet, Text, View } from 'react-native';
 import Color from '../../Global/Color';
-import {Gilmer} from '../../Global/FontFamily';
+import { Gilmer } from '../../Global/FontFamily';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ItemCard from '../../Componens/ItemCard';
-import {job_data} from '../../Config/Content';
+import { job_data } from '../../Config/Content';
 import fetchData from '../../Config/fetchData';
 import common_fn from '../../Config/common_fn';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
-const {height} = Dimensions.get('screen');
-const SavedJobScreen = ({navigation}) => {
+const { height } = Dimensions.get('screen');
+const SavedJobScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [resultDate, setResultDate] = useState(null);
   const [savedJobs, setSavedJobs] = useState([]);
   const userData = useSelector(state => state.UserReducer.userData);
-  var {token} = userData;
+  var { token } = userData;
 
   useEffect(() => {
     setLoading(true);
@@ -44,17 +44,18 @@ const SavedJobScreen = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <Text
-        style={{
-          fontSize: 18,
-          marginVertical: 10,
-          color: Color.black,
-          fontFamily: Gilmer.Bold,
-        }}>
-        Profile ({savedJobs?.length})
-      </Text>
+      {savedJobs?.length != "" ?
+        <Text
+          style={{
+            fontSize: 18,
+            marginVertical: 10,
+            color: Color.black,
+            fontFamily: Gilmer.Bold,
+          }}>
+          Profile ({savedJobs?.length})
+        </Text> : null}
       {loading ? (
-        <View style={{padding: 10}}>
+        <View style={{ padding: 10 }}>
           <SkeletonPlaceholder>
             <SkeletonPlaceholder.Item style={{}}>
               <SkeletonPlaceholder.Item
@@ -118,7 +119,7 @@ const SavedJobScreen = ({navigation}) => {
         <FlatList
           data={savedJobs}
           showsVerticalScrollIndicator={false}
-          renderItem={({item, index}) => {
+          renderItem={({ item, index }) => {
             return (
               <ItemCard item={item} navigation={navigation} getData={getData} />
             );

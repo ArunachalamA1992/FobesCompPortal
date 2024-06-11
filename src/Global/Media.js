@@ -13,4 +13,7 @@ export const Media = {
   faq: 'https://albion-backend.s3.ap-south-1.amazonaws.com/Fobes/faq.jpg',
   terms: 'https://albion-backend.s3.ap-south-1.amazonaws.com/Fobes/terms.jpg',
   empty_cover: require('../assets/images/emptyCover.png'),
+
+  fobes_white_main: 'https://albion-backend.s3.ap-south-1.amazonaws.com/assets/assets/logos/fobes_white.png',
+  fobes_blue_main: 'https://albion-backend.s3.ap-south-1.amazonaws.com/assets/assets/logos/fobes_blue.png'
 };

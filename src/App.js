@@ -1,21 +1,21 @@
 import React from 'react';
-import {LogBox, StatusBar, Text, View} from 'react-native';
+import { LogBox, StatusBar, Text, View } from 'react-native';
 
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
-import {createDrawerNavigator} from '@react-navigation/drawer';
-import {Provider} from 'react-redux';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { Provider } from 'react-redux';
 
-import {Provider as PaperProvider} from 'react-native-paper';
-import TabNavigator, {Auth} from './route';
+import { Provider as PaperProvider } from 'react-native-paper';
+import TabNavigator, { Auth } from './route';
 import SplashScreen from './SplashScreen';
 import Store from './Redux/Store';
 import OnboardOne from './Screens/OnboardScreens/OnboardOne';
 import Color from './Global/Color';
-import {navigationRef} from '../RootNavigation';
+import { navigationRef } from '../RootNavigation';
 import BasicDetails from './Screens/Details/BasicDetails';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {Gilmer} from './Global/FontFamily';
+import { Gilmer } from './Global/FontFamily';
 import SocialMedia from './Screens/Details/SocialMedia';
 import ContactDetails from './Screens/Details/ContactDetails';
 import ProfileCompletion from './Screens/Details/ProfileCompletion';
@@ -35,6 +35,11 @@ import PromoteJob from './Screens/SideMenu/PromoteJob';
 import SearchDataList from './Screens/HomeScreens/Search/SearchDataList';
 import ProfileScreen from './Screens/Profile/ProfileScreen';
 import CandidateDetails from './Screens/HomeScreens/CandidateDetails';
+import TermsandConditions from './Screens/SideMenu/TermsandConditions';
+import PrivacyPolicy from './Screens/SideMenu/PrivacyPolicy';
+import FAQs from './Screens/SideMenu/FAQs';
+import ContactUs from './Screens/SideMenu/ContactUs';
+import AboutUs from './Screens/SideMenu/AboutUs';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -45,12 +50,12 @@ const MyDrawer = () => {
       <NavigationContainer ref={navigationRef}>
         <Drawer.Navigator
           initialRouteName="HomeDrawer"
-          screenOptions={{swipeEnabled: false}}
+          screenOptions={{ swipeEnabled: false }}
           drawerContent={props => <CustomDrawerContent {...props} />}>
           <Drawer.Screen
             name="HomeDrawer"
             component={MainApp}
-            options={{headerShown: false}}
+            options={{ headerShown: false }}
           />
         </Drawer.Navigator>
       </NavigationContainer>
@@ -74,27 +79,27 @@ const MainApp = () => {
         <Stack.Screen
           name="Splash"
           component={SplashScreen}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="OnboardOne"
           component={OnboardOne}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Auth"
           component={Auth}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="TabNavigator"
           component={TabNavigator}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="RecentJob"
           component={RecentJobList}
-          options={({navigation, route}) => ({
+          options={({ navigation, route }) => ({
             headerTitle: 'Recent Job',
             headerTitleAlign: 'center',
             headerTitleStyle: {
@@ -102,9 +107,9 @@ const MainApp = () => {
               fontFamily: Gilmer.Bold,
               fontSize: 18,
             },
-            headerStyle: {backgroundColor: Color.primary},
+            headerStyle: { backgroundColor: Color.primary },
             headerLeft: () => (
-              <View style={{marginHorizontal: 10}}>
+              <View style={{ marginHorizontal: 10 }}>
                 <Icon
                   name="arrow-back"
                   size={30}
@@ -118,16 +123,16 @@ const MainApp = () => {
         <Stack.Screen
           name="BuySubscriptions"
           component={BuySubscriptions}
-          options={({navigation, route}) => ({
+          options={({ navigation, route }) => ({
             headerTitle: 'Buy Subscriptions',
             headerTitleStyle: {
               color: Color.black,
               fontFamily: Gilmer.Bold,
               fontSize: 18,
             },
-            headerStyle: {backgroundColor: Color.white},
+            headerStyle: { backgroundColor: Color.white },
             headerLeft: () => (
-              <View style={{marginHorizontal: 10}}>
+              <View style={{ marginHorizontal: 10 }}>
                 <Icon
                   name="arrow-back"
                   size={30}
@@ -141,7 +146,7 @@ const MainApp = () => {
         <Stack.Screen
           name="SearchDataList"
           component={SearchDataList}
-          options={({navigation, route}) => ({
+          options={({ navigation, route }) => ({
             headerTitle: '',
             headerTitleAlign: 'center',
             headerTitleStyle: {
@@ -149,9 +154,9 @@ const MainApp = () => {
               fontFamily: Gilmer.Bold,
               fontSize: 18,
             },
-            headerStyle: {backgroundColor: Color.white},
+            headerStyle: { backgroundColor: Color.white },
             headerLeft: () => (
-              <View style={{marginHorizontal: 10}}>
+              <View style={{ marginHorizontal: 10 }}>
                 <Icon
                   name="arrow-back"
                   size={30}
@@ -165,16 +170,16 @@ const MainApp = () => {
         <Stack.Screen
           name="JobApplicants"
           component={JobApplicants}
-          options={({navigation, route}) => ({
+          options={({ navigation, route }) => ({
             headerTitle: route?.params?.title,
             headerTitleStyle: {
               color: Color.white,
               fontFamily: Gilmer.Bold,
               fontSize: 18,
             },
-            headerStyle: {backgroundColor: Color.primary},
+            headerStyle: { backgroundColor: Color.primary },
             headerLeft: () => (
-              <View style={{marginHorizontal: 10}}>
+              <View style={{ marginHorizontal: 10 }}>
                 <Icon
                   name="arrow-back"
                   size={30}
@@ -188,7 +193,7 @@ const MainApp = () => {
         <Stack.Screen
           name="profile"
           component={ProfileScreen}
-          options={({navigation}) => ({
+          options={({ navigation }) => ({
             headerTitle: '',
             headerTitleAlign: 'center',
             headerTitleStyle: {
@@ -196,9 +201,9 @@ const MainApp = () => {
               fontFamily: Gilmer.Bold,
               fontSize: 18,
             },
-            headerStyle: {backgroundColor: Color.white},
+            headerStyle: { backgroundColor: Color.white },
             headerLeft: () => (
-              <View style={{marginHorizontal: 10}}>
+              <View style={{ marginHorizontal: 10 }}>
                 <Icon
                   name="arrow-back"
                   size={30}
@@ -212,21 +217,21 @@ const MainApp = () => {
         <Stack.Screen
           name="PromoteJob"
           component={PromoteJob}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Notification"
           component={Notification}
-          options={({navigation, route}) => ({
+          options={({ navigation, route }) => ({
             headerTitle: 'Notifications',
             headerTitleStyle: {
               color: Color.black,
               fontFamily: Gilmer.Bold,
               fontSize: 18,
             },
-            headerStyle: {backgroundColor: Color.white},
+            headerStyle: { backgroundColor: Color.white },
             headerLeft: () => (
-              <View style={{marginHorizontal: 10}}>
+              <View style={{ marginHorizontal: 10 }}>
                 <Icon
                   name="arrow-back"
                   size={30}
@@ -240,16 +245,16 @@ const MainApp = () => {
         <Stack.Screen
           name="basicDetails"
           component={BasicDetails}
-          options={({navigation, route}) => ({
+          options={({ navigation, route }) => ({
             headerTitle: 'Basic Details',
             headerTitleStyle: {
               color: Color.black,
               fontFamily: Gilmer.Bold,
               fontSize: 18,
             },
-            headerStyle: {backgroundColor: Color.white},
+            headerStyle: { backgroundColor: Color.white },
             headerLeft: () => (
-              <View style={{marginHorizontal: 10}}>
+              <View style={{ marginHorizontal: 10 }}>
                 <Icon
                   name="arrow-back"
                   size={30}
@@ -259,7 +264,7 @@ const MainApp = () => {
               </View>
             ),
             headerRight: () => (
-              <View style={{marginHorizontal: 10}}>
+              <View style={{ marginHorizontal: 10 }}>
                 <Text
                   style={{
                     color: Color.primary,
@@ -275,16 +280,16 @@ const MainApp = () => {
         <Stack.Screen
           name="profileDetails"
           component={Profile}
-          options={({navigation, route}) => ({
+          options={({ navigation, route }) => ({
             headerTitle: 'Profile',
             headerTitleStyle: {
               color: Color.black,
               fontFamily: Gilmer.Bold,
               fontSize: 18,
             },
-            headerStyle: {backgroundColor: Color.white},
+            headerStyle: { backgroundColor: Color.white },
             headerLeft: () => (
-              <View style={{marginHorizontal: 10}}>
+              <View style={{ marginHorizontal: 10 }}>
                 <Icon
                   name="arrow-back"
                   size={30}
@@ -294,7 +299,7 @@ const MainApp = () => {
               </View>
             ),
             headerRight: () => (
-              <View style={{marginHorizontal: 10}}>
+              <View style={{ marginHorizontal: 10 }}>
                 <Text
                   style={{
                     color: Color.primary,
@@ -310,16 +315,16 @@ const MainApp = () => {
         <Stack.Screen
           name="SocialMedia"
           component={SocialMedia}
-          options={({navigation, route}) => ({
+          options={({ navigation, route }) => ({
             headerTitle: 'Social Media',
             headerTitleStyle: {
               color: Color.black,
               fontFamily: Gilmer.Bold,
               fontSize: 18,
             },
-            headerStyle: {backgroundColor: Color.white},
+            headerStyle: { backgroundColor: Color.white },
             headerLeft: () => (
-              <View style={{marginHorizontal: 10}}>
+              <View style={{ marginHorizontal: 10 }}>
                 <Icon
                   name="arrow-back"
                   size={30}
@@ -329,7 +334,7 @@ const MainApp = () => {
               </View>
             ),
             headerRight: () => (
-              <View style={{marginHorizontal: 10}}>
+              <View style={{ marginHorizontal: 10 }}>
                 <Text
                   style={{
                     color: Color.primary,
@@ -345,16 +350,16 @@ const MainApp = () => {
         <Stack.Screen
           name="ContactDetails"
           component={ContactDetails}
-          options={({navigation, route}) => ({
+          options={({ navigation, route }) => ({
             headerTitle: 'Contact Details',
             headerTitleStyle: {
               color: Color.black,
               fontFamily: Gilmer.Bold,
               fontSize: 18,
             },
-            headerStyle: {backgroundColor: Color.white},
+            headerStyle: { backgroundColor: Color.white },
             headerLeft: () => (
-              <View style={{marginHorizontal: 10}}>
+              <View style={{ marginHorizontal: 10 }}>
                 <Icon
                   name="arrow-back"
                   size={30}
@@ -364,7 +369,7 @@ const MainApp = () => {
               </View>
             ),
             headerRight: () => (
-              <View style={{marginHorizontal: 10}}>
+              <View style={{ marginHorizontal: 10 }}>
                 <Text
                   style={{
                     color: Color.primary,
@@ -380,30 +385,30 @@ const MainApp = () => {
         <Stack.Screen
           name="applicantdetails"
           component={ApplicantDetails}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="candidateDetails"
           component={CandidateDetails}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Home"
           component={HomeScreen}
-          options={({navigation}) => ({
+          options={({ navigation }) => ({
             headerTitle: '',
             headerTitleStyle: {
               color: Color.white,
               fontFamily: Gilmer.Bold,
               fontSize: 18,
             },
-            headerStyle: {backgroundColor: Color.primary, elevation: 0},
+            headerStyle: { backgroundColor: Color.primary, elevation: 0 },
             headerLeft: () => (
               <NavigationDrawerStructure navigation={navigation} home={true} />
             ),
             headerRight: () => (
               <TouchableOpacity
-                style={{right: 10}}
+                style={{ right: 10 }}
                 onPress={() => {
                   navigation.navigate('Notification');
                 }}>
@@ -411,7 +416,7 @@ const MainApp = () => {
                   badgeStyle={{
                     backgroundColor: Color.red,
                   }}
-                  style={{position: 'absolute', zIndex: 1, top: -5, right: -5}}>
+                  style={{ position: 'absolute', zIndex: 1, top: -5, right: -5 }}>
                   {0}
                 </Badge>
                 <Iconviewcomponent
@@ -427,16 +432,16 @@ const MainApp = () => {
         <Stack.Screen
           name="JobDetails"
           component={JobDetails}
-          options={({navigation, route}) => ({
+          options={({ navigation, route }) => ({
             headerTitle: 'Post Job',
             headerTitleStyle: {
               color: Color.black,
               fontFamily: Gilmer.Bold,
               fontSize: 18,
             },
-            headerStyle: {backgroundColor: Color.white},
+            headerStyle: { backgroundColor: Color.white },
             headerLeft: () => (
-              <View style={{marginHorizontal: 10}}>
+              <View style={{ marginHorizontal: 10 }}>
                 <Icon
                   name="arrow-back"
                   size={30}
@@ -450,16 +455,16 @@ const MainApp = () => {
         <Stack.Screen
           name="SalaryandBenefits"
           component={SalaryandBenefits}
-          options={({navigation, route}) => ({
+          options={({ navigation, route }) => ({
             headerTitle: 'Post Job',
             headerTitleStyle: {
               color: Color.black,
               fontFamily: Gilmer.Bold,
               fontSize: 18,
             },
-            headerStyle: {backgroundColor: Color.white},
+            headerStyle: { backgroundColor: Color.white },
             headerLeft: () => (
-              <View style={{marginHorizontal: 10}}>
+              <View style={{ marginHorizontal: 10 }}>
                 <Icon
                   name="arrow-back"
                   size={30}
@@ -473,16 +478,16 @@ const MainApp = () => {
         <Stack.Screen
           name="AdvanceInformation"
           component={AdvanceInformation}
-          options={({navigation, route}) => ({
+          options={({ navigation, route }) => ({
             headerTitle: 'Post Job',
             headerTitleStyle: {
               color: Color.primary,
               fontFamily: Gilmer.Bold,
               fontSize: 18,
             },
-            headerStyle: {backgroundColor: Color.white},
+            headerStyle: { backgroundColor: Color.white },
             headerLeft: () => (
-              <View style={{marginHorizontal: 10}}>
+              <View style={{ marginHorizontal: 10 }}>
                 <Icon
                   name="arrow-back"
                   size={30}
@@ -496,13 +501,130 @@ const MainApp = () => {
         <Stack.Screen
           name="Congratulations"
           component={Congratulations}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="ProfileCompletion"
           component={ProfileCompletion}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
+
+        <Stack.Screen
+          name="TermsandConditions"
+          component={TermsandConditions}
+          options={({ navigation, route }) => ({
+            headerTitle: 'Terms and Conditions',
+            headerTitleStyle: {
+              color: Color.black,
+              fontFamily: Gilmer.Bold,
+              fontSize: 18,
+            },
+            headerStyle: { backgroundColor: Color.white },
+            headerLeft: () => (
+              <View style={{ marginHorizontal: 10 }}>
+                <Icon
+                  name="arrow-back"
+                  size={30}
+                  color={Color.black}
+                  onPress={() => navigation.goBack()}
+                />
+              </View>
+            ),
+          })}
+        />
+        <Stack.Screen
+          name="PrivacyPolicy"
+          component={PrivacyPolicy}
+          options={({ navigation, route }) => ({
+            headerTitle: 'Privacy Policy',
+            headerTitleStyle: {
+              color: Color.black,
+              fontFamily: Gilmer.Bold,
+              fontSize: 18,
+            },
+            headerStyle: { backgroundColor: Color.white },
+            headerLeft: () => (
+              <View style={{ marginHorizontal: 10 }}>
+                <Icon
+                  name="arrow-back"
+                  size={30}
+                  color={Color.black}
+                  onPress={() => navigation.goBack()}
+                />
+              </View>
+            ),
+          })}
+        />
+        <Stack.Screen
+          name="FAQs"
+          component={FAQs}
+          options={({ navigation, route }) => ({
+            headerTitle: 'FAQs',
+            headerTitleStyle: {
+              color: Color.black,
+              fontFamily: Gilmer.Bold,
+              fontSize: 18,
+            },
+            headerStyle: { backgroundColor: Color.white },
+            headerLeft: () => (
+              <View style={{ marginHorizontal: 10 }}>
+                <Icon
+                  name="arrow-back"
+                  size={30}
+                  color={Color.black}
+                  onPress={() => navigation.goBack()}
+                />
+              </View>
+            ),
+          })}
+        />
+        <Stack.Screen
+          name="ContactUs"
+          component={ContactUs}
+          options={({ navigation, route }) => ({
+            headerTitle: 'ContactUs',
+            headerTitleStyle: {
+              color: Color.black,
+              fontFamily: Gilmer.Bold,
+              fontSize: 18,
+            },
+            headerStyle: { backgroundColor: Color.white },
+            headerLeft: () => (
+              <View style={{ marginHorizontal: 10 }}>
+                <Icon
+                  name="arrow-back"
+                  size={30}
+                  color={Color.black}
+                  onPress={() => navigation.goBack()}
+                />
+              </View>
+            ),
+          })}
+        />
+        <Stack.Screen
+          name="AboutUs"
+          component={AboutUs}
+          options={({ navigation, route }) => ({
+            headerTitle: 'AboutUs',
+            headerTitleStyle: {
+              color: Color.black,
+              fontFamily: Gilmer.Bold,
+              fontSize: 18,
+            },
+            headerStyle: { backgroundColor: Color.white },
+            headerLeft: () => (
+              <View style={{ marginHorizontal: 10 }}>
+                <Icon
+                  name="arrow-back"
+                  size={30}
+                  color={Color.black}
+                  onPress={() => navigation.goBack()}
+                />
+              </View>
+            ),
+          })}
+        />
+
       </Stack.Navigator>
     </>
   );
