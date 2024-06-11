@@ -20,6 +20,7 @@ import {setNotificationCount} from './Redux';
 import ForgotPassword from './Screens/AuthScreens/ForgotPassword';
 import PassOtpVerify from './Screens/AuthScreens/PassOtpVerify';
 import ResetPass from './Screens/AuthScreens/ResetPass';
+import EmailOtpVerify from './Screens/AuthScreens/EmailOtpVerify';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -225,6 +226,11 @@ export const Auth = () => {
       <Stack.Screen
         name="ResetPass"
         component={ResetPass}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="EmailOtpVerify"
+        component={EmailOtpVerify}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

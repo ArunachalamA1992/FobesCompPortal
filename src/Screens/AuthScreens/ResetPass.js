@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   Image,
   TouchableWithoutFeedback,
@@ -9,21 +9,21 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { Button } from 'react-native-elements';
+import {Button} from 'react-native-elements';
 import FIcon from 'react-native-vector-icons/FontAwesome';
 import common_fn from '../../Config/common_fn';
 import fetchData from '../../Config/fetchData';
-import { Media } from '../../Global/Media';
+import {Media} from '../../Global/Media';
 import Color from '../../Global/Color';
-import { Gilmer } from '../../Global/FontFamily';
+import {Gilmer} from '../../Global/FontFamily';
 
-const DismissKeyboard = ({ children }) => (
+const DismissKeyboard = ({children}) => (
   <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
     {children}
   </TouchableWithoutFeedback>
 );
 
-const ResetPass = ({ navigation, route }) => {
+const ResetPass = ({navigation, route}) => {
   const [email] = useState(route.params.email);
   const [Password, setPassword] = useState('');
   const [ConfirmPassword, setConfirmPassword] = useState('');
@@ -56,6 +56,10 @@ const ResetPass = ({ navigation, route }) => {
   };
   const changePassword = async () => {
     try {
+      if (Password !== ConfirmPassword) {
+        common_fn.showToast('Passwords do not match');
+        return;
+      }
       var data = {
         email: email,
         password: Password,
@@ -63,7 +67,6 @@ const ResetPass = ({ navigation, route }) => {
       };
       if (Password != '' && ConfirmPassword != '') {
         const ResetPass = await fetchData.resetPassword(data);
-        console.log("data pass =========== : ", ResetPass);
         if (ResetPass) {
           common_fn.showToast(ResetPass?.message);
           navigation.replace('Auth');
@@ -93,7 +96,7 @@ const ResetPass = ({ navigation, route }) => {
           }}>
           <Image
             source={Media.logo}
-            style={{ width: 100, height: 100, resizeMode: 'contain' }}
+            style={{width: 100, height: 100, resizeMode: 'contain'}}
           />
         </View>
         <View
@@ -112,7 +115,7 @@ const ResetPass = ({ navigation, route }) => {
             }}>
             Change Your Password
           </Text>
-          <View style={{ marginVertical: 5 }}>
+          <View style={{marginVertical: 5}}>
             <Text
               style={{
                 fontFamily: Gilmer.Medium,
@@ -137,7 +140,7 @@ const ResetPass = ({ navigation, route }) => {
               />
               <TouchableOpacity
                 onPress={() => setPasswordVisible(!passwordVisible)}
-                style={{ position: 'absolute', right: 20 }}>
+                style={{position: 'absolute', right: 20}}>
                 <FIcon
                   name={passwordVisible ? 'eye' : 'eye-slash'}
                   color={Password?.length > 0 ? Color.black : Color.white}
@@ -149,7 +152,7 @@ const ResetPass = ({ navigation, route }) => {
               <Text style={styles.invalidLogin}>{errorPassword}</Text>
             )}
           </View>
-          <View style={{ marginVertical: 5 }}>
+          <View style={{marginVertical: 5}}>
             <Text
               style={{
                 fontFamily: Gilmer.Medium,
@@ -176,7 +179,7 @@ const ResetPass = ({ navigation, route }) => {
                 onPress={() =>
                   setConfirmPasswordVisible(!ConfirmpasswordVisible)
                 }
-                style={{ position: 'absolute', right: 20 }}>
+                style={{position: 'absolute', right: 20}}>
                 <FIcon
                   name={ConfirmpasswordVisible ? 'eye' : 'eye-slash'}
                   color={

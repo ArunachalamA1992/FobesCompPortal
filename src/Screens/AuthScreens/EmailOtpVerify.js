@@ -9,6 +9,7 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
   Keyboard,
+  Alert,
 } from 'react-native';
 import {Media} from '../../Global/Media';
 import {Button} from 'react-native-elements';
@@ -24,9 +25,9 @@ const DismissKeyboard = ({children}) => (
   </TouchableWithoutFeedback>
 );
 
-const PassOtpVerify = ({navigation, route}) => {
-  const [id] = useState(route.params.id);
-  const [data] = useState(route.params.data);
+const EmailOtpVerify = ({navigation, route}) => {
+  const [email] = useState(route.params.email);
+  const [token] = useState(route.params.token);
   const inputRef = useRef();
   const [otpCode, setOTPCode] = useState('');
   const [isPinReady, setIsPinReady] = useState(false);
@@ -57,14 +58,17 @@ const PassOtpVerify = ({navigation, route}) => {
 
   const ResendOTP = async () => {
     setSeconds(30);
-    const ResendOtpVerify = await fetchData.forgot_password(data);
+    var data = {
+      email: email,
+    };
+    const ResendOtpVerify = await fetchData.verify_email(data, null);
     if (ResendOtpVerify) {
-      common_fn.showToast('OTP Sent Successfully');
+      common_fn.showToast(ResendOtpVerify?.message);
     } else {
       if (Platform.OS === 'android') {
         common_fn.showToast(ResendOtpVerify?.message);
       } else {
-        alert(ResendOtpVerify?.message);
+        Alert.alert(ResendOtpVerify?.message);
       }
     }
   };
@@ -84,13 +88,11 @@ const PassOtpVerify = ({navigation, route}) => {
 
   const VerifyOTP = async navigation => {
     if (otpCode.length == 6) {
-      const VerifyOTP = await fetchData.password_otp({
-        id: id,
-        otp: otpCode,
-      });
+      var data = {otp: otpCode};
+      const VerifyOTP = await fetchData.verify_email_otp(data, token);
 
       if (VerifyOTP?.message == 'Success') {
-        navigation.navigate('ResetPass', {email: data.email});
+        navigation.replace('Login');
         common_fn.showToast(VerifyOTP?.message);
       } else {
         setOTPCode('');
@@ -188,7 +190,7 @@ const PassOtpVerify = ({navigation, route}) => {
   );
 };
 
-export default PassOtpVerify;
+export default EmailOtpVerify;
 const styles = StyleSheet.create({
   otpInputView: {
     marginVertical: 10,

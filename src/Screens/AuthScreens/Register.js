@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -8,14 +8,14 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Color from '../../Global/Color';
-import { Gilmer } from '../../Global/FontFamily';
+import {Gilmer} from '../../Global/FontFamily';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useTheme } from 'react-native-paper';
-import { Iconviewcomponent } from '../../Componens/Icontag';
+import {useTheme} from 'react-native-paper';
+import {Iconviewcomponent} from '../../Componens/Icontag';
 import fetchData from '../../Config/fetchData';
 import common_fn from '../../Config/common_fn';
 
-const Register = ({ navigation }) => {
+const Register = ({navigation}) => {
   const [username, setUsername] = useState('');
   const [checked, setChecked] = useState(false);
   const [email, setEmail] = useState('');
@@ -27,23 +27,33 @@ const Register = ({ navigation }) => {
   const [minPass, setMinPass] = useState('');
   const [minconPass, setMinConPass] = useState('');
   const [password_visible, setPasswordvisibility] = useState(false);
-  const [confirmPassword_visible, setConfirmPasswordVisibility] = useState(false);
+  const [confirmPassword_visible, setConfirmPasswordVisibility] =
+    useState(false);
   const [confirmPasserror, setConfirmPassError] = useState('');
+  const [mailErrorMessage, setMailErrorMessage] = useState('');
 
+  const handleValidEmail = value => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const allowedDomains = [
+      'gmail.com',
+      'yahoo.com',
+      'outlook.com',
+      'rediff.com',
+      'mail.com',
+      'zohocorp.com',
+      'proton.me',
+      'icloud.com',
+    ];
+    const emailDomain = value.split('@')[1];
 
-  const handleValidEmail = val => {
-    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-    if (val.length === 0) {
-      setEmailValidError('Email address must be enter');
-    } else if (reg.test(val) === false) {
-      setEmailValidError('Enter valid email address');
-    } else if (reg.test(val) === true) {
-      setEmailValidError('');
+    if (emailDomain && allowedDomains.includes(emailDomain.toLowerCase())) {
+      setMailErrorMessage('This email domain is not allowed.');
+    } else {
+      setMailErrorMessage('');
     }
   };
 
-
-  const handleConfirmPasswordChange = (value) => {
+  const handleConfirmPasswordChange = value => {
     setConfirmPassword(value);
     if (password !== value) {
       setConfirmPassError('Passwords do not match');
@@ -52,8 +62,29 @@ const Register = ({ navigation }) => {
     }
   };
 
+  const handleEmailVerification = async value => {
+    try {
+      var data = {
+        email: email,
+      };
+      const email_verification = await fetchData.verify_email(data, null);
+      if (email_verification?.status == true) {
+        common_fn.showToast(email_verification?.message);
+        navigation.navigate('EmailOtpVerify', {
+          email,
+          token: email_verification?.token,
+        });
+      }
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
 
   const register = async () => {
+    if (!mailErrorMessage) {
+      common_fn.showToast('Enter your valid Email address');
+      return;
+    }
     if (!username || !email || !phone || !password || !confirmPassword) {
       common_fn.showToast('All fields are required');
       return;
@@ -80,8 +111,9 @@ const Register = ({ navigation }) => {
     try {
       const registerData = await fetchData.register(data, null);
       if (registerData?.message === 'Registered Successfully') {
-        common_fn.showToast(registerData?.message);
-        navigation.navigate('Login');
+        // common_fn.showToast(registerData?.message);
+        // navigation.navigate('Login');
+        handleEmailVerification();
       } else {
         common_fn.showToast(registerData?.message);
       }
@@ -123,8 +155,16 @@ const Register = ({ navigation }) => {
         </Text>
       </View>
 
-      <View style={{ marginVertical: 5 }}>
-        <Text style={{ textAlign: 'left', fontSize: 15, paddingHorizontal: 10, paddingVertical: 5, color: Color.cloudyGrey, fontFamily: Gilmer.Bold }}>
+      <View style={{marginVertical: 5}}>
+        <Text
+          style={{
+            textAlign: 'left',
+            fontSize: 15,
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+            color: Color.cloudyGrey,
+            fontFamily: Gilmer.Bold,
+          }}>
           HR Name *
         </Text>
         <View style={styles.textContainer}>
@@ -132,10 +172,10 @@ const Register = ({ navigation }) => {
             Icontag={'Ionicons'}
             iconname={'person'}
             icon_size={22}
-            iconstyle={{ color: Color.transparantBlack }}
+            iconstyle={{color: Color.transparantBlack}}
           />
           <TextInput
-            style={[styles.numberTextBox, { paddingHorizontal: 10 }]}
+            style={[styles.numberTextBox, {paddingHorizontal: 10}]}
             placeholder="Enter HR Name"
             placeholderTextColor={Color.transparantBlack}
             value={username}
@@ -147,8 +187,16 @@ const Register = ({ navigation }) => {
         </View>
       </View>
 
-      <View style={{ marginVertical: 5 }}>
-        <Text style={{ textAlign: 'left', fontSize: 15, paddingHorizontal: 10, paddingVertical: 5, color: Color.cloudyGrey, fontFamily: Gilmer.Bold }}>
+      <View style={{marginVertical: 5}}>
+        <Text
+          style={{
+            textAlign: 'left',
+            fontSize: 15,
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+            color: Color.cloudyGrey,
+            fontFamily: Gilmer.Bold,
+          }}>
           Official Email Address *
         </Text>
         <View style={styles.textContainer}>
@@ -156,10 +204,10 @@ const Register = ({ navigation }) => {
             Icontag={'Ionicons'}
             iconname={'mail'}
             icon_size={22}
-            iconstyle={{ color: Color.transparantBlack }}
+            iconstyle={{color: Color.transparantBlack}}
           />
           <TextInput
-            style={[styles.numberTextBox, { paddingHorizontal: 10 }]}
+            style={[styles.numberTextBox, {paddingHorizontal: 10}]}
             placeholder="Official Email Address"
             value={email}
             placeholderTextColor={Color.transparantBlack}
@@ -170,22 +218,27 @@ const Register = ({ navigation }) => {
             keyboardType="email-address"
           />
         </View>
-        {emailValidError ? (
+        {mailErrorMessage ? (
           <Text
             style={{
-              width: '100%',
-              textAlign: 'left',
-              fontFamily: Gilmer.Regular,
-              fontSize: 14,
               color: 'red',
+              marginTop: 5,
             }}>
-            {emailValidError}
+            {mailErrorMessage}
           </Text>
         ) : null}
       </View>
 
-      <View style={{ marginVertical: 5 }}>
-        <Text style={{ textAlign: 'left', fontSize: 15, paddingHorizontal: 10, paddingVertical: 5, color: Color.cloudyGrey, fontFamily: Gilmer.Bold }}>
+      <View style={{marginVertical: 5}}>
+        <Text
+          style={{
+            textAlign: 'left',
+            fontSize: 15,
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+            color: Color.cloudyGrey,
+            fontFamily: Gilmer.Bold,
+          }}>
           Mobile Number *
         </Text>
         <View style={styles.textContainer}>
@@ -193,10 +246,10 @@ const Register = ({ navigation }) => {
             Icontag={'Ionicons'}
             iconname={'call'}
             icon_size={22}
-            iconstyle={{ color: Color.transparantBlack }}
+            iconstyle={{color: Color.transparantBlack}}
           />
           <TextInput
-            style={[styles.numberTextBox, { paddingHorizontal: 10 }]}
+            style={[styles.numberTextBox, {paddingHorizontal: 10}]}
             placeholder="Mobile Number"
             placeholderTextColor={Color.transparantBlack}
             value={phone}
@@ -207,8 +260,16 @@ const Register = ({ navigation }) => {
         </View>
       </View>
 
-      <View style={{ marginVertical: 5 }}>
-        <Text style={{ textAlign: 'left', fontSize: 15, paddingHorizontal: 10, paddingVertical: 5, color: Color.cloudyGrey, fontFamily: Gilmer.Bold }}>
+      <View style={{marginVertical: 5}}>
+        <Text
+          style={{
+            textAlign: 'left',
+            fontSize: 15,
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+            color: Color.cloudyGrey,
+            fontFamily: Gilmer.Bold,
+          }}>
           Password *
         </Text>
         <View style={styles.textContainer}>
@@ -216,10 +277,10 @@ const Register = ({ navigation }) => {
             Icontag={'MaterialCommunityIcons'}
             iconname={'lock'}
             icon_size={22}
-            iconstyle={{ color: Color.transparantBlack }}
+            iconstyle={{color: Color.transparantBlack}}
           />
           <TextInput
-            style={[styles.numberTextBox, { paddingHorizontal: 10 }]}
+            style={[styles.numberTextBox, {paddingHorizontal: 10}]}
             placeholder="Password"
             placeholderTextColor={Color.transparantBlack}
             secureTextEntry={!password_visible}
@@ -242,14 +303,15 @@ const Register = ({ navigation }) => {
               Icontag={'MaterialCommunityIcons'}
               iconname={!password_visible ? 'eye-off' : 'eye'}
               icon_size={22}
-              iconstyle={{ color: Color.transparantBlack }}
+              iconstyle={{color: Color.transparantBlack}}
             />
           </TouchableOpacity>
         </View>
         {minPass != 'null' ? (
           <Text
             style={{
-              width: '95%', paddingHorizontal: 5,
+              width: '95%',
+              paddingHorizontal: 5,
               fontSize: 14,
               color: 'red',
             }}>
@@ -258,11 +320,16 @@ const Register = ({ navigation }) => {
         ) : null}
       </View>
 
-
-
-
-      <View style={{ marginVertical: 0 }}>
-        <Text style={{ textAlign: 'left', fontSize: 15, paddingHorizontal: 10, paddingVertical: 5, color: Color.cloudyGrey, fontFamily: Gilmer.Bold }}>
+      <View style={{marginVertical: 0}}>
+        <Text
+          style={{
+            textAlign: 'left',
+            fontSize: 15,
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+            color: Color.cloudyGrey,
+            fontFamily: Gilmer.Bold,
+          }}>
           Confirm Password *
         </Text>
         <View style={styles.textContainer}>
@@ -270,10 +337,10 @@ const Register = ({ navigation }) => {
             Icontag={'MaterialCommunityIcons'}
             iconname={'lock'}
             icon_size={22}
-            iconstyle={{ color: Color.transparantBlack }}
+            iconstyle={{color: Color.transparantBlack}}
           />
           <TextInput
-            style={[styles.numberTextBox, { paddingHorizontal: 10 }]}
+            style={[styles.numberTextBox, {paddingHorizontal: 10}]}
             placeholder="Confirm Password"
             placeholderTextColor={Color.transparantBlack}
             secureTextEntry={!confirmPassword_visible}
@@ -290,36 +357,41 @@ const Register = ({ navigation }) => {
             keyboardType="name-phone-pad"
           />
           <TouchableOpacity
-            onPress={() => setConfirmPasswordVisibility(!confirmPassword_visible)}
+            onPress={() =>
+              setConfirmPasswordVisibility(!confirmPassword_visible)
+            }
             style={styles.numberCountryCode}>
             <Iconviewcomponent
               Icontag={'MaterialCommunityIcons'}
               iconname={!confirmPassword_visible ? 'eye-off' : 'eye'}
               icon_size={22}
-              iconstyle={{ color: Color.transparantBlack }}
+              iconstyle={{color: Color.transparantBlack}}
             />
           </TouchableOpacity>
         </View>
         {minconPass != 'null' ? (
           <Text
             style={{
-              width: '95%', paddingHorizontal: 5,
+              width: '95%',
+              paddingHorizontal: 5,
               fontSize: 14,
               color: 'red',
             }}>
-            {minconPass}</Text>
+            {minconPass}
+          </Text>
         ) : null}
         {confirmPasserror != 'null' ? (
           <Text
             style={{
-              width: '95%', paddingHorizontal: 5,
+              width: '95%',
+              paddingHorizontal: 5,
               fontSize: 14,
               color: 'red',
             }}>
-            {confirmPasserror}</Text>
+            {confirmPasserror}
+          </Text>
         ) : null}
       </View>
-
 
       <View
         style={{
@@ -354,7 +426,10 @@ const Register = ({ navigation }) => {
             }}>
             I've read and agree with{' '}
           </Text>
-          <TouchableOpacity onPress={() => { navigation.navigate('TermsandConditions'); }}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('TermsandConditions');
+            }}>
             <Text
               style={{
                 fontSize: 14,
@@ -381,7 +456,7 @@ const Register = ({ navigation }) => {
           borderRadius: 5,
           marginVertical: 20,
         }}>
-        <Text style={{ fontSize: 14, color: Color.white, textAlign: 'center' }}>
+        <Text style={{fontSize: 14, color: Color.white, textAlign: 'center'}}>
           Create Account
         </Text>
       </TouchableOpacity>

@@ -23,6 +23,14 @@ export default {
     let url = api_name + 'users/resetPassword';
     return api.postMethod(url, data, token);
   },
+  verify_email: (data, token) => {
+    let url = api_name + 'users/verify';
+    return api.postMethod(url, data, token);
+  },
+  verify_email_otp: (data, token) => {
+    let url = api_name + 'users/verifyemail';
+    return api.postMethod(url, data, token);
+  },
   company_logo: (data, token) => {
     let url = api_name + 'company/logo';
     return api.postMethod(url, data, token);
