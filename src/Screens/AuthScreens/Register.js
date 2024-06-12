@@ -296,7 +296,6 @@ const Register = ({navigation}) => {
           />
           <View
             style={{
-              marginVertical: 10,
               padding: 10,
               backgroundColor: Color.white,
             }}>
