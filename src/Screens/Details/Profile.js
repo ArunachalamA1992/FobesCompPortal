@@ -20,7 +20,7 @@ import fetchData from '../../Config/fetchData';
 import common_fn from '../../Config/common_fn';
 import {useSelector} from 'react-redux';
 
-const Profile = ({navigation, route}) => {
+const ProfileDetails = ({navigation, route}) => {
   const [FromdatePickerVisible, setFromDatePickerVisible] = useState(false);
   const [OrganizationType, setOrganizationType] = useState(0);
   const [IndustryType, setIndustryType] = useState(0);
@@ -303,7 +303,7 @@ const Profile = ({navigation, route}) => {
   );
 };
 
-export default Profile;
+export default ProfileDetails;
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { baseUrl } from './base_url';
+import {baseUrl} from './base_url';
 
 export const api = {
   header: token => {
@@ -37,7 +37,7 @@ export const api = {
     return new Promise((resolve, reject) => {
       axios
         .post(baseUrl + url, data, {
-          headers: headers
+          headers: headers,
         })
         .then(res => {
           if (res.status == 200) {
@@ -104,13 +104,9 @@ export const api = {
     var headers = api.header(token);
     return new Promise((resolve, reject) => {
       axios
-        .delete(
-          baseUrl + url,
-          {},
-          {
-            headers: headers,
-          },
-        )
+        .delete(baseUrl + url, {
+          headers: headers,
+        })
         .then(res => {
           if (res.status == 200) {
             resolve(res.data);

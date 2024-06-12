@@ -35,6 +35,10 @@ export default {
     let url = api_name + 'company/logo';
     return api.postMethod(url, data, token);
   },
+  delete_company: (data, token) => {
+    let url = api_name + 'company';
+    return api.deleteMethod(url, token);
+  },
   company_banner: (data, token) => {
     let url = api_name + 'company/banner';
     return api.postMethod(url, data, token);
@@ -59,6 +63,10 @@ export default {
     let url = api_name + 'candidates/list?' + data;
     return api.getMethod(url, token);
   },
+  single_company: (data, token) => {
+    let url = api_name + 'company/list?' + data;
+    return api.getMethod(url, token);
+  },
   job_applicants: (data, token) => {
     let url = api_name + 'applicants?' + data;
     return api.getMethod(url, token);
@@ -77,7 +85,7 @@ export default {
   },
   unsave_candidated: (data, token) => {
     let url = api_name + 'company/saved_candidate';
-    return api.deleteMethod(url, data, token);
+    return api.deleteMethod(url, token);
   },
   list_bookmarks: (data, token) => {
     let url = api_name + 'company/saved_candidate?' + data;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Dimensions,
   Image,
@@ -10,30 +10,30 @@ import {
   View,
 } from 'react-native';
 import Color from '../../Global/Color';
-import { Gilmer } from '../../Global/FontFamily';
-import { pick } from 'react-native-document-picker';
-import { Iconviewcomponent } from '../../Componens/Icontag';
-import { Button } from 'react-native-paper';
+import {Gilmer} from '../../Global/FontFamily';
+import {pick} from 'react-native-document-picker';
+import {Iconviewcomponent} from '../../Componens/Icontag';
+import {Button} from 'react-native-paper';
 import fetchData from '../../Config/fetchData';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 import common_fn from '../../Config/common_fn';
 import axios from 'axios';
-import { baseUrl } from '../../Config/base_url';
+import {baseUrl} from '../../Config/base_url';
 
-const BasicDetails = ({ navigation }) => {
+const BasicDetails = ({navigation}) => {
   const [logo, setLogo] = useState([]);
   const [banner, setBanner] = useState([]);
   const [companyname, setcompanyname] = useState('');
   const [aboutCompany, setAboutCompany] = useState('');
   const userData = useSelector(state => state.UserReducer.userData);
-  var { token } = userData;
+  var {token} = userData;
 
   const uploadLogoImage = async () => {
     try {
       if (logo?.length > 0) {
         const formData = new FormData();
-        const { uri, name, type } = logo?.[0];
-        formData.append('logo', { uri, type, name });
+        const {uri, name, type} = logo?.[0];
+        formData.append('logo', {uri, type, name});
         const response = await axios.post(
           `${baseUrl}api/company/logo`,
           formData,
@@ -44,7 +44,7 @@ const BasicDetails = ({ navigation }) => {
             },
           },
         );
-        console.log('Image upload response:', response);
+        // console.log('Image upload response:', response);
         common_fn.showToast(response?.data?.message);
       }
     } catch (error) {
@@ -54,10 +54,10 @@ const BasicDetails = ({ navigation }) => {
 
   const uploadBannerImage = async () => {
     try {
-      if (logo?.length > 0) {
+      if (banner?.length > 0) {
         const formData = new FormData();
-        const { uri, name, type } = banner?.[0];
-        formData.append('banner', { uri, type, name });
+        const {uri, name, type} = banner?.[0];
+        formData.append('banner', {uri, type, name});
         const response = await axios.post(
           `${baseUrl}api/company/banner`,
           formData,
@@ -68,13 +68,18 @@ const BasicDetails = ({ navigation }) => {
             },
           },
         );
-        console.log('Image upload response:', response);
+        console.log('Banner upload response:', response?.data, name);
         common_fn.showToast(response?.data?.message);
       }
     } catch (error) {
       console.log('Error uploading profile image:', error);
     }
   };
+
+  useEffect(() => {
+    uploadLogoImage();
+    uploadBannerImage();
+  }, [logo, banner]);
 
   const set_basic_data = async () => {
     try {
@@ -109,8 +114,8 @@ const BasicDetails = ({ navigation }) => {
         }}
       />
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{ flex: 1 }}>
-          <View style={{ marginVertical: 10 }}>
+        <View style={{flex: 1}}>
+          <View style={{marginVertical: 10}}>
             <Text
               style={{
                 fontSize: 18,
@@ -126,7 +131,7 @@ const BasicDetails = ({ navigation }) => {
                 justifyContent: 'space-around',
                 marginVertical: 10,
               }}>
-              <View style={{ flex: 1, marginHorizontal: 5 }}>
+              <View style={{flex: 1, marginHorizontal: 5}}>
                 <Text
                   style={{
                     fontSize: 14,
@@ -139,12 +144,19 @@ const BasicDetails = ({ navigation }) => {
                   logo?.map((item, index) => {
                     return (
                       <Image
-                        source={{ uri: item?.uri }}
+                        source={{uri: item?.uri}}
                         style={{
                           width: '100%',
-                          height: 130,
-                          resizeMode: 'contain',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          minHeight: 130,
+                          borderWidth: 1,
+                          borderColor: Color.cloudyGrey,
+                          borderRadius: 5,
+                          borderStyle: 'dashed',
                           marginVertical: 10,
+                          padding: 10,
+                          resizeMode: 'contain',
                         }}
                       />
                     );
@@ -205,8 +217,8 @@ const BasicDetails = ({ navigation }) => {
                   </TouchableOpacity>
                 )}
               </View>
-              <View style={{ flex: 1, marginHorizontal: 5 }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View style={{flex: 1, marginHorizontal: 5}}>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
                   <Text
                     style={{
                       fontSize: 14,
@@ -229,12 +241,19 @@ const BasicDetails = ({ navigation }) => {
                   banner?.map((item, index) => {
                     return (
                       <Image
-                        source={{ uri: item?.uri }}
+                        source={{uri: item?.uri}}
                         style={{
                           width: '100%',
-                          height: 130,
+                          justifyContent: 'center',
+                          alignItems: 'center',
                           resizeMode: 'contain',
+                          minHeight: 130,
+                          borderWidth: 1,
+                          borderColor: Color.cloudyGrey,
+                          borderRadius: 5,
+                          borderStyle: 'dashed',
                           marginVertical: 10,
+                          padding: 10,
                         }}
                       />
                     );
@@ -297,7 +316,7 @@ const BasicDetails = ({ navigation }) => {
               </View>
             </View>
           </View>
-          <View style={{ marginVertical: 10 }}>
+          <View style={{marginVertical: 10}}>
             <Text
               style={{
                 fontSize: 16,
@@ -325,15 +344,15 @@ const BasicDetails = ({ navigation }) => {
               }}
             />
           </View>
-          <View style={{ marginVertical: 10 }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View style={{marginVertical: 10}}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <Text
                 style={{
                   fontSize: 16,
                   color: Color.black,
                   fontFamily: Gilmer.Bold,
                 }}>
-                About Company
+                Bio
               </Text>
               <Text
                 style={{

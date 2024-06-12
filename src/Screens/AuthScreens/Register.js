@@ -6,6 +6,8 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
+  Modal,
+  Pressable,
 } from 'react-native';
 import Color from '../../Global/Color';
 import {Gilmer} from '../../Global/FontFamily';
@@ -42,6 +44,7 @@ const Register = ({navigation}) => {
   const [isPinReady, setIsPinReady] = useState(false);
   const [error, setError] = useState(false);
   const emailVerify = useSelector(state => state.UserReducer.emailVerify);
+
   const chkOTPError = OTP => {
     let reg = /^[6-9][0-9]*$/;
 
@@ -145,11 +148,10 @@ const Register = ({navigation}) => {
     }
   };
 
-  const VerifyOTP = async navigation => {
+  const VerifyOTP = async () => {
     if (otpCode.length == 6) {
       var data = {otp: otpCode};
       const VerifyOTP = await fetchData.verify_email_otp(data, token);
-
       if (VerifyOTP?.message == 'Success') {
         common_fn.showToast(VerifyOTP?.message);
         setEmailVisible(false);
@@ -166,6 +168,8 @@ const Register = ({navigation}) => {
       );
     }
   };
+
+  var opacityValue = !emailVerify ? 0.4 : 1;
   return (
     <View style={styles.container}>
       <View
@@ -280,11 +284,31 @@ const Register = ({navigation}) => {
             {mailErrorMessage}
           </Text>
         ) : null}
-        {emailVisible && (
+        <Modal transparent visible={emailVisible} animationType="slide">
+          <Pressable
+            style={{
+              flex: 1,
+              backgroundColor: Color.transparantBlack,
+            }}
+            onPress={() => {
+              setEmailVerify(false);
+            }}
+          />
           <View
             style={{
               marginVertical: 10,
+              padding: 10,
+              backgroundColor: Color.white,
             }}>
+            <Text
+              style={{
+                fontSize: 18,
+                fontFamily: Gilmer.Bold,
+                color: Color.black,
+                marginVertical: 10,
+              }}>
+              Enter Your OTP
+            </Text>
             <OTPInput
               inputRef={inputRef}
               code={otpCode}
@@ -316,10 +340,10 @@ const Register = ({navigation}) => {
               {error}
             </Text>
           </View>
-        )}
+        </Modal>
       </View>
 
-      <View style={{marginVertical: 5}}>
+      <View style={{marginVertical: 5, opacity: opacityValue}}>
         <Text
           style={{
             textAlign: 'left',
@@ -351,7 +375,7 @@ const Register = ({navigation}) => {
         </View>
       </View>
 
-      <View style={{marginVertical: 5}}>
+      <View style={{marginVertical: 5, opacity: opacityValue}}>
         <Text
           style={{
             textAlign: 'left',
@@ -412,7 +436,7 @@ const Register = ({navigation}) => {
         ) : null}
       </View>
 
-      <View style={{marginVertical: 0}}>
+      <View style={{marginVertical: 5, opacity: opacityValue}}>
         <Text
           style={{
             textAlign: 'left',
@@ -492,12 +516,14 @@ const Register = ({navigation}) => {
           justifyContent: 'flex-start',
           flexDirection: 'row',
           alignItems: 'center',
+          opacity: opacityValue,
         }}>
         <TouchableOpacity
           style={{}}
           onPress={() => {
             setChecked(!checked);
-          }}>
+          }}
+          disabled={!emailVerify}>
           <MCIcon
             name={!checked ? 'checkbox-blank-outline' : 'checkbox-marked'}
             size={24}
@@ -540,7 +566,7 @@ const Register = ({navigation}) => {
         onPress={() => {
           register();
         }}
-        disabled={!checked}
+        disabled={!checked || !emailVerify}
         style={{
           height: 45,
           backgroundColor: checked ? Color.primary : Color.lightgrey,

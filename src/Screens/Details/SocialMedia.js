@@ -145,7 +145,7 @@ const SocialMedia = ({navigation, route}) => {
                   }}>
                   <Icon name="link-sharp" size={30} color={Color.cloudyGrey} />
                   <TextInput
-                    placeholder=""
+                    placeholder="Enter Your Social URl"
                     placeholderTextColor={Color.cloudyGrey}
                     value={profile.url}
                     onChangeText={text => {

@@ -15,6 +15,7 @@ import {Button} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
 import FeIcon from 'react-native-vector-icons/Feather';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import MIcon from 'react-native-vector-icons/MaterialIcons';
 import {Media} from '../../Global/Media';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import moment from 'moment';
@@ -868,6 +869,7 @@ const HomeScreen = ({navigation}) => {
 
   useEffect(() => {
     getUserData();
+    getSingleCompanyData();
   }, [token]);
 
   const getUserData = async () => {
@@ -902,6 +904,24 @@ const HomeScreen = ({navigation}) => {
         setActivityLoading(false);
       });
   }, [index, token]);
+
+  const getSingleCompanyData = useCallback(async () => {
+    try {
+      const single_data = await fetchData.single_company(null, token);
+      if (single_data) {
+        const combinedData = {
+          ...single_data?.data,
+          token: token,
+        };
+        if (combinedData !== userData) {
+          dispatch(setUserData(combinedData));
+          await AsyncStorage.setItem('user_data', JSON.stringify(combinedData));
+        }
+      }
+    } catch (error) {
+      console.log('error', error);
+    }
+  }, [token]);
 
   const getData = useCallback(async () => {
     try {
@@ -1484,6 +1504,29 @@ const HomeScreen = ({navigation}) => {
                             </View>
                           </View>
                         </TouchableOpacity>
+                      );
+                    }}
+                    ListEmptyComponent={() => {
+                      return (
+                        <View
+                          style={{
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            marginVertical: 10,
+                            flex: 1,
+                          }}>
+                          <MIcon name="work" size={30} color={Color.primary} />
+                          <Text
+                            style={{
+                              fontSize: 14,
+                              borderRadius: 5,
+                              color: Color.primary,
+                              marginVertical: 5,
+                              fontFamily: Gilmer.Bold,
+                            }}>
+                            No Job Post
+                          </Text>
+                        </View>
                       );
                     }}
                     horizontal={true}

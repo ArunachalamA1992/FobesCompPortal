@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   Text,
   View,
@@ -9,23 +9,24 @@ import {
   FlatList,
   LayoutAnimation,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Divider } from 'react-native-paper';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {Divider} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { useSelector, useDispatch } from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Color from '../../Global/Color';
-import { Media } from '../../Global/Media';
-import { Gilmer } from '../../Global/FontFamily';
-import { Iconviewcomponent } from '../Icontag';
+import {Media} from '../../Global/Media';
+import {Gilmer} from '../../Global/FontFamily';
+import {Iconviewcomponent} from '../Icontag';
 import common_fn from '../../Config/common_fn';
-import { setUserData } from '../../Redux';
+import {setUserData} from '../../Redux';
+import {base_image_url} from '../../Config/base_url';
 
 const CustomDrawerContent = props => {
   const [itemSelected, setItemSelected] = useState('');
   const dispatch = useDispatch();
   const userData = useSelector(state => state.UserReducer.userData);
-  var { email, name } = userData;
+  var {email, name, logo} = userData;
 
   const [visible, setVisible] = useState(false);
 
@@ -88,10 +89,10 @@ const CustomDrawerContent = props => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Color.white }}>
+    <SafeAreaView style={{flex: 1, backgroundColor: Color.white}}>
       <TouchableOpacity
         onPress={() => {
-          props.navigation.navigate('ProfileTab');
+          props.navigation.navigate('profile');
         }}
         style={{
           backgroundColor: Color.primary,
@@ -101,17 +102,30 @@ const CustomDrawerContent = props => {
           // flexDirection: 'row',
           padding: 10,
         }}>
-        <Image
-          source={Media.user}
-          style={{
-            width: 90,
-            height: 90,
-            resizeMode: 'contain',
-            borderRadius: 100,
-            marginTop: 20,
-          }}
-        />
-        <View style={{ flex: 1, marginHorizontal: 5, marginVertical: 10 }}>
+        {logo == null ? (
+          <Image
+            source={Media.user}
+            style={{
+              width: 90,
+              height: 90,
+              resizeMode: 'contain',
+              borderRadius: 100,
+              marginTop: 20,
+            }}
+          />
+        ) : (
+          <Image
+            source={{uri: base_image_url + logo}}
+            style={{
+              width: 90,
+              height: 90,
+              resizeMode: 'contain',
+              borderRadius: 100,
+              marginTop: 20,
+            }}
+          />
+        )}
+        <View style={{flex: 1, marginHorizontal: 5, marginVertical: 10}}>
           <Text
             style={{
               fontSize: 16,
@@ -134,7 +148,7 @@ const CustomDrawerContent = props => {
         </View>
       </TouchableOpacity>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{ marginVertical: 10, marginBottom: 10 }}>
+        <View style={{marginVertical: 10, marginBottom: 10}}>
           <View
             style={{
               backgroundColor:
@@ -214,7 +228,7 @@ const CustomDrawerContent = props => {
             </TouchableOpacity>
           </View>
 
-          <Divider style={{ height: 1, marginVertical: 10 }} />
+          <Divider style={{height: 1, marginVertical: 10}} />
           <View
             style={{
               backgroundColor:
@@ -273,7 +287,7 @@ const CustomDrawerContent = props => {
               marginVertical: 0,
             }}>
             {visible && (
-              <View style={{ paddingHorizontal: 10 }}>
+              <View style={{paddingHorizontal: 10}}>
                 <View
                   style={{
                     backgroundColor:

@@ -19,7 +19,7 @@ const ContactDetails = ({navigation, route}) => {
   const [email, setEmail] = useState('');
   const userData = useSelector(state => state.UserReducer.userData);
   var {token} = userData;
-
+  console.log('token', token);
   const setCompleteData = async () => {
     try {
       var data = {
@@ -30,7 +30,7 @@ const ContactDetails = ({navigation, route}) => {
         email: email,
       };
       const complete_data = await fetchData.update_company_details(data, token);
-      console.log('complete_data', complete_data);
+      console.log('complete_data---------', complete_data);
       if (complete_data?.message == 'Profile Updated Successfully') {
         navigation.dispatch(StackActions.replace('ProfileCompletion'));
       }
