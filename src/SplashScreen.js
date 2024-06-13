@@ -53,6 +53,7 @@ const SplashScreen = ({navigation}) => {
       }
 
       const userData = JSON.parse(userDataValue);
+      dispatch(setUserData(userData));
 
       if (!userData.logo || !userData.name) {
         navigation.dispatch(StackActions.replace('basicDetails'));
@@ -91,7 +92,6 @@ const SplashScreen = ({navigation}) => {
         dispatch(setUserData(userData));
         navigation.replace('TabNavigator');
       }
-      dispatch(setUserData(userData));
     } catch (e) {
       console.log(e);
     }
