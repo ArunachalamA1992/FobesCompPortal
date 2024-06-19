@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   Dimensions,
   FlatList,
@@ -35,6 +35,7 @@ const Applies = ({
   loading,
   getActivityData,
   getData,
+  planLimit,
 }) => {
   const [GroupsData, setGroupsData] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState({
@@ -286,7 +287,9 @@ const Applies = ({
                 <TouchableOpacity
                   key={index}
                   onPress={() => {
-                    job_profile_view(item?.candidate_id, item?.id);
+                    planLimit == 0
+                      ? navigation.navigate('BuySubscriptions')
+                      : job_profile_view(item?.candidate_id, item?.id);
                   }}
                   style={styles.card}>
                   <View
@@ -500,7 +503,7 @@ const Applies = ({
   );
 };
 
-const Shortlisted = ({navigation, job_posting, token, loading}) => {
+const Shortlisted = ({navigation, job_posting, token, loading, planLimit}) => {
   const job_profile_view = async (candidate_id, id) => {
     try {
       var data = {
@@ -586,7 +589,9 @@ const Shortlisted = ({navigation, job_posting, token, loading}) => {
             return (
               <TouchableOpacity
                 onPress={() => {
-                  job_profile_view(item?.candidate_id, item?.id);
+                  planLimit == 0
+                    ? navigation.navigate('BuySubscriptions')
+                    : job_profile_view(item?.candidate_id, item?.id);
                 }}
                 style={styles.card}>
                 <View
@@ -689,7 +694,7 @@ const Shortlisted = ({navigation, job_posting, token, loading}) => {
   );
 };
 
-const Rejected = ({navigation, job_posting, token, loading}) => {
+const Rejected = ({navigation, job_posting, token, loading, planLimit}) => {
   const job_profile_view = async (candidate_id, id) => {
     try {
       var data = {
@@ -775,7 +780,9 @@ const Rejected = ({navigation, job_posting, token, loading}) => {
             return (
               <TouchableOpacity
                 onPress={() => {
-                  job_profile_view(item?.candidate_id, item?.id);
+                  planLimit == 0
+                    ? navigation.navigate('BuySubscriptions')
+                    : job_profile_view(item?.candidate_id, item?.id);
                 }}
                 style={styles.card}>
                 <View
@@ -885,6 +892,7 @@ const JobApplicants = ({navigation, route}) => {
   const [loading, setLoading] = useState(false);
   const userData = useSelector(state => state.UserReducer.userData);
   var {token} = userData;
+  const [planLimit, setPlanLimit] = useState(0);
 
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
@@ -968,6 +976,15 @@ const JobApplicants = ({navigation, route}) => {
     }
   };
 
+  const getPlanLimit = useCallback(async () => {
+    try {
+      const PlanLimit = await fetchData.plan_limit(``, token);
+      setPlanLimit(PlanLimit?.data?.job_limit);
+    } catch (error) {
+      console.log('error', error);
+    }
+  }, [token]);
+
   const renderScene = ({route}) => {
     switch (route.key) {
       case 'applies':
@@ -981,6 +998,7 @@ const JobApplicants = ({navigation, route}) => {
             loading={loading}
             getActivityData={getActivityData}
             getData={getData}
+            planLimit={planLimit}
           />
         );
       case 'shortlisted':
@@ -990,6 +1008,7 @@ const JobApplicants = ({navigation, route}) => {
             job_posting={job_posting}
             token={token}
             loading={loading}
+            planLimit={planLimit}
           />
         );
       case 'rejected':
@@ -999,6 +1018,7 @@ const JobApplicants = ({navigation, route}) => {
             job_posting={job_posting}
             token={token}
             loading={loading}
+            planLimit={planLimit}
           />
         );
     }

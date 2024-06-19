@@ -21,7 +21,6 @@ import Color from '../../../Global/Color';
 import {FlatList} from 'react-native';
 import {Gilmer} from '../../../Global/FontFamily';
 import axios from 'axios';
-import {job_data} from '../../../Config/Content';
 import ItemCard from '../../../Componens/ItemCard';
 import fetchData from '../../../Config/fetchData';
 import {useSelector} from 'react-redux';
@@ -57,10 +56,10 @@ const SearchDataList = ({navigation, route}) => {
     try {
       setLoading(true);
 
-      var data =
-        typeID == null
-          ? `place=${searchLocation}&${type}=${searchJob}`
-          : `place=${searchLocation}&${type}=${typeID}`;
+      var data = typeID == null ? `${type}=${searchJob}` : `${type}=${typeID}`;
+      if (searchLocation != '') {
+        data += `&place=${searchLocation}`;
+      }
       const job_list = await fetchData.candidate_list(data, token);
       setJobData(job_list?.data);
     } catch (error) {
@@ -131,8 +130,11 @@ const SearchDataList = ({navigation, route}) => {
       const nextPage = page + 1;
       var data =
         typeID == null
-          ? `place=${searchLocation}&${type}=${searchJob}`
-          : `place=${searchLocation}&${type}=${typeID}`;
+          ? `${type}=${searchJob}`
+          : `${type}=${typeID}`;
+      if (searchLocation != '') {
+        data += `&place=${searchLocation}`;
+      }
       const filterData = await fetchData.candidate_list(data, token);
       if (filterData?.data?.length > 0) {
         setPage(nextPage);

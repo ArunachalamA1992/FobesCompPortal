@@ -41,6 +41,7 @@ import FAQs from './Screens/SideMenu/FAQs';
 import ContactUs from './Screens/SideMenu/ContactUs';
 import AboutUs from './Screens/SideMenu/AboutUs';
 import ProfileDetails from './Screens/Details/Profile';
+import {NavigationDrawerStructure} from './Componens/Nav/NavDrawer';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -216,7 +217,7 @@ const MainApp = () => {
             headerRight: () => (
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate('basicDetails');
+                  navigation.navigate('basicDetails', {type: 'update'});
                 }}
                 style={{marginRight: 15}}>
                 <FIcon name="edit" size={25} color={Color.primary} />
@@ -255,37 +256,38 @@ const MainApp = () => {
         <Stack.Screen
           name="basicDetails"
           component={BasicDetails}
-          options={({navigation, route}) => ({
-            headerTitle: 'Basic Details',
-            headerTitleStyle: {
-              color: Color.black,
-              fontFamily: Gilmer.Bold,
-              fontSize: 18,
-            },
-            headerStyle: {backgroundColor: Color.white},
-            headerLeft: () => (
-              <View style={{marginHorizontal: 10}}>
-                <Icon
-                  name="arrow-back"
-                  size={30}
-                  color={Color.black}
-                  onPress={() => navigation.goBack()}
-                />
-              </View>
-            ),
-            headerRight: () => (
-              <View style={{marginHorizontal: 10}}>
-                <Text
-                  style={{
-                    color: Color.primary,
-                    fontSize: 14,
-                    fontFamily: Gilmer.Medium,
-                  }}>
-                  0% Completed
-                </Text>
-              </View>
-            ),
-          })}
+          // options={({navigation, route}) => ({
+          //   headerTitle: 'Basic Details',
+          //   headerTitleStyle: {
+          //     color: Color.black,
+          //     fontFamily: Gilmer.Bold,
+          //     fontSize: 18,
+          //   },
+          //   headerStyle: {backgroundColor: Color.white},
+          //   headerLeft: () => (
+          //     <View style={{marginHorizontal: 10}}>
+          //       <Icon
+          //         name="arrow-back"
+          //         size={30}
+          //         color={Color.black}
+          //         onPress={() => navigation.goBack()}
+          //       />
+          //     </View>
+          //   ),
+          //   headerRight: () => (
+          //     <View style={{marginHorizontal: 10}}>
+          //       <Text
+          //         style={{
+          //           color: Color.primary,
+          //           fontSize: 14,
+          //           fontFamily: Gilmer.Medium,
+          //         }}>
+          //         0% Completed
+          //       </Text>
+          //     </View>
+          //   ),
+          // })}
+          options={{headerShown: false}}
         />
         <Stack.Screen
           name="profileDetails"
@@ -401,43 +403,6 @@ const MainApp = () => {
           name="candidateDetails"
           component={CandidateDetails}
           options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="Home"
-          component={HomeScreen}
-          options={({navigation}) => ({
-            headerTitle: '',
-            headerTitleStyle: {
-              color: Color.white,
-              fontFamily: Gilmer.Bold,
-              fontSize: 18,
-            },
-            headerStyle: {backgroundColor: Color.primary, elevation: 0},
-            headerLeft: () => (
-              <NavigationDrawerStructure navigation={navigation} home={true} />
-            ),
-            headerRight: () => (
-              <TouchableOpacity
-                style={{right: 10}}
-                onPress={() => {
-                  navigation.navigate('Notification');
-                }}>
-                <Badge
-                  badgeStyle={{
-                    backgroundColor: Color.red,
-                  }}
-                  style={{position: 'absolute', zIndex: 1, top: -5, right: -5}}>
-                  {0}
-                </Badge>
-                <Iconviewcomponent
-                  Icontag={'Ionicons'}
-                  iconname={'notifications'}
-                  icon_size={26}
-                  icon_color={Color.white}
-                />
-              </TouchableOpacity>
-            ),
-          })}
         />
         <Stack.Screen
           name="JobDetails"

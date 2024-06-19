@@ -47,8 +47,8 @@ const customStyles = {
 };
 const SalaryandBenefits = ({route}) => {
   const [jobTitle] = useState(route.params.jobTitle);
-  const [selectedCategory] = useState(route.params.Category);
-  const [selectedRole] = useState(route.params.role);
+  const [selectedCategory] = useState(route.params.selectedCategory);
+  const [selectedRole] = useState(route.params.selectedRole);
   const [selectedSkills] = useState(route.params.selectedSkills);
   const [selectedTags] = useState(route.params.selectedTags);
   const [description] = useState(route.params.description);
@@ -59,6 +59,7 @@ const SalaryandBenefits = ({route}) => {
   const [BenifitsVisible, setBenifitsVisible] = useState(false);
   const [salaryType, setSalaryType] = useState({});
   const [benifitsData, setBenifitsData] = useState([]);
+  console.log('benifitsData', benifitsData)
   const [queryBenefits, setQueryBenefits] = useState('');
   const [selectedBenifits, setSelectedBenifits] = useState([]);
   const [benifitsSelectedItem, setBenifitsSelectedItem] = useState([]);
@@ -98,13 +99,14 @@ const SalaryandBenefits = ({route}) => {
 
   useEffect(() => {
     getData();
-  }, [getData]);
+  }, [getData, token]);
 
   const getData = async () => {
     try {
-      const benifits_data = await fetchData.benefits({}, token);
+      const benifits_data = await fetchData.benefits(``, token);
       setBenifitsData(benifits_data?.data);
-      const salarytype_data = await fetchData.salarytype('', token);
+      const salarytype_data = await fetchData.salarytype(``, token);
+      console.log('salarytype_data?.data', salarytype_data?.data);
       setSalaryTypeData(salarytype_data?.data);
     } catch (error) {
       console.error('Error fetching items:', error);
@@ -381,6 +383,7 @@ const SalaryandBenefits = ({route}) => {
               title={'Add Benifits'}
               onPress={() => {
                 addBenifitsItem(queryBenefits);
+                setQueryBenefits('');
               }}
               titleStyle={{
                 fontSize: 16,

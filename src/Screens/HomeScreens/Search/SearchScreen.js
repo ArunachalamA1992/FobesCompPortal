@@ -94,7 +94,7 @@ const SearchScreen = ({navigation}) => {
 
   const getSearchData = async () => {
     try {
-      if (searchJob != '' && searchLocation != '') {
+      if (searchJob != '') {
         const data = `string=${searchJob}`;
         const getData = await fetchData.add_search(data, token);
         navigation.navigate('SearchDataList', {
@@ -250,7 +250,7 @@ const SearchScreen = ({navigation}) => {
         }}>
         <Text style={{fontSize: 16, color: Color.white}}>Search</Text>
       </TouchableOpacity>
-      <View style={{marginTop: 10}}>
+      {/* <View style={{marginTop: 10}}>
         <View
           style={{
             flexDirection: 'row',
@@ -370,7 +370,7 @@ const SearchScreen = ({navigation}) => {
             );
           })}
         </View>
-      </View>
+      </View> */}
     </View>
   );
 };

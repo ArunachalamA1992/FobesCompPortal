@@ -17,7 +17,7 @@ import FeIcon from 'react-native-vector-icons/Feather';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import {Media} from '../../Global/Media';
-import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
+import {TabView, TabBar} from 'react-native-tab-view';
 import moment from 'moment';
 import common_fn from '../../Config/common_fn';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -800,62 +800,12 @@ const HomeScreen = ({navigation}) => {
   const [categoryData, setCategoryData] = useState([]);
   const [acticityData, setActivityData] = useState([]);
   const [jobLoading, setJobLoading] = useState(false);
+  const [planLimit, setPlanLimit] = useState(0);
   const [loading, setLoading] = useState(false);
   const [activityLoading, setActivityLoading] = useState(false);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const userData = useSelector(state => state.UserReducer.userData);
-  var {
-    address,
-    auth_type,
-    banner,
-    bio,
-    contactInfo,
-    country,
-    created_at,
-    district,
-    document_verified_at,
-    email,
-    establishment_date,
-    exact_location,
-    facebook_id,
-    google_id,
-    image,
-    industry_type,
-    industry_type_id,
-    is_demo_field,
-    is_profile_verified,
-    job_expired_alert,
-    lat,
-    locality,
-    logo,
-    long,
-    name,
-    neighborhood,
-    new_job_alert,
-    organization_type_id,
-    origanization_type,
-    place,
-    plan,
-    postcode,
-    profile_completion,
-    provider,
-    provider_id,
-    question_feature_enable,
-    recent_activities_alert,
-    region,
-    role,
-    shortlisted_alert,
-    social_links,
-    team_size,
-    team_size_id,
-    token,
-    total_views,
-    updated_at,
-    username,
-    visibility,
-    vision,
-    website,
-  } = userData;
+  var {name, token} = userData;
 
   const layout = useWindowDimensions();
 
@@ -869,7 +819,13 @@ const HomeScreen = ({navigation}) => {
 
   useEffect(() => {
     getUserData();
-    getSingleCompanyData();
+  }, [token]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      getSingleCompanyData();
+    }, 3000);
+    return () => clearInterval(interval);
   }, [token]);
 
   const getUserData = async () => {
@@ -897,6 +853,7 @@ const HomeScreen = ({navigation}) => {
 
   useEffect(() => {
     setActivityLoading(true);
+    getPlanLimit();
     getActivityData()
       .then(() => setActivityLoading(false))
       .catch(error => {
@@ -971,6 +928,15 @@ const HomeScreen = ({navigation}) => {
     [token],
   );
 
+  const getPlanLimit = useCallback(async () => {
+    try {
+      const PlanLimit = await fetchData.plan_limit(``, token);
+      setPlanLimit(PlanLimit?.data?.job_limit);
+    } catch (error) {
+      console.log('error', error);
+    }
+  }, [token, index]);
+
   const renderScene = ({route}) => {
     switch (route.key) {
       case 'all':
@@ -980,6 +946,7 @@ const HomeScreen = ({navigation}) => {
             navigation={navigation}
             activityLoading={activityLoading}
             token={token}
+            planLimit={planLimit}
           />
         );
       case 'called':
@@ -989,6 +956,7 @@ const HomeScreen = ({navigation}) => {
             navigation={navigation}
             activityLoading={activityLoading}
             token={token}
+            planLimit={planLimit}
           />
         );
       case 'viewed':
@@ -998,6 +966,7 @@ const HomeScreen = ({navigation}) => {
             navigation={navigation}
             activityLoading={activityLoading}
             token={token}
+            planLimit={planLimit}
           />
         );
       case 'mailed':
@@ -1007,6 +976,7 @@ const HomeScreen = ({navigation}) => {
             navigation={navigation}
             activityLoading={activityLoading}
             token={token}
+            planLimit={planLimit}
           />
         );
     }
@@ -1234,7 +1204,9 @@ const HomeScreen = ({navigation}) => {
                 mode="contained"
                 onPress={async () => {
                   try {
-                    navigation.navigate('JobDetails');
+                    planLimit == 0
+                      ? navigation.navigate('BuySubscriptions')
+                      : navigation.navigate('JobDetails');
                   } catch (err) {}
                 }}
                 style={{
@@ -1315,7 +1287,9 @@ const HomeScreen = ({navigation}) => {
                     return (
                       <TouchableOpacity
                         onPress={() => {
-                          getCategory_data(item.id);
+                          planLimit == 0
+                            ? navigation.navigate('BuySubscriptions')
+                            : getCategory_data(item.id);
                         }}
                         key={index}
                         style={{

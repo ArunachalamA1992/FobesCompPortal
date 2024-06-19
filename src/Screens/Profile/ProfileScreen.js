@@ -225,6 +225,8 @@ const ProfileScreen = ({navigation}) => {
                   width: '100%',
                   height: 80,
                   resizeMode: 'contain',
+                  borderWidth: 1,
+                  borderColor: Color.lightgrey,
                 }}
               />
             )}
@@ -246,7 +248,7 @@ const ProfileScreen = ({navigation}) => {
                     resizeMode: 'contain',
                     borderRadius: 100,
                     borderWidth: 1,
-                    borderColor: Color.cloudyGrey,
+                    borderColor: Color.lightgrey,
                   }}
                 />
               </View>
@@ -267,6 +269,8 @@ const ProfileScreen = ({navigation}) => {
                     height: 70,
                     resizeMode: 'contain',
                     borderRadius: 100,
+                    borderWidth: 1,
+                    borderColor: Color.lightgrey,
                   }}
                 />
               </View>

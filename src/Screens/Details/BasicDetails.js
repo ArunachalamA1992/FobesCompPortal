@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
+  BackHandler,
   Dimensions,
   Image,
   ScrollView,
@@ -19,8 +20,10 @@ import {useSelector} from 'react-redux';
 import common_fn from '../../Config/common_fn';
 import axios from 'axios';
 import {baseUrl} from '../../Config/base_url';
+import Icon from 'react-native-vector-icons/Ionicons';
 
-const BasicDetails = ({navigation}) => {
+const BasicDetails = ({navigation, route}) => {
+  const [type] = useState(route.params.type);
   const [logo, setLogo] = useState([]);
   const [banner, setBanner] = useState([]);
   const [companyname, setcompanyname] = useState('');
@@ -83,9 +86,6 @@ const BasicDetails = ({navigation}) => {
 
   const set_basic_data = async () => {
     try {
-      uploadLogoImage();
-      uploadBannerImage();
-      // if (logo?.length > 0 && banner?.length > 0 && companyname?.length > 0) {
       if (logo?.length > 0 && companyname?.length > 0) {
         var data = {
           name: companyname,
@@ -105,6 +105,42 @@ const BasicDetails = ({navigation}) => {
 
   return (
     <View style={styles.container}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          marginVertical: 10,
+        }}>
+        <View style={{marginHorizontal: 10}}>
+          <Icon
+            name="arrow-back"
+            size={30}
+            color={Color.black}
+            onPress={() => {
+              type == 'add' ? BackHandler.exitApp() : navigation.goBack();
+            }}
+          />
+        </View>
+        <Text
+          style={{
+            flex: 1,
+            fontSize: 18,
+            color: Color.lightBlack,
+            fontFamily: Gilmer.Bold,
+          }}>
+          Basic Details
+        </Text>
+        <View style={{marginHorizontal: 10}}>
+          <Text
+            style={{
+              color: Color.primary,
+              fontSize: 14,
+              fontFamily: Gilmer.Medium,
+            }}>
+            0% Completed
+          </Text>
+        </View>
+      </View>
       <View
         style={{
           width: '100%',

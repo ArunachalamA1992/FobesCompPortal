@@ -49,8 +49,8 @@ const labels = ['JobDetails', 'Salary & Benefits', 'Advance Information'];
 
 const AdvanceInformation = ({route}) => {
   const [jobTitle] = useState(route.params.jobTitle);
-  const [selectedCategory] = useState(route.params.Category);
-  const [selectedRole] = useState(route.params.role);
+  const [selectedCategory] = useState(route.params.selectedCategory);
+  const [selectedRole] = useState(route.params.selectedRole);
   const [selectedSkills] = useState(route.params.selectedSkills);
   const [selectedTags] = useState(route.params.selectedTags);
   const [description] = useState(route.params.description);
@@ -113,7 +113,7 @@ const AdvanceInformation = ({route}) => {
   const handleFromConfirm = date => {
     setDeadlineExpired(date);
   };
-
+  console.log('selectedCategory', selectedCategory);
   const postJob = async () => {
     try {
       if (
@@ -150,6 +150,7 @@ const AdvanceInformation = ({route}) => {
           apply_email: applyJobOn?.value == 'email' ? applyVenueData : '',
           apply_url: applyJobOn?.value == 'website' ? applyVenueData : '',
         };
+
         if (salaryRange?.value === 'range') {
           if (min !== 0) {
             data.min_salary = min;
@@ -164,7 +165,7 @@ const AdvanceInformation = ({route}) => {
         }
         const post_data = await fetchData.job_post(data, token);
         if (post_data?.message == 'Job created successfully') {
-          navigation.replace('Congratulations');
+          navigation.replace('Congratulations', {id: post_data?.id});
           common_fn.showToast(post_data?.message);
         } else {
           common_fn.showToast(post_data?.message);

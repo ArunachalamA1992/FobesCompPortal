@@ -15,15 +15,37 @@ import Color from '../../Global/Color';
 import {Gilmer} from '../../Global/FontFamily';
 import {Iconviewcomponent} from '../../Componens/Icontag';
 import {Button} from 'react-native-paper';
+import fetchData from '../../Config/fetchData';
+import {useSelector} from 'react-redux';
+import common_fn from '../../Config/common_fn';
 LogBox.ignoreAllLogs();
 
-const PromoteJob = ({navigation}) => {
+const PromoteJob = ({navigation, route}) => {
+  const [id] = useState(route.params.id);
   const [netInfo_State, setNetinfo] = useState(true);
-  const [PromotionItem, setPromotionItem] = useState('Featured');
+  const userData = useSelector(state => state.UserReducer.userData);
+  var {token} = userData;
+  const [PromotionItem, setPromotionItem] = useState({
+    id: 2,
+    title: 'Highlight Job',
+    value: 'Highlight',
+  });
 
   const [promotionData] = useState([
-    {id: 1, title: 'Featured ( On the top )', value: 'Featured'},
-    {id: 2, title: 'Highlight Job', value: 'Highlight'},
+    {
+      id: 1,
+      title: 'Featured ( On the top )',
+      value: 'Featured',
+      image: require('../../assets/images/blue_high.png'),
+      image_title: 'Always on the top',
+    },
+    {
+      id: 2,
+      title: 'Highlight Job',
+      value: 'Highlight',
+      image: require('../../assets/images/yellow_high.png'),
+      image_title: 'Highlight with Yellow Color',
+    },
   ]);
 
   useEffect(() => {
@@ -36,6 +58,25 @@ const PromoteJob = ({navigation}) => {
       console.log('catch in Home_interior use_Effect :', error);
     }
   }, []);
+
+  const add_promote = async () => {
+    try {
+      // let formdata = new FormData();
+      // formdata.append('job_id', id);
+      // console.log('formdata-----------------------', formdata);
+      var data = `job_id=${id}`;
+      const getData = await fetchData.promote_job(data, token);
+
+      if (getData?.status == true) {
+        navigation.replace('TabNavigator');
+        common_fn.showToast(getData?.message);
+      } else {
+        common_fn.showToast(getData?.message);
+      }
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -83,115 +124,88 @@ const PromoteJob = ({navigation}) => {
         <View
           style={{
             flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}>
-          <View
-            style={{
-              width: '48%',
-              height: 240,
-              justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor: PromotionItem ? '#DBF3FF' : Color.white,
-              elevation: 5,
-              borderRadius: 5,
-              padding: 15,
-              bottom: 2,
-            }}>
-            <Text
-              style={{
-                fontSize: 14,
-                color: Color.black,
-                fontFamily: Gilmer.Regular,
-                textAlign: 'center',
-                marginTop: 30,
-              }}>
-              Always on the top
-            </Text>
-            <Image
-              source={require('../../assets/images/blue_high.png')}
-              style={{
-                width: '100%',
-                height: '100%',
-                resizeMode: 'contain',
-              }}
-            />
-          </View>
-
-          <View
-            style={{
-              width: '48%',
-              height: 240,
-              justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor: PromotionItem ? '#EAEAEF' : Color.white,
-              elevation: 5,
-              borderRadius: 5,
-              padding: 15,
-              bottom: 2,
-            }}>
-            <Text
-              style={{
-                fontSize: 14,
-                color: Color.black,
-                fontFamily: Gilmer.Regular,
-                textAlign: 'center',
-                marginTop: 30,
-              }}>
-              Highlight with Yellow Color
-            </Text>
-            <Image
-              source={require('../../assets/images/yellow_high.png')}
-              style={{
-                width: '100%',
-                height: '100%',
-                resizeMode: 'contain',
-              }}
-            />
-          </View>
-        </View>
-
-        <View
-          style={{
-            flexDirection: 'row',
             justifyContent: 'space-around',
             alignItems: 'center',
             paddingVertical: 10,
           }}>
           {promotionData?.map((item, index) => {
             return (
-              <TouchableOpacity
-                key={index}
-                onPress={() => {
-                  setPromotionItem(item);
-                }}
+              <View
                 style={{
-                  flexDirection: 'row',
+                  flex: 1,
+                  marginHorizontal: 5,
                   alignItems: 'center',
+                  opacity: item?.id == 1 ? 0.3 : 1,
                 }}>
-                <Iconviewcomponent
-                  Icontag={'Ionicons'}
-                  iconname={
-                    PromotionItem?.id === item.id
-                      ? 'radio-button-on'
-                      : 'radio-button-off'
-                  }
-                  icon_size={18}
-                  icon_color={
-                    PromotionItem?.id === item.id ? Color.primary : Color.black
-                  }
-                />
-
-                <Text
+                <View
                   style={{
-                    fontSize: 14,
-                    color: Color.black,
-                    fontFamily: Gilmer.Medium,
-                    marginRight: 5,
+                    width: '100%',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: PromotionItem ? '#DBF3FF' : Color.white,
+                    elevation: item?.id == 1 ? 0 : 1,
+                    borderRadius: 5,
+                    padding: 10,
+                    bottom: 2,
+                    marginVertical: 10,
                   }}>
-                  {item.title}
-                </Text>
-              </TouchableOpacity>
+                  <Text
+                    style={{
+                      // flex: 1,
+                      fontSize: 14,
+                      color: Color.black,
+                      fontFamily: Gilmer.Medium,
+                      textAlign: 'center',
+                      marginTop: 20,
+                    }}
+                    numberOfLines={1}>
+                    {item?.image_title}
+                  </Text>
+                  <Image
+                    source={item?.image}
+                    style={{
+                      width: '100%',
+                      height: 240,
+                      resizeMode: 'contain',
+                    }}
+                  />
+                </View>
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => {
+                    setPromotionItem(item);
+                  }}
+                  disabled={item.id == 1}
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <Iconviewcomponent
+                    Icontag={'Ionicons'}
+                    iconname={
+                      PromotionItem?.id === item.id
+                        ? 'radio-button-on'
+                        : 'radio-button-off'
+                    }
+                    icon_size={18}
+                    icon_color={
+                      PromotionItem?.id === item.id
+                        ? Color.primary
+                        : Color.black
+                    }
+                  />
+
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      color: Color.black,
+                      fontFamily: Gilmer.Medium,
+                      marginRight: 5,
+                    }}>
+                    {item.title}
+                  </Text>
+                </TouchableOpacity>
+              </View>
             );
           })}
         </View>
@@ -201,7 +215,7 @@ const PromoteJob = ({navigation}) => {
             mode="contained"
             onPress={async () => {
               try {
-                navigation.navigate('Home');
+                add_promote();
               } catch (err) {}
             }}
             style={{
@@ -216,7 +230,7 @@ const PromoteJob = ({navigation}) => {
           <Button
             mode="contained"
             onPress={() => {
-              navigation.navigate('Home');
+              navigation.navigate('TabNavigator');
             }}
             style={{
               backgroundColor: Color.white,

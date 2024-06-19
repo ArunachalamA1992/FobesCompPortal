@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   FlatList,
   Image,
@@ -18,8 +18,13 @@ import {base_image_url} from '../Config/base_url';
 
 const ItemCard = props => {
   const {item, navigation, getData} = props;
+  const [planLimit, setPlanLimit] = useState(0);
   const userData = useSelector(state => state.UserReducer.userData);
   var {token} = userData;
+
+  useEffect(() => {
+    getPlanLimit();
+  }, []);
 
   const getToggleJobs = async id => {
     try {
@@ -64,10 +69,21 @@ const ItemCard = props => {
     setShowLoadMore(newVisibleData.length < item?.candidate_skills?.length);
   };
 
+  const getPlanLimit = useCallback(async () => {
+    try {
+      const PlanLimit = await fetchData.plan_limit(``, token);
+      setPlanLimit(PlanLimit?.data?.job_limit);
+    } catch (error) {
+      console.log('error', error);
+    }
+  }, [token]);
+
   return (
     <TouchableOpacity
       onPress={() => {
-        job_profile_view(item?.candidate_id);
+        planLimit == 0
+          ? navigation.navigate('BuySubscriptions')
+          : job_profile_view(item?.candidate_id);
       }}
       style={styles.card}>
       <View style={styles.header}>
@@ -121,7 +137,9 @@ const ItemCard = props => {
         </View>
         <TouchableOpacity
           onPress={() => {
-            getToggleJobs(item?.candidate_id);
+            planLimit == 0
+              ? navigation.navigate('BuySubscriptions')
+              : getToggleJobs(item?.candidate_id);
           }}
           style={{marginLeft: 10}}>
           <Iconviewcomponent

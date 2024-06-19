@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -12,14 +12,14 @@ import {
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Color from '../../Global/Color';
-import { Gilmer } from '../../Global/FontFamily';
-import { StackActions, useNavigation } from '@react-navigation/native';
+import {Gilmer} from '../../Global/FontFamily';
+import {StackActions, useNavigation} from '@react-navigation/native';
 import common_fn from '../../Config/common_fn';
-import { Iconviewcomponent } from '../../Componens/Icontag';
+import {Iconviewcomponent} from '../../Componens/Icontag';
 import fetchData from '../../Config/fetchData';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const DismissKeyboard = ({ children }) => (
+const DismissKeyboard = ({children}) => (
   <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
     {children}
   </TouchableWithoutFeedback>
@@ -48,7 +48,7 @@ const Login = () => {
   const setLogin = async () => {
     try {
       if (email && password) {
-        const data = { email, password };
+        const data = {email, password};
         const login = await fetchData.login_with_pass(data, null);
 
         if (login?.message === 'Login Successful') {
@@ -59,7 +59,9 @@ const Login = () => {
           await AsyncStorage.setItem('user_data', JSON.stringify(combinedData));
 
           if (!login.data.logo || !login.data.name) {
-            navigation.dispatch(StackActions.replace('basicDetails'));
+            navigation.dispatch(
+              StackActions.replace('basicDetails', {type: 'add'}),
+            );
           } else if (
             !login.data.industry_type?.name ||
             !login.data.origanization_type?.name ||
@@ -106,7 +108,7 @@ const Login = () => {
         }}>
         <Image
           source={require('../../assets/logos/fobes.png')}
-          style={{ width: 100, height: 100, resizeMode: 'contain' }}
+          style={{width: 100, height: 100, resizeMode: 'contain'}}
         />
         <View
           style={{
@@ -132,7 +134,7 @@ const Login = () => {
             Icontag={'Feather'}
             iconname={'mail'}
             icon_size={22}
-            iconstyle={{ color: Color.transparantBlack }}
+            iconstyle={{color: Color.transparantBlack}}
           />
           <TextInput
             style={styles.numberTextBox}
@@ -160,17 +162,17 @@ const Login = () => {
           </Text>
         ) : null}
 
-        <View style={{ marginTop: 20 }}>
+        <View style={{marginTop: 20}}>
           <View
             style={[
               styles.NumberBoxConatiner,
-              { marginVertical: 5, paddingHorizontal: 15 },
+              {marginVertical: 5, paddingHorizontal: 15},
             ]}>
             <Iconviewcomponent
               Icontag={'MaterialCommunityIcons'}
               iconname={'lock'}
               icon_size={22}
-              iconstyle={{ color: Color.transparantBlack }}
+              iconstyle={{color: Color.transparantBlack}}
             />
             <TextInput
               style={styles.numberTextBox}
@@ -196,7 +198,7 @@ const Login = () => {
                 Icontag={'MaterialCommunityIcons'}
                 iconname={!password_visible ? 'eye-off' : 'eye'}
                 icon_size={22}
-                iconstyle={{ color: Color.transparantBlack }}
+                iconstyle={{color: Color.transparantBlack}}
               />
             </TouchableOpacity>
           </View>
@@ -238,7 +240,7 @@ const Login = () => {
                 color={Color.cloudyGrey}
               />
             </TouchableOpacity>
-            <View style={{ marginHorizontal: 5 }}>
+            <View style={{marginHorizontal: 5}}>
               <Text
                 style={{
                   fontSize: 14,
@@ -257,8 +259,7 @@ const Login = () => {
             }}
             onPress={() => {
               navigation.navigate('ForgotPassword');
-            }}
-          >
+            }}>
             <Text
               style={{
                 fontFamily: Gilmer.Medium,

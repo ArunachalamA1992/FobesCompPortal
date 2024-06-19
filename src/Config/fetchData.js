@@ -203,4 +203,12 @@ export default {
     let url = api_name + 'job/contact';
     return api.postMethod(url, data, token);
   },
+  promote_job: (data, token) => {
+    let url = api_name + 'jobs/promote?' + data;
+    return api.getMethod(url, token);
+  },
+  plan_limit: (data, token) => {
+    let url = api_name + 'plans/plan_limit';
+    return api.getMethod(url, token);
+  },
 };

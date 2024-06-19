@@ -56,7 +56,9 @@ const SplashScreen = ({navigation}) => {
       dispatch(setUserData(userData));
 
       if (!userData.logo || !userData.name) {
-        navigation.dispatch(StackActions.replace('basicDetails'));
+        navigation.dispatch(
+          StackActions.replace('basicDetails', {type: 'add'}),
+        );
         return;
       }
 

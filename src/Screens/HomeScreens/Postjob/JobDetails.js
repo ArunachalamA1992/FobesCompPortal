@@ -27,6 +27,10 @@ const JobDetails = () => {
   const [role, setRole] = useState({});
   const [description, setDescription] = useState('');
   const [queryCategory, setQueryCategory] = useState('');
+  const [categoryModal, setCategoryModal] = useState(false);
+  const [roleModal, setRoleModal] = useState(false);
+  const [tagModal, setTagModal] = useState(false);
+  const [skillModal, setSkillModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState({});
   const [queryRole, setQueryRole] = useState('');
   const [selectedRole, setSelectedRole] = useState({});
@@ -37,6 +41,7 @@ const JobDetails = () => {
   const labels = ['JobDetails', 'Salary & Benefits', 'Advance Information'];
   const userData = useSelector(state => state.UserReducer.userData);
   var {token} = userData;
+  console.log('selectedCategory', selectedCategory)
 
   const customStyles = {
     stepIndicatorSize: 25,
@@ -139,6 +144,7 @@ const JobDetails = () => {
     try {
       setSelectedTags([...selectedTags, item]);
       setQuery(item?.name);
+      setTagModal(true);
     } catch (error) {
       console.log('error', error);
     }
@@ -187,6 +193,7 @@ const JobDetails = () => {
     try {
       setSelectedSkills([...selectedSkills, item]);
       setQuerySkills(item?.name);
+      setSkillModal(false);
     } catch (error) {
       console.log('error', error);
     }
@@ -238,6 +245,7 @@ const JobDetails = () => {
     try {
       setSelectedCategory(item);
       setQueryCategory(item?.name);
+      setCategoryModal(false);
     } catch (error) {
       console.log('error', error);
     }
@@ -283,6 +291,7 @@ const JobDetails = () => {
     try {
       setSelectedRole(item);
       setQueryRole(item?.name);
+      setRoleModal(false);
     } catch (error) {
       console.log('error', error);
     }
@@ -374,9 +383,10 @@ const JobDetails = () => {
                 addCategoryItem(queryCategory);
               }
             }}
+            onFocus={() => setCategoryModal(true)}
           />
         </View>
-        {queryCategory.length > 0 && (
+        {categoryModal && (
           <View style={styles.dropdown}>
             {categoriesData.length > 0 ? (
               <FlatList
@@ -426,7 +436,7 @@ const JobDetails = () => {
                     fontSize: 16,
                     color: Color.primary,
                   }}>
-                  Add {queryCategory}
+                  {queryCategory}
                 </Text>
               </TouchableOpacity>
             )}
@@ -436,24 +446,6 @@ const JobDetails = () => {
           <Text style={styles.h1}>
             Job Role <Text style={styles.star}>*</Text>
           </Text>
-          {/* <Dropdown
-            style={styles.dropdown}
-            containerStyle={styles.dropContainer}
-            itemTextStyle={styles.dropTextStyle}
-            placeholderStyle={styles.placeholderStyle}
-            selectedTextStyle={styles.selectedTextStyle}
-            iconStyle={styles.iconStyle}
-            iconColor={Color.smokeyGrey}
-            data={roleData}
-            maxHeight={200}
-            labelField="name"
-            valueField="name"
-            placeholder="Select your role"
-            value={role}
-            onChange={item => {
-              setRole(item);
-            }}
-          /> */}
           <TextInput
             style={styles.input}
             placeholder="Enter Role"
@@ -467,9 +459,10 @@ const JobDetails = () => {
                 addRoleItem(queryRole);
               }
             }}
+            onFocus={() => setRoleModal(true)}
           />
         </View>
-        {queryRole.length > 0 && (
+        {roleModal && (
           <View style={styles.dropdown}>
             {roleData.length > 0 ? (
               <FlatList
@@ -519,7 +512,7 @@ const JobDetails = () => {
                     fontSize: 16,
                     color: Color.primary,
                   }}>
-                  Add {queryRole}
+                  {queryRole}
                 </Text>
               </TouchableOpacity>
             )}
@@ -542,9 +535,10 @@ const JobDetails = () => {
                 addTagItem(query);
               }
             }}
+            onFocus={() => setTagModal(true)}
           />
         </View>
-        {query.length > 0 && (
+        {tagModal && (
           <View style={styles.dropdown}>
             {tagsData.length > 0 ? (
               <FlatList
@@ -594,7 +588,7 @@ const JobDetails = () => {
                     fontSize: 16,
                     color: Color.primary,
                   }}>
-                  Add {query}
+                  {query}
                 </Text>
               </TouchableOpacity>
             )}
@@ -631,9 +625,10 @@ const JobDetails = () => {
                 addSkillsItem(querySkills);
               }
             }}
+            onFocus={() => setSkillModal(true)}
           />
         </View>
-        {querySkills.length > 0 && (
+        {skillModal && (
           <View style={styles.dropdown}>
             {requiredSkillsData.length > 0 ? (
               <FlatList
@@ -784,7 +779,7 @@ const styles = StyleSheet.create({
     // margin: height * 0.008,
     // height: height * 0.06,
     // width: width * 0.88,
-    height: 45,
+    height: 150,
     backgroundColor: Color.Fantasy,
     borderColor: Color.lightgrey,
     borderWidth: 1,

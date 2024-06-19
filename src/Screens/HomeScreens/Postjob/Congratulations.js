@@ -1,10 +1,11 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import Color from '../../../Global/Color';
 import {useNavigation} from '@react-navigation/native';
 import {Gilmer} from '../../../Global/FontFamily';
 
-const Congratulations = () => {
+const Congratulations = ({route}) => {
+  const [id] = useState(route.params.id);
   const navigation = useNavigation();
 
   return (
@@ -16,7 +17,7 @@ const Congratulations = () => {
       </Text>
       <TouchableOpacity
         style={styles.nextView}
-        onPress={() => navigation.navigate('PromoteJob')}>
+        onPress={() => navigation.navigate('PromoteJob', {id})}>
         <Text style={styles.PromoteJob}>Promote Job</Text>
       </TouchableOpacity>
       <TouchableOpacity
