@@ -18,141 +18,19 @@ import Color from '../Global/Color';
 import {Gilmer} from '../Global/FontFamily';
 import {Iconviewcomponent} from '../Componens/Icontag';
 import {Button} from 'react-native-paper';
+import fetchData from '../Config/fetchData';
+import {useDispatch, useSelector} from 'react-redux';
+import RazorpayCheckout from 'react-native-razorpay';
+import {setPayCancelVisible, setPaySuccessVisible} from '../Redux';
+
 LogBox.ignoreAllLogs();
 
-const BuySubscriptions = () => {
+const BuySubscriptions = ({navigation}) => {
+  const dispatch = useDispatch();
   const [netInfo_State, setNetinfo] = useState(true);
-
-  const [planData, setPlanData] = useState([
-    {
-      id: '0',
-      validity: '7 days Validity',
-      plan_status: 'Free Plan',
-      plan_amount: '0',
-      plan_subs_text: [
-        {
-          id: '0',
-          text: 'Post 1 Jobs',
-          sub_value: 'positive',
-        },
-        {
-          id: '1',
-          text: '0 Featured Job',
-          sub_value: 'positive',
-        },
-        {
-          id: '2',
-          text: '0 Highlights Job',
-          sub_value: 'positive',
-        },
-        {
-          id: '3',
-          text: '3 Candidates Profile View',
-          sub_value: 'positive',
-        },
-        {
-          id: '4',
-          text: 'Job Branding',
-          sub_value: 'negative',
-        },
-        {
-          id: '5',
-          text: 'Smart Boost Via Whatsapp',
-          sub_value: 'negative',
-        },
-        {
-          id: '6',
-          text: 'Get Noticed with Urgent Hiring tag',
-          sub_value: 'negative',
-        },
-        {
-          id: '7',
-          text: 'Ability to verify company profile',
-          sub_value: 'negative',
-        },
-      ],
-    },
-    {
-      id: '1',
-      validity: '15 days Validity',
-      plan_status: 'Basic Plan',
-      plan_amount: '1000',
-      plan_subs_text: [
-        {
-          id: '0',
-          text: 'Post 1 Jobs',
-        },
-        {
-          id: '1',
-          text: '0 Featured Job',
-        },
-        {
-          id: '2',
-          text: '0 Highlights Job',
-        },
-        {
-          id: '3',
-          text: '3 Candidates Profile View',
-        },
-        {
-          id: '4',
-          text: 'Job Branding',
-        },
-        {
-          id: '5',
-          text: 'Smart Boost Via Whatsapp',
-        },
-        {
-          id: '6',
-          text: 'Get Noticed with Urgent Hiring tag',
-        },
-        {
-          id: '7',
-          text: 'Ability to verify company profile',
-        },
-      ],
-    },
-    {
-      id: '2',
-      validity: '30 days Validity',
-      plan_status: 'Pro Plan',
-      plan_amount: '2500',
-      plan_subs_text: [
-        {
-          id: '0',
-          text: 'Post 1 Jobs',
-        },
-        {
-          id: '1',
-          text: '0 Featured Job',
-        },
-        {
-          id: '2',
-          text: '0 Highlights Job',
-        },
-        {
-          id: '3',
-          text: '3 Candidates Profile View',
-        },
-        {
-          id: '4',
-          text: 'Job Branding',
-        },
-        {
-          id: '5',
-          text: 'Smart Boost Via Whatsapp',
-        },
-        {
-          id: '6',
-          text: 'Get Noticed with Urgent Hiring tag',
-        },
-        {
-          id: '7',
-          text: 'Ability to verify company profile',
-        },
-      ],
-    },
-  ]);
+  const userData = useSelector(state => state.UserReducer.userData);
+  var {token} = userData;
+  const [planData, setPlanData] = useState([]);
 
   const [resdexData, setResdexData] = useState([
     {
@@ -234,6 +112,100 @@ const BuySubscriptions = () => {
       console.log('catch in Home_interior use_Effect :', error);
     }
   }, []);
+
+  useEffect(() => {
+    getPlanData();
+  }, []);
+
+  const getPlanData = async () => {
+    try {
+      const plan_data = await fetchData.company_plan(``, token);
+      const transformedData = transformData(plan_data?.data);
+      setPlanData(transformedData);
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
+
+  const paymentDetails = async plan_id => {
+    const paymentData = {
+      plan_id: plan_id,
+    };
+    const payment_start = await fetchData.post_plan(paymentData, token);
+    console.log('payment_start', payment_start)
+    RazorpayCheckout.open(payment_start?.data)
+      .then(async ({razorpay_signature, razorpay_payment_id}) => {
+        var data = {
+          order_id: payment_start?.data?.order_id,
+          plan_id: plan_id,
+          payment_id: razorpay_payment_id,
+        };
+        console.log('data', data)
+        const placeOrder = await fetchData.verify_pay(
+          data,
+          token,
+          razorpay_signature,
+        );
+        console.log('placeOrder---------------------', placeOrder);
+        dispatch(setPaySuccessVisible(true));
+        navigation?.replace('TabNavigator');
+      })
+      .catch(error => {
+        dispatch(setPayCancelVisible(true));
+        navigation?.replace('TabNavigator');
+      });
+  };
+
+  const transformData = data => {
+    return data.map((item, index) => ({
+      plan_id: item.plan_id,
+      validity: `${item.plan_valid_days} days Validity`,
+      plan_status: item.label,
+      plan_amount: item.price.toString(),
+      plan_subs_text: [
+        {
+          id: '0',
+          text: `Post ${item.job_limit} Jobs`,
+          sub_value: item.job_limit > 0 ? 'positive' : 'negative',
+        },
+        {
+          id: '1',
+          text: `${item.featured_job_limit} Featured Job`,
+          sub_value: item.featured_job_limit > 0 ? 'positive' : 'negative',
+        },
+        {
+          id: '2',
+          text: `${item.highlight_job_limit} Highlights Job`,
+          sub_value: item.highlight_job_limit > 0 ? 'positive' : 'negative',
+        },
+        {
+          id: '3',
+          text: `${item.candidate_cv_view_limit} Candidates Profile View`,
+          sub_value: item.candidate_cv_view_limit > 0 ? 'positive' : 'negative',
+        },
+        {
+          id: '4',
+          text: 'Job Branding',
+          sub_value: item.profile_verify ? 'positive' : 'negative',
+        },
+        {
+          id: '5',
+          text: 'Smart Boost Via Whatsapp',
+          sub_value: 'negative',
+        },
+        {
+          id: '6',
+          text: 'Get Noticed with Urgent Hiring tag',
+          sub_value: 'negative',
+        },
+        {
+          id: '7',
+          text: 'Ability to verify company profile',
+          sub_value: item.profile_verify ? 'positive' : 'negative',
+        },
+      ],
+    }));
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -335,6 +307,7 @@ const BuySubscriptions = () => {
               style={{
                 backgroundColor: Color.primary,
                 marginHorizontal: 10,
+                borderRadius: 5,
               }}
               textColor={Color.white}>
               Post per job
@@ -372,14 +345,17 @@ const BuySubscriptions = () => {
             data={planData}
             keyExtractor={(item, index) => item + index}
             renderItem={({item, index}) => {
+              console.log(item?.plan_status == 'Free Plan');
               return (
                 <View
+                  key={index}
                   style={{
                     width: 300,
                     margin: 5,
                     backgroundColor: Color.white,
                     elevation: 3,
                     borderRadius: 5,
+                    opacity: item?.plan_status == 'Free Plan' ? 0.5 : 1,
                   }}>
                   <View
                     style={{
@@ -481,6 +457,10 @@ const BuySubscriptions = () => {
                       marginTop: 10,
                       borderBottomStartRadius: 5,
                       borderBottomEndRadius: 5,
+                    }}
+                    disabled={item?.plan_status == 'Free Plan'}
+                    onPress={() => {
+                      paymentDetails(item?.plan_id);
                     }}>
                     <Text
                       style={{

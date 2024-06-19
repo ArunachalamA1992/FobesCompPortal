@@ -211,4 +211,16 @@ export default {
     let url = api_name + 'plans/plan_limit';
     return api.getMethod(url, token);
   },
+  company_plan: (data, token) => {
+    let url = api_name + 'plans/all';
+    return api.getMethod(url, token);
+  },
+  post_plan: (data, token) => {
+    let url = api_name + 'plans';
+    return api.postMethod(url, data, token);
+  },
+  verify_pay: (data, token, header) => {
+    let url = api_name + 'plans/verify';
+    return api.postMethod(url, data, token, header);
+  },
 };

@@ -898,7 +898,7 @@ const CandidateDetails = ({navigation, route}) => {
                 onPress={() => navigation.goBack()}
                 style={{flex: 1}}
               />
-              <Text
+              {/* <Text
                 style={{
                   fontSize: 14,
                   color: Color.white,
@@ -906,7 +906,7 @@ const CandidateDetails = ({navigation, route}) => {
                   marginBottom: 5,
                 }}>
                 Applied on {moment(itemData?.created_at).format('DD MMM YY')}
-              </Text>
+              </Text> */}
             </View>
             <View style={styles.header}>
               {itemData?.photo != null ? (
@@ -1022,7 +1022,7 @@ const CandidateDetails = ({navigation, route}) => {
                 borderBottomLeftRadius: 10,
                 borderBottomRightRadius: 10,
               }}>
-              <Dropdown
+              {/* <Dropdown
                 style={[styles.dropdown]}
                 placeholderStyle={styles.placeholderStyle}
                 selectedTextStyle={styles.selectedTextStyle}
@@ -1039,8 +1039,8 @@ const CandidateDetails = ({navigation, route}) => {
                   setSelectedShorlist(group);
                   candidate_result(group?.id, itemData?.id, 'group');
                 }}
-              />
-              <TouchableOpacity
+              /> */}
+              {/* <TouchableOpacity
                 onPress={() => {
                   candidate_result(rejected_id_find, itemData?.id, 'group');
                 }}>
@@ -1052,7 +1052,7 @@ const CandidateDetails = ({navigation, route}) => {
                   size={30}
                   disabled={itemData?.status == 'Rejected'}
                 />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               <View
                 style={{
                   flex: 1,
@@ -1071,7 +1071,7 @@ const CandidateDetails = ({navigation, route}) => {
                     color={Color.black}
                   />
                 </TouchableOpacity>
-                <TouchableOpacity
+                {/* <TouchableOpacity
                   style={styles.iconContainer}
                   onPress={() => {
                     candidate_result(0, itemData?.id, 'mail');
@@ -1084,7 +1084,7 @@ const CandidateDetails = ({navigation, route}) => {
                     candidate_result(0, itemData?.id, 'call');
                   }}>
                   <Icon name="call" color={Color.cloudyGrey} size={20} />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
             </View>
           </View>
@@ -1120,6 +1120,7 @@ const styles = StyleSheet.create({
   image: {
     width: 70,
     height: 70,
+    borderRadius: 100,
     resizeMode: 'contain',
   },
   details: {

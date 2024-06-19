@@ -28,8 +28,13 @@ export const api = {
         .catch(err => reject(err));
     });
   },
-  postMethod: (url, data, token) => {
+  postMethod: (url, data, token, header) => {
+    console.log('test---header', header)
     var headers = api.header(token);
+    if (header != undefined) {
+      headers['x-razorpay-signature'] = header;
+    }
+    console.log('header x-razorpay-signature', header, headers);
     const formData = new FormData();
     Object.keys(data).map(obj => {
       formData.append(obj, data[obj]);

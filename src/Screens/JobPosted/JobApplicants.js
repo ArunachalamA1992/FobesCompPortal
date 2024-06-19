@@ -35,7 +35,6 @@ const Applies = ({
   loading,
   getActivityData,
   getData,
-  planLimit,
 }) => {
   const [GroupsData, setGroupsData] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState({
@@ -64,8 +63,11 @@ const Applies = ({
         candidate_id: candidate_id,
       };
       const job_view = await fetchData.company_profile_view(data, token);
-      if (job_view) {
+      if (job_view?.status == 200) {
         navigation.navigate('applicantdetails', {id: id});
+      } else {
+        navigation.navigate('BuySubscriptions');
+        common_fn.showToast(job_view?.message);
       }
     } catch (error) {
       console.log('error', error);
@@ -287,9 +289,7 @@ const Applies = ({
                 <TouchableOpacity
                   key={index}
                   onPress={() => {
-                    planLimit == 0
-                      ? navigation.navigate('BuySubscriptions')
-                      : job_profile_view(item?.candidate_id, item?.id);
+                    job_profile_view(item?.candidate_id, item?.id);
                   }}
                   style={styles.card}>
                   <View
@@ -503,15 +503,18 @@ const Applies = ({
   );
 };
 
-const Shortlisted = ({navigation, job_posting, token, loading, planLimit}) => {
+const Shortlisted = ({navigation, job_posting, token, loading}) => {
   const job_profile_view = async (candidate_id, id) => {
     try {
       var data = {
         candidate_id: candidate_id,
       };
       const job_view = await fetchData.company_profile_view(data, token);
-      if (job_view) {
+      if (job_view?.status == 200) {
         navigation.navigate('applicantdetails', {id: id});
+      } else {
+        navigation.navigate('BuySubscriptions');
+        common_fn.showToast(job_view?.message);
       }
     } catch (error) {
       console.log('error', error);
@@ -589,9 +592,7 @@ const Shortlisted = ({navigation, job_posting, token, loading, planLimit}) => {
             return (
               <TouchableOpacity
                 onPress={() => {
-                  planLimit == 0
-                    ? navigation.navigate('BuySubscriptions')
-                    : job_profile_view(item?.candidate_id, item?.id);
+                  job_profile_view(item?.candidate_id, item?.id);
                 }}
                 style={styles.card}>
                 <View
@@ -694,15 +695,18 @@ const Shortlisted = ({navigation, job_posting, token, loading, planLimit}) => {
   );
 };
 
-const Rejected = ({navigation, job_posting, token, loading, planLimit}) => {
+const Rejected = ({navigation, job_posting, token, loading}) => {
   const job_profile_view = async (candidate_id, id) => {
     try {
       var data = {
         candidate_id: candidate_id,
       };
       const job_view = await fetchData.company_profile_view(data, token);
-      if (job_view) {
+      if (job_view?.status == 200) {
         navigation.navigate('applicantdetails', {id: id});
+      } else {
+        navigation.navigate('BuySubscriptions');
+        common_fn.showToast(job_view?.message);
       }
     } catch (error) {
       console.log('error', error);
@@ -780,9 +784,7 @@ const Rejected = ({navigation, job_posting, token, loading, planLimit}) => {
             return (
               <TouchableOpacity
                 onPress={() => {
-                  planLimit == 0
-                    ? navigation.navigate('BuySubscriptions')
-                    : job_profile_view(item?.candidate_id, item?.id);
+                  job_profile_view(item?.candidate_id, item?.id);
                 }}
                 style={styles.card}>
                 <View
@@ -892,7 +894,6 @@ const JobApplicants = ({navigation, route}) => {
   const [loading, setLoading] = useState(false);
   const userData = useSelector(state => state.UserReducer.userData);
   var {token} = userData;
-  const [planLimit, setPlanLimit] = useState(0);
 
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
@@ -976,15 +977,6 @@ const JobApplicants = ({navigation, route}) => {
     }
   };
 
-  const getPlanLimit = useCallback(async () => {
-    try {
-      const PlanLimit = await fetchData.plan_limit(``, token);
-      setPlanLimit(PlanLimit?.data?.job_limit);
-    } catch (error) {
-      console.log('error', error);
-    }
-  }, [token]);
-
   const renderScene = ({route}) => {
     switch (route.key) {
       case 'applies':
@@ -998,7 +990,6 @@ const JobApplicants = ({navigation, route}) => {
             loading={loading}
             getActivityData={getActivityData}
             getData={getData}
-            planLimit={planLimit}
           />
         );
       case 'shortlisted':
@@ -1008,7 +999,6 @@ const JobApplicants = ({navigation, route}) => {
             job_posting={job_posting}
             token={token}
             loading={loading}
-            planLimit={planLimit}
           />
         );
       case 'rejected':
@@ -1018,7 +1008,6 @@ const JobApplicants = ({navigation, route}) => {
             job_posting={job_posting}
             token={token}
             loading={loading}
-            planLimit={planLimit}
           />
         );
     }

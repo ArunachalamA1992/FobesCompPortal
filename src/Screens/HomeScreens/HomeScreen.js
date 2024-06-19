@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import Color from '../../Global/Color';
 import {Gilmer} from '../../Global/FontFamily';
-import {Button} from 'react-native-paper';
+import {ActivityIndicator, Button} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
 import FeIcon from 'react-native-vector-icons/Feather';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -27,23 +27,79 @@ import fetchData from '../../Config/fetchData';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {base_image_url} from '../../Config/base_url';
 import {SafeAreaView} from 'react-native';
+import PrimeModal from '../../Componens/PrimeModal';
 
-const All = ({acticityData, navigation, activityLoading, token}) => {
+const All = ({navigation, token, index}) => {
+  const [acticityData, setActivityData] = useState([]);
+  const [SearchendReached, setSearchEndReached] = useState(false);
+  const [loadMore, setLoadMore] = useState(false);
+  const [page, setPage] = useState(1);
+  const [endReached, setEndReached] = useState(false);
+  const [activityLoading, setActivityLoading] = useState(false);
+
+  useEffect(() => {
+    setActivityLoading(true);
+    getActivityData()
+      .then(() => setActivityLoading(false))
+      .catch(error => {
+        console.log('Error fetching data:', error);
+        setActivityLoading(false);
+      });
+  }, [token, index]);
+
+  const getActivityData = useCallback(async () => {
+    try {
+      var activity_data = ``;
+      const company_activity = await fetchData.company_activity(
+        activity_data,
+        token,
+      );
+      setActivityData(company_activity?.data);
+    } catch (error) {
+      console.log('error', error);
+    }
+  }, [token]);
+
+  const loadMoreData = async () => {
+    if (loadMore || endReached) {
+      return;
+    }
+    setLoadMore(true);
+    try {
+      const nextPage = page + 1;
+      var activity_data = `page=${nextPage}`;
+      const filterData = await fetchData.company_activity(activity_data, token);
+      if (filterData.length > 0) {
+        setPage(nextPage);
+        const updatedData = [...acticityData, ...filterData];
+        setActivityData(updatedData);
+      } else {
+        setEndReached(true);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoadMore(false);
+    }
+  };
+
   const job_profile_view = async id => {
     try {
       var data = {
         candidate_id: id,
       };
       const job_view = await fetchData.company_profile_view(data, token);
-      if (job_view) {
+      if (job_view?.status == 200) {
         navigation.navigate('candidateDetails', {id: id});
       } else {
+        navigation.navigate('BuySubscriptions');
         common_fn.showToast(job_view?.message);
       }
     } catch (error) {
       console.log('error', error);
     }
   };
+
   return (
     <SafeAreaView style={{flex: 1}}>
       {activityLoading ? (
@@ -143,16 +199,34 @@ const All = ({acticityData, navigation, activityLoading, token}) => {
                   style={{
                     flex: 1,
                   }}>
-                  <Text
+                  <View
                     style={{
                       flex: 1,
-                      fontSize: 16,
-                      color: Color.black,
-                      fontFamily: Gilmer.Bold,
-                    }}
-                    numberOfLines={1}>
-                    {item?.name}
-                  </Text>
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      width: '50%',
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        color: Color.black,
+                        fontFamily: Gilmer.Bold,
+                      }}
+                      numberOfLines={1}>
+                      {item?.name}{' '}
+                    </Text>
+                    {item?.applied_job != '' && (
+                      <Text
+                        style={{
+                          fontSize: 16,
+                          color: Color.black,
+                          fontFamily: Gilmer.Bold,
+                        }}
+                        numberOfLines={1}>
+                        | {item?.applied_job}
+                      </Text>
+                    )}
+                  </View>
                   <Text
                     style={{
                       flex: 1,
@@ -200,6 +274,30 @@ const All = ({acticityData, navigation, activityLoading, token}) => {
               </TouchableOpacity>
             );
           }}
+          onEndReached={() => {
+            loadMoreData();
+          }}
+          onEndReachedThreshold={3}
+          ListFooterComponent={() => {
+            return (
+              <View style={{alignItems: 'center', justifyContent: 'center'}}>
+                {loadMore && (
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        color: Color.black,
+                        marginHorizontal: 10,
+                        fontFamily: Gilmer.Medium,
+                      }}>
+                      Loading...
+                    </Text>
+                    <ActivityIndicator />
+                  </View>
+                )}
+              </View>
+            );
+          }}
           ListEmptyComponent={() => {
             return (
               <View
@@ -233,16 +331,71 @@ const All = ({acticityData, navigation, activityLoading, token}) => {
     </SafeAreaView>
   );
 };
-const Called = ({acticityData, navigation, activityLoading, token}) => {
+const Called = ({navigation, token, index}) => {
+  const [acticityData, setActivityData] = useState([]);
+  const [SearchendReached, setSearchEndReached] = useState(false);
+  const [loadMore, setLoadMore] = useState(false);
+  const [page, setPage] = useState(1);
+  const [endReached, setEndReached] = useState(false);
+
+  const [activityLoading, setActivityLoading] = useState(false);
+
+  useEffect(() => {
+    setActivityLoading(true);
+    getActivityData()
+      .then(() => setActivityLoading(false))
+      .catch(error => {
+        console.log('Error fetching data:', error);
+        setActivityLoading(false);
+      });
+  }, [token, index]);
+
+  const getActivityData = useCallback(async () => {
+    try {
+      var activity_data = `is_called=1`;
+      const company_activity = await fetchData.company_activity(
+        activity_data,
+        token,
+      );
+      setActivityData(company_activity?.data);
+    } catch (error) {
+      console.log('error', error);
+    }
+  }, [token]);
+
+  const loadMoreData = async () => {
+    if (loadMore || endReached) {
+      return;
+    }
+    setLoadMore(true);
+    try {
+      const nextPage = page + 1;
+      var activity_data = `is_called=1&page=${nextPage}`;
+      const filterData = await fetchData.company_activity(activity_data, token);
+      if (filterData.length > 0) {
+        setPage(nextPage);
+        const updatedData = [...acticityData, ...filterData];
+        setActivityData(updatedData);
+      } else {
+        setEndReached(true);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoadMore(false);
+    }
+  };
+
   const job_profile_view = async id => {
     try {
       var data = {
         candidate_id: id,
       };
       const job_view = await fetchData.company_profile_view(data, token);
-      if (job_view) {
+      if (job_view?.status == 200) {
         navigation.navigate('candidateDetails', {id: id});
       } else {
+        navigation.navigate('BuySubscriptions');
         common_fn.showToast(job_view?.message);
       }
     } catch (error) {
@@ -348,16 +501,31 @@ const Called = ({acticityData, navigation, activityLoading, token}) => {
                   style={{
                     flex: 1,
                   }}>
-                  <Text
+                  <View
                     style={{
-                      flex: 1,
-                      fontSize: 16,
-                      color: Color.black,
-                      fontFamily: Gilmer.Bold,
-                    }}
-                    numberOfLines={1}>
-                    {item?.name}
-                  </Text>
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    }}>
+                    <Text
+                      style={{
+                        // flex: 1,
+                        fontSize: 16,
+                        color: Color.black,
+                        fontFamily: Gilmer.Bold,
+                      }}
+                      numberOfLines={1}>
+                      {item?.name}
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        color: Color.black,
+                        fontFamily: Gilmer.Bold,
+                      }}
+                      numberOfLines={1}>
+                      {item?.applied_job}
+                    </Text>
+                  </View>
                   <Text
                     style={{
                       flex: 1,
@@ -389,6 +557,30 @@ const Called = ({acticityData, navigation, activityLoading, token}) => {
               </TouchableOpacity>
             );
           }}
+          onEndReached={() => {
+            loadMoreData();
+          }}
+          onEndReachedThreshold={3}
+          ListFooterComponent={() => {
+            return (
+              <View style={{alignItems: 'center', justifyContent: 'center'}}>
+                {loadMore && (
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        color: Color.black,
+                        marginHorizontal: 10,
+                        fontFamily: Gilmer.Medium,
+                      }}>
+                      Loading...
+                    </Text>
+                    <ActivityIndicator />
+                  </View>
+                )}
+              </View>
+            );
+          }}
           ListEmptyComponent={() => {
             return (
               <View
@@ -418,16 +610,71 @@ const Called = ({acticityData, navigation, activityLoading, token}) => {
     </SafeAreaView>
   );
 };
-const Viewed = ({acticityData, navigation, activityLoading, token}) => {
+const Viewed = ({navigation, token, index}) => {
+  const [acticityData, setActivityData] = useState([]);
+  const [SearchendReached, setSearchEndReached] = useState(false);
+  const [loadMore, setLoadMore] = useState(false);
+  const [page, setPage] = useState(1);
+  const [endReached, setEndReached] = useState(false);
+
+  const [activityLoading, setActivityLoading] = useState(false);
+
+  useEffect(() => {
+    setActivityLoading(true);
+    getActivityData()
+      .then(() => setActivityLoading(false))
+      .catch(error => {
+        console.log('Error fetching data:', error);
+        setActivityLoading(false);
+      });
+  }, [token, index]);
+
+  const getActivityData = useCallback(async () => {
+    try {
+      var activity_data = `is_viewed=1`;
+      const company_activity = await fetchData.company_activity(
+        activity_data,
+        token,
+      );
+      setActivityData(company_activity?.data);
+    } catch (error) {
+      console.log('error', error);
+    }
+  }, [token]);
+
+  const loadMoreData = async () => {
+    if (loadMore || endReached) {
+      return;
+    }
+    setLoadMore(true);
+    try {
+      const nextPage = page + 1;
+      var activity_data = `is_viewed=1&page=${nextPage}`;
+      const filterData = await fetchData.company_activity(activity_data, token);
+      if (filterData.length > 0) {
+        setPage(nextPage);
+        const updatedData = [...acticityData, ...filterData];
+        setActivityData(updatedData);
+      } else {
+        setEndReached(true);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoadMore(false);
+    }
+  };
+
   const job_profile_view = async id => {
     try {
       var data = {
         candidate_id: id,
       };
       const job_view = await fetchData.company_profile_view(data, token);
-      if (job_view) {
+      if (job_view?.status == 200) {
         navigation.navigate('candidateDetails', {id: id});
       } else {
+        navigation.navigate('BuySubscriptions');
         common_fn.showToast(job_view?.message);
       }
     } catch (error) {
@@ -533,16 +780,31 @@ const Viewed = ({acticityData, navigation, activityLoading, token}) => {
                   style={{
                     flex: 1,
                   }}>
-                  <Text
+                  <View
                     style={{
-                      flex: 1,
-                      fontSize: 16,
-                      color: Color.black,
-                      fontFamily: Gilmer.Bold,
-                    }}
-                    numberOfLines={1}>
-                    {item?.name}
-                  </Text>
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    }}>
+                    <Text
+                      style={{
+                        flex: 1,
+                        fontSize: 16,
+                        color: Color.black,
+                        fontFamily: Gilmer.Bold,
+                      }}
+                      numberOfLines={1}>
+                      {item?.name}
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        color: Color.black,
+                        fontFamily: Gilmer.Bold,
+                      }}
+                      numberOfLines={1}>
+                      {item?.applied_job}
+                    </Text>
+                  </View>
                   <Text
                     style={{
                       flex: 1,
@@ -572,6 +834,30 @@ const Viewed = ({acticityData, navigation, activityLoading, token}) => {
                   />
                 )}
               </TouchableOpacity>
+            );
+          }}
+          onEndReached={() => {
+            loadMoreData();
+          }}
+          onEndReachedThreshold={3}
+          ListFooterComponent={() => {
+            return (
+              <View style={{alignItems: 'center', justifyContent: 'center'}}>
+                {loadMore && (
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        color: Color.black,
+                        marginHorizontal: 10,
+                        fontFamily: Gilmer.Medium,
+                      }}>
+                      Loading...
+                    </Text>
+                    <ActivityIndicator />
+                  </View>
+                )}
+              </View>
             );
           }}
           ListEmptyComponent={() => {
@@ -608,16 +894,71 @@ const Viewed = ({acticityData, navigation, activityLoading, token}) => {
     </SafeAreaView>
   );
 };
-const Mailed = ({acticityData, navigation, activityLoading, token}) => {
+const Mailed = ({navigation, token, index}) => {
+  const [acticityData, setActivityData] = useState([]);
+  const [SearchendReached, setSearchEndReached] = useState(false);
+  const [loadMore, setLoadMore] = useState(false);
+  const [page, setPage] = useState(1);
+  const [endReached, setEndReached] = useState(false);
+
+  const [activityLoading, setActivityLoading] = useState(false);
+
+  useEffect(() => {
+    setActivityLoading(true);
+    getActivityData()
+      .then(() => setActivityLoading(false))
+      .catch(error => {
+        console.log('Error fetching data:', error);
+        setActivityLoading(false);
+      });
+  }, [token, index]);
+
+  const getActivityData = useCallback(async () => {
+    try {
+      var activity_data = `is_mailed=1`;
+      const company_activity = await fetchData.company_activity(
+        activity_data,
+        token,
+      );
+      setActivityData(company_activity?.data);
+    } catch (error) {
+      console.log('error', error);
+    }
+  }, [token]);
+
+  const loadMoreData = async () => {
+    if (loadMore || endReached) {
+      return;
+    }
+    setLoadMore(true);
+    try {
+      const nextPage = page + 1;
+      var activity_data = `is_mailed=1&page=${nextPage}`;
+      const filterData = await fetchData.company_activity(activity_data, token);
+      if (filterData.length > 0) {
+        setPage(nextPage);
+        const updatedData = [...acticityData, ...filterData];
+        setActivityData(updatedData);
+      } else {
+        setEndReached(true);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoadMore(false);
+    }
+  };
+
   const job_profile_view = async id => {
     try {
       var data = {
         candidate_id: id,
       };
       const job_view = await fetchData.company_profile_view(data, token);
-      if (job_view) {
+      if (job_view?.status == 200) {
         navigation.navigate('candidateDetails', {id: id});
       } else {
+        navigation.navigate('BuySubscriptions');
         common_fn.showToast(job_view?.message);
       }
     } catch (error) {
@@ -764,6 +1105,30 @@ const Mailed = ({acticityData, navigation, activityLoading, token}) => {
               </TouchableOpacity>
             );
           }}
+          onEndReached={() => {
+            loadMoreData();
+          }}
+          onEndReachedThreshold={3}
+          ListFooterComponent={() => {
+            return (
+              <View style={{alignItems: 'center', justifyContent: 'center'}}>
+                {loadMore && (
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        color: Color.black,
+                        marginHorizontal: 10,
+                        fontFamily: Gilmer.Medium,
+                      }}>
+                      Loading...
+                    </Text>
+                    <ActivityIndicator />
+                  </View>
+                )}
+              </View>
+            );
+          }}
           ListEmptyComponent={() => {
             return (
               <View
@@ -798,11 +1163,9 @@ const HomeScreen = ({navigation}) => {
   const dispatch = useDispatch();
   const [job_posting, setJobPosting] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
-  const [acticityData, setActivityData] = useState([]);
   const [jobLoading, setJobLoading] = useState(false);
   const [planLimit, setPlanLimit] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [activityLoading, setActivityLoading] = useState(false);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const userData = useSelector(state => state.UserReducer.userData);
   var {name, token} = userData;
@@ -848,18 +1211,10 @@ const HomeScreen = ({navigation}) => {
         setLoading(false);
       });
     getCategory_data(``);
-    getActivityData();
   }, [token]);
 
   useEffect(() => {
-    setActivityLoading(true);
     getPlanLimit();
-    getActivityData()
-      .then(() => setActivityLoading(false))
-      .catch(error => {
-        console.log('Error fetching data:', error);
-        setActivityLoading(false);
-      });
   }, [index, token]);
 
   const getSingleCompanyData = useCallback(async () => {
@@ -886,26 +1241,6 @@ const HomeScreen = ({navigation}) => {
       setJobPosting(company_job?.data);
       const category_data = await fetchData.job_Categories_list(``, token);
       setCategoryData([{id: null, name: 'All Jobs'}, ...category_data?.data]);
-    } catch (error) {
-      console.log('error', error);
-    }
-  }, [token, index]);
-
-  const getActivityData = useCallback(async () => {
-    try {
-      var activity_data =
-        index == 1
-          ? `is_called=1`
-          : index == 2
-          ? `is_viewed=1`
-          : index == 3
-          ? `is_mailed=1`
-          : ``;
-      const company_activity = await fetchData.company_activity(
-        activity_data,
-        token,
-      );
-      setActivityData(company_activity?.data);
     } catch (error) {
       console.log('error', error);
     }
@@ -942,41 +1277,41 @@ const HomeScreen = ({navigation}) => {
       case 'all':
         return (
           <All
-            acticityData={acticityData}
+            // acticityData={acticityData}
+            // activityLoading={activityLoading}
             navigation={navigation}
-            activityLoading={activityLoading}
             token={token}
-            planLimit={planLimit}
+            index={index}
           />
         );
       case 'called':
         return (
           <Called
-            acticityData={acticityData}
+            // acticityData={acticityData}
+            // activityLoading={activityLoading}
             navigation={navigation}
-            activityLoading={activityLoading}
             token={token}
-            planLimit={planLimit}
+            index={index}
           />
         );
       case 'viewed':
         return (
           <Viewed
-            acticityData={acticityData}
+            // acticityData={acticityData}
+            // activityLoading={activityLoading}
             navigation={navigation}
-            activityLoading={activityLoading}
             token={token}
-            planLimit={planLimit}
+            index={index}
           />
         );
       case 'mailed':
         return (
           <Mailed
-            acticityData={acticityData}
+            // acticityData={acticityData}
+            // activityLoading={activityLoading}
             navigation={navigation}
-            activityLoading={activityLoading}
             token={token}
-            planLimit={planLimit}
+            index={index}
           />
         );
     }
@@ -1287,9 +1622,7 @@ const HomeScreen = ({navigation}) => {
                     return (
                       <TouchableOpacity
                         onPress={() => {
-                          planLimit == 0
-                            ? navigation.navigate('BuySubscriptions')
-                            : getCategory_data(item.id);
+                          getCategory_data(item.id);
                         }}
                         key={index}
                         style={{
@@ -1559,6 +1892,7 @@ const HomeScreen = ({navigation}) => {
           </ScrollView>
         </View>
       )}
+      <PrimeModal navigation={navigation} />
     </View>
   );
 };

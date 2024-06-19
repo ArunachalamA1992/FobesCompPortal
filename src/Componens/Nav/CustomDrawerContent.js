@@ -223,7 +223,7 @@ const CustomDrawerContent = props => {
                   fontFamily:
                     itemSelected === 'favorite' ? Gilmer.Bold : Gilmer.Medium,
                 }}>
-                Favorite Jobs
+                Saved Candidates
               </Text>
             </TouchableOpacity>
           </View>

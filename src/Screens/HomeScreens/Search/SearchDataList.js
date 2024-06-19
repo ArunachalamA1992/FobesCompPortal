@@ -130,8 +130,8 @@ const SearchDataList = ({navigation, route}) => {
       const nextPage = page + 1;
       var data =
         typeID == null
-          ? `${type}=${searchJob}`
-          : `${type}=${typeID}`;
+          ? `${type}=${searchJob}&page=${nextPage}`
+          : `${type}=${typeID}&page=${nextPage}`;
       if (searchLocation != '') {
         data += `&place=${searchLocation}`;
       }
@@ -296,6 +296,7 @@ const SearchDataList = ({navigation, route}) => {
           onEndReached={() => {
             loadMoreData();
           }}
+          onEndReachedThreshold={3}
           ListFooterComponent={() => {
             return (
               <View style={{alignItems: 'center', justifyContent: 'center'}}>
@@ -316,7 +317,6 @@ const SearchDataList = ({navigation, route}) => {
               </View>
             );
           }}
-          onEndReachedThreshold={3}
         />
       )}
       <Modal

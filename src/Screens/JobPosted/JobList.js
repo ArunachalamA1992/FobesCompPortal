@@ -25,6 +25,7 @@ const JobList = ({navigation}) => {
   const [categoryData, setCategoryData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [jobLoading, setJobLoading] = useState(false);
+  const [planLimit, setPlanLimit] = useState(0);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const userData = useSelector(state => state.UserReducer.userData);
   var {token} = userData;
@@ -79,6 +80,20 @@ const JobList = ({navigation}) => {
     },
     [token],
   );
+
+  useEffect(() => {
+    getPlanLimit();
+  }, [token]);
+
+  const getPlanLimit = useCallback(async () => {
+    try {
+      const PlanLimit = await fetchData.plan_limit(``, token);
+      setPlanLimit(PlanLimit?.data?.job_limit);
+    } catch (error) {
+      console.log('error', error);
+    }
+  }, [token]);
+
   return (
     <View style={styles.container}>
       {loading ? (
@@ -434,7 +449,9 @@ const JobList = ({navigation}) => {
             mode="contained"
             onPress={async () => {
               try {
-                navigation.navigate('JobDetails');
+                planLimit == 0
+                  ? navigation.navigate('BuySubscriptions')
+                  : navigation.navigate('JobDetails');
               } catch (err) {}
             }}
             style={{

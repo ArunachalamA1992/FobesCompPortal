@@ -18,13 +18,8 @@ import {base_image_url} from '../Config/base_url';
 
 const ItemCard = props => {
   const {item, navigation, getData} = props;
-  const [planLimit, setPlanLimit] = useState(0);
   const userData = useSelector(state => state.UserReducer.userData);
   var {token} = userData;
-
-  useEffect(() => {
-    getPlanLimit();
-  }, []);
 
   const getToggleJobs = async id => {
     try {
@@ -44,9 +39,10 @@ const ItemCard = props => {
         candidate_id: id,
       };
       const job_view = await fetchData.company_profile_view(data, token);
-      if (job_view) {
+      if (job_view?.status == 200) {
         navigation.navigate('candidateDetails', {id: id});
       } else {
+        navigation.navigate('BuySubscriptions');
         common_fn.showToast(job_view?.message);
       }
     } catch (error) {
@@ -69,21 +65,10 @@ const ItemCard = props => {
     setShowLoadMore(newVisibleData.length < item?.candidate_skills?.length);
   };
 
-  const getPlanLimit = useCallback(async () => {
-    try {
-      const PlanLimit = await fetchData.plan_limit(``, token);
-      setPlanLimit(PlanLimit?.data?.job_limit);
-    } catch (error) {
-      console.log('error', error);
-    }
-  }, [token]);
-
   return (
     <TouchableOpacity
       onPress={() => {
-        planLimit == 0
-          ? navigation.navigate('BuySubscriptions')
-          : job_profile_view(item?.candidate_id);
+        job_profile_view(item?.candidate_id);
       }}
       style={styles.card}>
       <View style={styles.header}>
@@ -137,9 +122,7 @@ const ItemCard = props => {
         </View>
         <TouchableOpacity
           onPress={() => {
-            planLimit == 0
-              ? navigation.navigate('BuySubscriptions')
-              : getToggleJobs(item?.candidate_id);
+            getToggleJobs(item?.candidate_id);
           }}
           style={{marginLeft: 10}}>
           <Iconviewcomponent
@@ -203,6 +186,7 @@ const styles = StyleSheet.create({
   image: {
     width: 70,
     height: 70,
+    borderRadius: 100,
     resizeMode: 'contain',
   },
   details: {
