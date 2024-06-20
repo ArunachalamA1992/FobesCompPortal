@@ -144,7 +144,7 @@ const JobDetails = () => {
     try {
       setSelectedTags([...selectedTags, item]);
       setQuery(item?.name);
-      setTagModal(true);
+      setTagModal(false);
     } catch (error) {
       console.log('error', error);
     }

@@ -1266,6 +1266,7 @@ const HomeScreen = ({navigation}) => {
   const getPlanLimit = useCallback(async () => {
     try {
       const PlanLimit = await fetchData.plan_limit(``, token);
+      console.log('PlanLimit?.data---------------------------------', PlanLimit?.data)
       setPlanLimit(PlanLimit?.data?.job_limit);
     } catch (error) {
       console.log('error', error);

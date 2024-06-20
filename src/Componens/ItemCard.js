@@ -40,7 +40,7 @@ const ItemCard = props => {
       };
       const job_view = await fetchData.company_profile_view(data, token);
       if (job_view?.status == 200) {
-        navigation.navigate('candidateDetails', {id: id});
+        navigation.navigate('BuySubscriptions', {id: id});
       } else {
         navigation.navigate('BuySubscriptions');
         common_fn.showToast(job_view?.message);
